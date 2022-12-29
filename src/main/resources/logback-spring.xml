@@ -1,0 +1,28 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/console.xml"/>
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>./logs/ecommerce.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <maxIndex>8</maxIndex>
+            <FileNamePattern>./logs/orders.log.%i
+            </FileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>128MB</MaxFileSize>
+        </triggeringPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" >
+            <includeMdcKeyName>requestId</includeMdcKeyName>
+        </encoder>
+    </appender>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%white(%d{yyyy-MM-dd HH:mm:ss.SSS}) %highlight(%-5level) [%blue(%t)] [%blue(%mdc)] %yellow(%C:%line [%method]): %msg%n%throwable
+            </pattern>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="file" />
+        <appender-ref ref="stdout" />
+    </root>
+</configuration>
