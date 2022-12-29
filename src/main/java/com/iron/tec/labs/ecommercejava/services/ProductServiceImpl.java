@@ -5,6 +5,7 @@ import com.iron.tec.labs.ecommercejava.db.entities.Product;
 import com.iron.tec.labs.ecommercejava.dto.ProductCreationDTO;
 import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
 import com.iron.tec.labs.ecommercejava.dto.ProductUpdateDTO;
+import lombok.AllArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -13,14 +14,10 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductDAO productDAO;
     private final ConversionService conversionService;
-
-    public ProductServiceImpl(ProductDAO productDAO, ConversionService conversionService) {
-        this.productDAO = productDAO;
-        this.conversionService = conversionService;
-    }
 
     public Mono<ProductDTO> createProduct(ProductCreationDTO productCreationDTO) {
         return productDAO.create(conversionService.convert(productCreationDTO, Product.class))
