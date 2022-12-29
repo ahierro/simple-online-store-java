@@ -4,6 +4,7 @@ import com.iron.tec.labs.ecommercejava.db.entities.Product;
 import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
 import com.iron.tec.labs.ecommercejava.exceptions.DuplicateKey;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.TransientDataAccessResourceException;
@@ -15,14 +16,11 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Repository
+@AllArgsConstructor
 @Transactional
 @Log4j2
 public class ProductDAOImpl implements ProductDAO {
     private final ProductRepository productRepository;
-
-    public ProductDAOImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     @Override
     public Flux<Product> getAll() {
