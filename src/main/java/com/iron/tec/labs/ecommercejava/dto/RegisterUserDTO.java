@@ -26,5 +26,6 @@ public class RegisterUserDTO {
     @Length(max = 100)
     private String lastName;
 
+    // This is just for testing purposes
     private boolean isAdmin;
 }
