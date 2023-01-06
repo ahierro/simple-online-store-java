@@ -3,7 +3,6 @@ package com.iron.tec.labs.ecommercejava.controllers;
 import com.iron.tec.labs.ecommercejava.dto.LoginRequest;
 import com.iron.tec.labs.ecommercejava.dto.RegisterUserDTO;
 import com.iron.tec.labs.ecommercejava.services.JWTGeneratorService;
-import com.iron.tec.labs.ecommercejava.services.JWTGeneratorServiceImpl;
 import com.iron.tec.labs.ecommercejava.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,7 +23,7 @@ public class AuthController {
     private final ReactiveAuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public Mono<String> token(@RequestBody LoginRequest userLogin) {
+    public Mono<String> login(@RequestBody LoginRequest userLogin) {
         return authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(userLogin.username(), userLogin.password()))
                 .map(jwtGeneratorService::generateToken);
