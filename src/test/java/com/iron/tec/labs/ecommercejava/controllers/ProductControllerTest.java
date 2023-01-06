@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -43,6 +44,7 @@ class ProductControllerTest {
     Resource updateProductRequest;
 
     @Test
+    @WithMockUser(roles = "USER")
     void getAll() {
         when(productService.getAll()).thenReturn(Flux.just(ProductDTO.builder()
                         .productId("baffc3a4-5447-48ab-b9c0-7604e448371d")
@@ -71,7 +73,8 @@ class ProductControllerTest {
     }
 
     @Test
-    void createProduct(){
+    @WithMockUser(roles = "ADMIN")
+    void createProduct() {
 
         when(productService.createProduct(any())).thenReturn(Mono.just(ProductDTO.builder()
                 .productId("63466fc5-dccd-43c2-a3c7-4028bd9684bb")
@@ -93,7 +96,8 @@ class ProductControllerTest {
     }
 
     @Test
-    void createExistingProduct(){
+    @WithMockUser(roles = "ADMIN")
+    void createExistingProduct() {
 
         when(productService.createProduct(any())).thenThrow(DuplicateKey.class);
 
@@ -107,9 +111,10 @@ class ProductControllerTest {
 
 
     @Test
-    void updateProduct(){
+    @WithMockUser(roles = "ADMIN")
+    void updateProduct() {
 
-        when(productService.updateProduct(anyString(),any())).thenReturn(Mono.empty());
+        when(productService.updateProduct(anyString(), any())).thenReturn(Mono.empty());
 
         testClient.put().uri("/v1/product/f833d126-6cb1-4759-af63-9972f106a51d")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -121,9 +126,10 @@ class ProductControllerTest {
     }
 
     @Test
-    void updateNonExistingProduct(){
+    @WithMockUser(roles = "ADMIN")
+    void updateNonExistingProduct() {
 
-        when(productService.updateProduct(anyString(),any())).thenThrow(NotFound.class);
+        when(productService.updateProduct(anyString(), any())).thenThrow(NotFound.class);
 
         testClient.put().uri("/v1/product/f833d126-6cb1-4759-af63-9972f106a51d")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -134,7 +140,8 @@ class ProductControllerTest {
     }
 
     @Test
-    void deleteProduct(){
+    @WithMockUser(roles = "ADMIN")
+    void deleteProduct() {
 
         when(productService.deleteProduct(anyString())).thenReturn(Mono.empty());
 
@@ -145,7 +152,8 @@ class ProductControllerTest {
     }
 
     @Test
-    void deleteNonExistingProduct(){
+    @WithMockUser(roles = "ADMIN")
+    void deleteNonExistingProduct() {
 
         when(productService.deleteProduct(anyString())).thenThrow(NotFound.class);
 

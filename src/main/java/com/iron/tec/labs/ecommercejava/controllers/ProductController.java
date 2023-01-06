@@ -1,11 +1,12 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
-import com.iron.tec.labs.ecommercejava.util.LoggingUtils;
 import com.iron.tec.labs.ecommercejava.dto.ProductCreationDTO;
 import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
 import com.iron.tec.labs.ecommercejava.dto.ProductUpdateDTO;
 import com.iron.tec.labs.ecommercejava.services.ProductService;
+import com.iron.tec.labs.ecommercejava.util.LoggingUtils;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -18,15 +19,12 @@ import java.net.URI;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/v1/product")
 @Log4j2
 public class ProductController {
 
     private final ProductService productService;
-
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @GetMapping()
     public Flux<ProductDTO> getProducts() {
