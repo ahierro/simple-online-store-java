@@ -128,4 +128,20 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
                 .expectNextCount(0)
                 .verifyComplete();
     }
+
+    @Test
+    @DisplayName("Create a product and get product by id to verify if it is returned")
+    void getById_ok() {
+        create_ok();
+        StepVerifier.create(productDAO.getById(product.getId()))
+                .expectNextCount(1)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Get non existing product")
+    void getById_notFound() {
+        StepVerifier.create(productDAO.getById(UUID.randomUUID()))
+                .verifyError(NotFound.class);
+    }
 }

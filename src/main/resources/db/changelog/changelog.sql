@@ -33,11 +33,12 @@ create table "users"
     "last_name"   VARCHAR(100) not null,
     "active"     boolean     not null default true,
     "locked"     boolean     not null default false,
-    "roles"      json NOT NULL,
+    "authorities" json NOT NULL,
     "created_at" TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 create unique index ix_users_username on users (username);
+create unique index ix_users_email on users (email);
 --rollback drop table users;
 
 

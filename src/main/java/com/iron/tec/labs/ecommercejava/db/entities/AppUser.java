@@ -1,20 +1,18 @@
 package com.iron.tec.labs.ecommercejava.db.entities;
 
 import jakarta.validation.constraints.Email;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Table("USERS")
 @Data
@@ -35,12 +33,12 @@ public class AppUser extends AuditableEntity implements UserDetails {
     @Builder.Default
     private boolean locked = false;
 
-    @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    @Singular
+    private List<String> authorities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream().map(SimpleGrantedAuthority::new).toList();
+        return this.authorities.stream().map(SimpleGrantedAuthority::new).toList();
     }
 
     @Override

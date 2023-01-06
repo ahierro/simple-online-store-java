@@ -28,11 +28,19 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
+    public Mono<Product> getById(UUID id) {
+        return this.productRepository.findById(id)
+                .switchIfEmpty(Mono.defer(() -> {
+                    throw new NotFound("Product not found");
+                }));
+    }
+
+    @Override
     public Mono<Product> create(Product product) {
         return productRepository.save(product)
                 .doOnError(DataIntegrityViolationException.class, e -> {
-            throw new DuplicateKey("Product already exists");
-        });
+                    throw new DuplicateKey("Product already exists");
+                });
     }
 
     @Override

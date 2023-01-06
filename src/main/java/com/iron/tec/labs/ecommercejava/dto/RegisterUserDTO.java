@@ -25,4 +25,6 @@ public class RegisterUserDTO {
     @NotEmpty
     @Length(max = 100)
     private String lastName;
+
+    private boolean isAdmin;
 }

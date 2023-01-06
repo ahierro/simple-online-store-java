@@ -20,6 +20,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -37,6 +38,9 @@ class ProductControllerTest {
     @Value("classpath:getAllResponse.json")
     Resource getAllResponse;
 
+    @Value("classpath:getProductByIdResponse.json")
+    Resource getProductByIdResponse;
+
     @Value("classpath:createProductRequest.json")
     Resource createProductRequest;
 
@@ -44,7 +48,7 @@ class ProductControllerTest {
     Resource updateProductRequest;
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void getAll() {
         when(productService.getAll()).thenReturn(Flux.just(ProductDTO.builder()
                         .productId("baffc3a4-5447-48ab-b9c0-7604e448371d")
@@ -73,7 +77,27 @@ class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "SCOPE_ROLE_USER")
+    void getById() {
+        when(productService.getById(any(UUID.class))).thenReturn(Mono.just(ProductDTO.builder()
+                .productId("baffc3a4-5447-48ab-b9c0-7604e448371d")
+                .productName("Laptop")
+                .stock(16)
+                .price(BigDecimal.valueOf(123))
+                .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                .smallImageUrl("https://github.com/1.jpg")
+                .bigImageUrl("https://github.com/2.jpg")
+                .build()));
+        testClient.get().uri("/v1/product/baffc3a4-5447-48ab-b9c0-7604e448371d")
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBody()
+                .json(ResourceUtils.readFile(getProductByIdResponse));
+    }
+
+    @Test
+    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void createProduct() {
 
         when(productService.createProduct(any())).thenReturn(Mono.just(ProductDTO.builder()
@@ -96,7 +120,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void createExistingProduct() {
 
         when(productService.createProduct(any())).thenThrow(DuplicateKey.class);
@@ -111,7 +135,7 @@ class ProductControllerTest {
 
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void updateProduct() {
 
         when(productService.updateProduct(anyString(), any())).thenReturn(Mono.empty());
@@ -126,7 +150,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void updateNonExistingProduct() {
 
         when(productService.updateProduct(anyString(), any())).thenThrow(NotFound.class);
@@ -140,7 +164,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void deleteProduct() {
 
         when(productService.deleteProduct(anyString())).thenReturn(Mono.empty());
@@ -152,7 +176,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void deleteNonExistingProduct() {
 
         when(productService.deleteProduct(anyString())).thenThrow(NotFound.class);

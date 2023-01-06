@@ -19,6 +19,12 @@ public class ProductServiceImpl implements ProductService {
     private final ProductDAO productDAO;
     private final ConversionService conversionService;
 
+    @Override
+    public Mono<ProductDTO> getById(UUID id) {
+        return productDAO.getById(id)
+                .mapNotNull(product -> conversionService.convert(product,ProductDTO.class));
+    }
+
     public Mono<ProductDTO> createProduct(ProductCreationDTO productCreationDTO) {
         return productDAO.create(conversionService.convert(productCreationDTO, Product.class))
                 .mapNotNull(product -> conversionService.convert(product, ProductDTO.class));

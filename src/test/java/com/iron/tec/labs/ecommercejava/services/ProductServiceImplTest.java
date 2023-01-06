@@ -164,4 +164,32 @@ class ProductServiceImplTest {
 
     }
 
+    @Test
+    void testGetById() {
+        when(productDAO.getById(any(UUID.class))).thenReturn(Mono.just(Product.builder()
+                .id(UUID.randomUUID())
+                .name("Laptop")
+                .stock(16)
+                .price(BigDecimal.valueOf(123))
+                .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                .smallImageUrl("https://github.com/1.jpg")
+                .bigImageUrl("https://github.com/2.jpg")
+                .build()));
+
+        when(conversionService.convert(any(Product.class), eq(ProductDTO.class)))
+                .thenAnswer(x -> ProductDTO.builder()
+                        .productId(UUID.randomUUID().toString())
+                        .productName("Laptop")
+                        .stock(16)
+                        .price(BigDecimal.valueOf(123))
+                        .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                        .smallImageUrl("https://github.com/1.jpg")
+                        .bigImageUrl("https://github.com/2.jpg")
+                        .build());
+
+        StepVerifier.create(productService.getById(UUID.randomUUID()))
+                .expectNextCount(1)
+                .verifyComplete();
+
+    }
 }

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class TokenService {
+public class JWTGeneratorServiceImpl implements JWTGeneratorService {
 
     private final JwtEncoder encoder;
 

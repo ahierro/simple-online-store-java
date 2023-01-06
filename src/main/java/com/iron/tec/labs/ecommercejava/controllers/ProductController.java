@@ -10,11 +10,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.UUID;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -34,7 +36,16 @@ public class ProductController {
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Products obtained")));
     }
 
+    @GetMapping("/{id}")
+    public Mono<ProductDTO> getProduct(@PathVariable UUID id) {
+        return Mono.empty()
+                .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before products obtained")))
+                .then( productService.getById(id))
+                .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Products obtained")));
+    }
+
     @PostMapping()
+//    @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public Mono<ResponseEntity<Void>> createProducts(@RequestBody @Valid ProductCreationDTO productCreationDTO,
                                                      ServerHttpRequest serverHttpRequest) {
         return  Mono.empty()
