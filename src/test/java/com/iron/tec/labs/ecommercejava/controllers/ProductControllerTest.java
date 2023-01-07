@@ -1,5 +1,8 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
+import com.iron.tec.labs.ecommercejava.db.entities.Product;
+import com.iron.tec.labs.ecommercejava.dto.PageRequestDTO;
+import com.iron.tec.labs.ecommercejava.dto.PageResponseDTO;
 import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
 import com.iron.tec.labs.ecommercejava.exceptions.DuplicateKey;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
@@ -11,15 +14,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -37,6 +47,9 @@ class ProductControllerTest {
 
     @Value("classpath:getAllResponse.json")
     Resource getAllResponse;
+
+    @Value("classpath:getProductPageResponse.json")
+    Resource getProductPageResponse;
 
     @Value("classpath:getProductByIdResponse.json")
     Resource getProductByIdResponse;
@@ -74,6 +87,28 @@ class ProductControllerTest {
                 .is2xxSuccessful()
                 .expectBody()
                 .json(ResourceUtils.readFile(getAllResponse));
+    }
+
+    @Test
+    @WithMockUser(authorities = "SCOPE_ROLE_USER")
+    void getProductPage() {
+        when(productService.getProductPage(any(PageRequestDTO.class))).thenReturn(Mono.just(new PageResponseDTO<>(
+                Collections.singletonList(ProductDTO.builder()
+                        .productId("f133d126-6cb1-4759-af63-9972f106a51d")
+                        .productName("Test")
+                        .stock(0)
+                        .price(BigDecimal.valueOf(1))
+                        .productDescription("Test2")
+                        .smallImageUrl("https://github.com/1.jpg")
+                        .bigImageUrl("https://github.com/2.jpg")
+                        .createdAt(LocalDateTime.parse("2023-01-05T09:50:06.912024", DateTimeFormatter.ISO_DATE_TIME))
+                        .build()), PageRequest.of(0, 1), 2)));
+        testClient.get().uri("/v1/product/page?page=0&size=1")
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBody()
+                .json(ResourceUtils.readFile(getProductPageResponse));
     }
 
     @Test

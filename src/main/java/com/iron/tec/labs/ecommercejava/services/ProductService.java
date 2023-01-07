@@ -1,8 +1,6 @@
 package com.iron.tec.labs.ecommercejava.services;
 
-import com.iron.tec.labs.ecommercejava.dto.ProductCreationDTO;
-import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
-import com.iron.tec.labs.ecommercejava.dto.ProductUpdateDTO;
+import com.iron.tec.labs.ecommercejava.dto.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -16,6 +14,7 @@ public interface ProductService {
     Mono<ProductDTO> updateProduct(String id, ProductUpdateDTO productCreationDTO);
 
     Flux<ProductDTO> getAll();
+    Mono<PageResponseDTO<ProductDTO>> getProductPage(PageRequestDTO pageRequest);
 
     Mono<Void> deleteProduct(String id);
 }

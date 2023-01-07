@@ -10,11 +10,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
+import org.springframework.data.domain.PageImpl;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataR2dbcTest
 class ProductDAOImplTest extends PostgresIntegrationSetup {
@@ -121,6 +125,29 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
                 .verifyComplete();
     }
 
+    @Test
+    @DisplayName("Create product and get a product page to verify if it is returned")
+    void getPage_ok() {
+        create_ok();
+        PageImpl<Product> page = productDAO.getProductPage(0, 2).block();
+        assertNotNull(page);
+        assertEquals(1,page.getTotalPages());
+        assertEquals(0,page.getNumber());
+        assertEquals(1,page.getTotalElements());
+        assertNotNull(page.getContent());
+        assertEquals(1,page.getContent().size());
+    }
+    @Test
+    @DisplayName("Get a product page when the table is empty")
+    void getPage_empty() {
+        PageImpl<Product> page = productDAO.getProductPage(0, 2).block();
+        assertNotNull(page);
+        assertEquals(0,page.getTotalPages());
+        assertEquals(0,page.getNumber());
+        assertEquals(0,page.getTotalElements());
+        assertNotNull(page.getContent());
+        assertEquals(0,page.getContent().size());
+    }
     @Test
     @DisplayName("Get all products on an empty table to verify that it is not returned")
     void getAll_empty_ok() {

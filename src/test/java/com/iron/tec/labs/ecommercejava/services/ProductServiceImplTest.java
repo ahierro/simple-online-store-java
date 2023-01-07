@@ -2,9 +2,7 @@ package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.db.dao.ProductDAO;
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
-import com.iron.tec.labs.ecommercejava.dto.ProductCreationDTO;
-import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
-import com.iron.tec.labs.ecommercejava.dto.ProductUpdateDTO;
+import com.iron.tec.labs.ecommercejava.dto.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -12,11 +10,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -162,6 +163,49 @@ class ProductServiceImplTest {
                 .expectNextCount(2)
                 .verifyComplete();
 
+    }
+
+    @Test
+    void getProductPage() {
+        when(productDAO.getProductPage(0, 1)).thenReturn(Mono.just(new PageImpl<>(
+                Arrays.asList(Product.builder()
+                                .id(UUID.randomUUID())
+                                .name("Laptop")
+                                .stock(16)
+                                .price(BigDecimal.valueOf(123))
+                                .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                                .smallImageUrl("https://github.com/1.jpg")
+                                .bigImageUrl("https://github.com/2.jpg")
+                                .build(),
+                        Product.builder()
+                                .id(UUID.randomUUID())
+                                .name("Laptop")
+                                .stock(16)
+                                .price(BigDecimal.valueOf(123))
+                                .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                                .smallImageUrl("https://github.com/1.jpg")
+                                .bigImageUrl("https://github.com/2.jpg")
+                                .build()), PageRequest.of(0,1),2)));
+        when(conversionService.convert(any(Product.class), eq(ProductDTO.class)))
+                .thenAnswer(x -> ProductDTO.builder()
+                        .productId(UUID.randomUUID().toString())
+                        .productName("Laptop")
+                        .stock(16)
+                        .price(BigDecimal.valueOf(123))
+                        .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                        .smallImageUrl("https://github.com/1.jpg")
+                        .bigImageUrl("https://github.com/2.jpg")
+                        .build());
+
+        PageResponseDTO<ProductDTO> page =
+                productService.getProductPage(PageRequestDTO.builder().page(0).size(1).build()).block();
+
+        assertNotNull(page);
+        assertEquals(2,page.getTotalPages());
+        assertEquals(0,page.getNumber());
+        assertEquals(2,page.getTotalElements());
+        assertNotNull(page.getContent());
+        assertEquals(2,page.getContent().size());
     }
 
     @Test

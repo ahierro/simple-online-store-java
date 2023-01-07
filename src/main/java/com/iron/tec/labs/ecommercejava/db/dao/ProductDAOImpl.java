@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.TransientDataAccessResourceException;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -25,6 +27,15 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Flux<Product> getAll() {
         return this.productRepository.findAll();
+    }
+
+    @Override
+    public Mono<PageImpl<Product>> getProductPage(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page,size);
+        return this.productRepository.findBy(pageRequest)
+                .collectList()
+                .zipWith(this.productRepository.count())
+                .map(t -> new PageImpl<>(t.getT1(), pageRequest, t.getT2()));
     }
 
     @Override

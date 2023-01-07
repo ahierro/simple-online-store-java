@@ -2,9 +2,7 @@ package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.db.dao.ProductDAO;
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
-import com.iron.tec.labs.ecommercejava.dto.ProductCreationDTO;
-import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
-import com.iron.tec.labs.ecommercejava.dto.ProductUpdateDTO;
+import com.iron.tec.labs.ecommercejava.dto.*;
 import lombok.AllArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -22,17 +20,18 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Mono<ProductDTO> getById(UUID id) {
         return productDAO.getById(id)
-                .mapNotNull(product -> conversionService.convert(product,ProductDTO.class));
+                .mapNotNull(product -> conversionService.convert(product, ProductDTO.class));
     }
 
     public Mono<ProductDTO> createProduct(ProductCreationDTO productCreationDTO) {
         return productDAO.create(conversionService.convert(productCreationDTO, Product.class))
                 .mapNotNull(product -> conversionService.convert(product, ProductDTO.class));
     }
+
     @Override
     public Mono<ProductDTO> updateProduct(String id, ProductUpdateDTO productCreationDTO) {
         Product product = conversionService.convert(productCreationDTO, Product.class);
-        if(product!=null){
+        if (product != null) {
             product.setId(UUID.fromString(id));
         }
         return productDAO.update(product)
@@ -42,6 +41,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Flux<ProductDTO> getAll() {
         return productDAO.getAll().mapNotNull(product -> conversionService.convert(product, ProductDTO.class));
+    }
+
+    @Override
+    public Mono<PageResponseDTO<ProductDTO>> getProductPage(PageRequestDTO pageRequest) {
+        return productDAO.getProductPage(pageRequest.getPage(), pageRequest.getSize())
+                .mapNotNull(page ->
+                        new PageResponseDTO<>(
+                                page.getContent().stream()
+                                        .map(x -> conversionService.convert(x, ProductDTO.class)).toList()
+                                , page.getPageable()
+                                , page.getTotalPages()));
     }
 
     @Override
