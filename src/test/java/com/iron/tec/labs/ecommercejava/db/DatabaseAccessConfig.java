@@ -2,6 +2,8 @@ package com.iron.tec.labs.ecommercejava.db;
 
 import com.iron.tec.labs.ecommercejava.db.dao.ProductDAOImpl;
 import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
+import com.iron.tec.labs.ecommercejava.services.MessageService;
+import com.iron.tec.labs.ecommercejava.services.MessageServiceImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +20,8 @@ public class DatabaseAccessConfig {
 	}
 
 	@Bean
-	public ProductDAOImpl productDaoImpl(ProductRepository productRepository){
-		return new ProductDAOImpl(productRepository);
+	public ProductDAOImpl productDaoImpl(ProductRepository productRepository, MessageService messageService){
+		return new ProductDAOImpl(productRepository,messageService);
 	}
 
 }

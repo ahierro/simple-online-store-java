@@ -5,11 +5,13 @@ import com.iron.tec.labs.ecommercejava.db.entities.Product;
 import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
 import com.iron.tec.labs.ecommercejava.exceptions.DuplicateKey;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
+import com.iron.tec.labs.ecommercejava.services.MessageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import reactor.test.StepVerifier;
 
@@ -28,6 +30,10 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
 
     @Autowired
     private ProductRepository productRepository;
+
+
+    @MockBean
+    MessageService messageService;
 
     Product product = null;
 

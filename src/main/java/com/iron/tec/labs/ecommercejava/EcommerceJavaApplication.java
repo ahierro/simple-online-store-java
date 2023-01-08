@@ -24,4 +24,5 @@ public class EcommerceJavaApplication {
 	public void setTimeZone() {
 		TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"));
 	}
+
 }
