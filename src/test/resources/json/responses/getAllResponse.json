@@ -3,26 +3,20 @@
     "productId": "baffc3a4-5447-48ab-b9c0-7604e448371d",
     "productName": "Laptop",
     "productDescription": "Laptop 16gb RAM 500gb SDD CPU 8 cores",
-    "brandId": null,
-    "brandName": null,
     "stock": 16,
     "price": 123,
     "smallImageUrl": "https://github.com/1.jpg",
     "bigImageUrl": "https://github.com/2.jpg",
-    "discountId": null,
     "createdAt": null
   },
   {
     "productId": "63466fc5-dccd-43c2-a3c7-4028bd9684bb",
     "productName": "Laptop",
     "productDescription": "Laptop 4gb RAM 320gb SDD CPU 4 cores",
-    "brandId": null,
-    "brandName": null,
     "stock": 16,
     "price": 100,
     "smallImageUrl": "https://github.com/1.jpg",
     "bigImageUrl": "https://github.com/2.jpg",
-    "discountId": null,
     "createdAt": null
   }
 ]

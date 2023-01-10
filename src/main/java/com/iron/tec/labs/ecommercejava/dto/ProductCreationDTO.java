@@ -15,10 +15,8 @@ public class ProductCreationDTO{
     @NotEmpty @UUID private String productId;
     @NotEmpty private String productName;
     @NotEmpty private String productDescription;
-    @UUID private String brandId;
     @PositiveOrZero private Integer stock;
     @Positive private BigDecimal price;
     @NotEmpty @URL private String smallImageUrl;
     @NotEmpty @URL private String bigImageUrl;
-    @UUID private String discountId;
 }

@@ -19,7 +19,7 @@ public class Product extends AuditableEntity {
     private String name;
     private String description;
     private Integer stock;
-    @DecimalMin("100.0")
+    @DecimalMin("1.0")
     @EqualsAndHashCode.Exclude
     private BigDecimal price;
     private String smallImageUrl;
