@@ -1,4 +1,4 @@
-package com.iron.tec.labs.ecommercejava.mappers;
+package com.iron.tec.labs.ecommercejava.mappers.converters;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,11 +1,11 @@
-package com.iron.tec.labs.ecommercejava.config;
+package com.iron.tec.labs.ecommercejava.config.logging;
 
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.ServerWebExchangeDecorator;
 
 public class CustomBodyExchange extends ServerWebExchangeDecorator {
-    private RequestBodyLogger requestBodyLogger;
-    private ResponseBodyLogger responseBodyLogger;
+    private final RequestBodyLogger requestBodyLogger;
+    private final ResponseBodyLogger responseBodyLogger;
 
     public CustomBodyExchange(ServerWebExchange exchange) {
         super(exchange);

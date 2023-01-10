@@ -1,4 +1,4 @@
-package com.iron.tec.labs.ecommercejava.config;
+package com.iron.tec.labs.ecommercejava.config.logging;
 
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.server.reactive.ServerHttpRequest;

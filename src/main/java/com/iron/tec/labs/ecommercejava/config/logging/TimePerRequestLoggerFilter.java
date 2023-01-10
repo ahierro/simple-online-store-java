@@ -1,4 +1,4 @@
-package com.iron.tec.labs.ecommercejava.config;
+package com.iron.tec.labs.ecommercejava.config.logging;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;

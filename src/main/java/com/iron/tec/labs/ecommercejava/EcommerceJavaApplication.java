@@ -1,6 +1,6 @@
 package com.iron.tec.labs.ecommercejava;
 
-import com.iron.tec.labs.ecommercejava.config.RsaKeyProperties;
+import com.iron.tec.labs.ecommercejava.config.security.RsaKeyProperties;
 import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

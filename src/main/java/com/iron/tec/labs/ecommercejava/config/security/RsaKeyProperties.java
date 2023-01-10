@@ -1,4 +1,4 @@
-package com.iron.tec.labs.ecommercejava.config;
+package com.iron.tec.labs.ecommercejava.config.security;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

@@ -1,4 +1,4 @@
-package com.iron.tec.labs.ecommercejava.mappers;
+package com.iron.tec.labs.ecommercejava.mappers.converters;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,18 +8,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.WritingConverter;
 
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @WritingConverter
 @AllArgsConstructor
-public class ListOfStringToJsonConverter implements Converter<List<String>, Json> {
+public class MapToJsonConverter implements Converter<Map<String, Object>, Json> {
 
     private final ObjectMapper objectMapper;
 
     @Override
-    public Json convert(List<String> source) {
+    public Json convert(Map<String, Object> source) {
         try {
             return Json.of(objectMapper.writeValueAsString(source));
         } catch (JsonProcessingException e) {

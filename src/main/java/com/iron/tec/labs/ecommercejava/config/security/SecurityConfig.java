@@ -1,4 +1,4 @@
-package com.iron.tec.labs.ecommercejava.config;
+package com.iron.tec.labs.ecommercejava.config.security;
 
 import com.iron.tec.labs.ecommercejava.db.repository.UserRepository;
 import com.nimbusds.jose.jwk.JWK;

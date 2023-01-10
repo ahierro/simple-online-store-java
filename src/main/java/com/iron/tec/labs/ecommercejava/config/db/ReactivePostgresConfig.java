@@ -1,11 +1,10 @@
-package com.iron.tec.labs.ecommercejava.config;
+package com.iron.tec.labs.ecommercejava.config.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iron.tec.labs.ecommercejava.mappers.JsonToListOfStringConverter;
-import com.iron.tec.labs.ecommercejava.mappers.JsonToMapConverter;
-import com.iron.tec.labs.ecommercejava.mappers.ListOfStringToJsonConverter;
-import com.iron.tec.labs.ecommercejava.mappers.MapToJsonConverter;
-import io.r2dbc.spi.ConnectionFactories;
+import com.iron.tec.labs.ecommercejava.mappers.converters.JsonToListOfStringConverter;
+import com.iron.tec.labs.ecommercejava.mappers.converters.JsonToMapConverter;
+import com.iron.tec.labs.ecommercejava.mappers.converters.ListOfStringToJsonConverter;
+import com.iron.tec.labs.ecommercejava.mappers.converters.MapToJsonConverter;
 import io.r2dbc.spi.ConnectionFactory;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
