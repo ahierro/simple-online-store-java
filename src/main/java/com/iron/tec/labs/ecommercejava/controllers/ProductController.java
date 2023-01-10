@@ -50,8 +50,8 @@ public class ProductController {
     }
 
     @PostMapping()
-    public Mono<ResponseEntity<Void>> createProducts(@RequestBody @Valid ProductCreationDTO productCreationDTO,
-                                                     ServerHttpRequest serverHttpRequest) {
+    public Mono<ResponseEntity<Void>> createProduct(@RequestBody @Valid ProductCreationDTO productCreationDTO,
+                                                    ServerHttpRequest serverHttpRequest) {
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before creating product")))
                 .then(productService.createProduct(productCreationDTO))
@@ -62,8 +62,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public Mono<ResponseEntity<Void>> updateProducts(@PathVariable("id") String id,
-                                                     @RequestBody @Valid ProductUpdateDTO product) {
+    public Mono<ResponseEntity<Void>> updateProduct(@PathVariable("id") String id,
+                                                    @RequestBody @Valid ProductUpdateDTO product) {
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before updating product")))
                 .then(productService.updateProduct(id, product))

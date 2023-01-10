@@ -41,5 +41,18 @@ create unique index ix_users_username on users (username);
 create unique index ix_users_email on users (email);
 --rollback drop table users;
 
+-- changeset alejandro:1672328951074-1
+-- preconditions onFail:HALT onError:HALT
+-- precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM information_schema.tables where table_name = 'category'
+-- comment: Initial creation of table category
+CREATE TABLE "category"
+(
+    "id"              UUID           NOT NULL,
+    "name"            VARCHAR(50)   NOT NULL,
+    "description"     TEXT           NOT NULL,
+    "created_at"      TIMESTAMP WITHOUT TIME ZONE,
+    CONSTRAINT "category_pkey" PRIMARY KEY ("id")
+);
+--rollback drop table category;
 
 

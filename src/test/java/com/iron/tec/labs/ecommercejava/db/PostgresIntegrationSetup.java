@@ -9,20 +9,19 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 public class PostgresIntegrationSetup {
 
-	@Container
-	protected static PostgreSQLContainer<?> postgresqlContainer
-			= new PostgreSQLContainer<>("postgres:15.1-alpine3.17");
+    public static PostgreSQLContainer<?> createContainer() {
+        return new PostgreSQLContainer<>("postgres:15.1-alpine3.17");
+    }
 
-	static {
-		postgresqlContainer.withInitScript("schema.sql");
-	}
+    public static void init(PostgreSQLContainer<?> postgresqlContainer) {
+        postgresqlContainer.withInitScript("schema.sql");
+    }
 
-	@DynamicPropertySource
-	public static void overrideProps(DynamicPropertyRegistry registry) {
-		registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://" + postgresqlContainer.getHost() + ":"
-				+ postgresqlContainer.getFirstMappedPort() + "/" + postgresqlContainer.getDatabaseName());
-		registry.add("spring.r2dbc.username", () -> "test");
-		registry.add("spring.r2dbc.password", () -> "test");
-	}
+    public static void overrideProperties(PostgreSQLContainer<?> postgresqlContainer, DynamicPropertyRegistry registry) {
+        registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://" + postgresqlContainer.getHost() + ":"
+                + postgresqlContainer.getFirstMappedPort() + "/" + postgresqlContainer.getDatabaseName());
+        registry.add("spring.r2dbc.username", () -> "test");
+        registry.add("spring.r2dbc.password", () -> "test");
+    }
 
 }

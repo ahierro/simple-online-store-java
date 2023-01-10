@@ -32,10 +32,10 @@ class AuthControllerTest {
     @MockBean
     ReactiveAuthenticationManager authenticationManager;
 
-    @Value("classpath:json/requests/loginRequest.json")
+    @Value("classpath:json/user/loginRequest.json")
     Resource loginRequest;
 
-    @Value("classpath:json/requests/signUpRequest.json")
+    @Value("classpath:json/user/signUpRequest.json")
     Resource signUpRequest;
 
     @Test

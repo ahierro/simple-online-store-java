@@ -13,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
@@ -24,6 +28,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataR2dbcTest
 class ProductDAOImplTest extends PostgresIntegrationSetup {
+
+    @Container
+    protected static PostgreSQLContainer<?> postgresqlContainer = createContainer();
+
+    static {
+        init(postgresqlContainer);
+    }
+    @DynamicPropertySource
+    public static void overrideProps(DynamicPropertyRegistry registry) {
+        overrideProperties(postgresqlContainer,registry);
+    }
 
     @Autowired
     private ProductDAO productDAO;

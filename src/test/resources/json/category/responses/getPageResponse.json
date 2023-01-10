@@ -1,0 +1,13 @@
+{
+  "content": [
+    {
+      "id": "f133d126-6cb1-4759-af63-9972f106a51d",
+      "name": "Test",
+      "description": "Test2",
+      "createdAt": "2023-01-05T09:50:06.912024"
+    }
+  ],
+  "totalPages": 2,
+  "totalElements": 2,
+  "number": 0
+}

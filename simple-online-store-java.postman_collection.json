@@ -7,204 +7,372 @@
 	},
 	"item": [
 		{
-			"name": "get products",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{jwt_token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/v1/product",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"v1",
-						"product"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get products Paged",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{jwt_token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/v1/product/page?page=0&size=1",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"v1",
-						"product",
-						"page"
-					],
-					"query": [
-						{
-							"key": "page",
-							"value": "0"
+			"name": "products",
+			"item": [
+				{
+					"name": "get products",
+					"request": {
+						"auth": {
+							"type": "noauth"
 						},
-						{
-							"key": "size",
-							"value": "1"
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/product",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"product"
+							]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "get products Paged",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/product/page?page=0&size=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"product",
+								"page"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get product by id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/product/f833d126-6cb1-4759-af63-9972f106a50d",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"product",
+								"f833d126-6cb1-4759-af63-9972f106a50d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "insert product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\": \"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3\",\r\n    \"productName\": \"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3\",\r\n    \"productDescription\": \"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3\",\r\n    \"stock\": 0,\r\n    \"price\": 1,\r\n    \"smallImageUrl\": \"https://www.youtube.com/\",\r\n    \"bigImageUrl\": \"https://www.youtube.com/\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/product",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productName\": \"updated6\",\r\n    \"productDescription\": \"updated\",\r\n    \"stock\": 0,\r\n    \"price\": 1,\r\n    \"smallImageUrl\": \"https://www.youtube.com/\",\r\n    \"bigImageUrl\": \"https://www.youtube.com/\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/product/0d3302bb-ce9a-4cc2-913c-3cf62799c4d3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"product",
+								"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/product/0d3302bb-ce9a-4cc2-913c-3cf62799c4d3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"product",
+								"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "get product by id",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{jwt_token}}",
-							"type": "string"
+			"name": "categories",
+			"item": [
+				{
+					"name": "get categories",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/category",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"category"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/v1/product/f833d126-6cb1-4759-af63-9972f106a50d",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"v1",
-						"product",
-						"f833d126-6cb1-4759-af63-9972f106a50d"
-					]
+				{
+					"name": "get categories Paged",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/category/page?page=0&size=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"category",
+								"page"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get category by id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/category/f833d126-6cb1-4759-af63-9972f106a51d",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"category",
+								"f833d126-6cb1-4759-af63-9972f106a51d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "insert category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"f833d126-6cb1-4759-af63-9972f106a51d\",\r\n  \"name\": \"Motherboards\",\r\n  \"description\": \"Motherboards\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/category",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Motherboards 1\",\r\n  \"description\": \"Motherboards 1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/category/f833d126-6cb1-4759-af63-9972f106a51d",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"category",
+								"f833d126-6cb1-4759-af63-9972f106a51d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/category/f833d126-6cb1-4759-af63-9972f106a51d",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"category",
+								"f833d126-6cb1-4759-af63-9972f106a51d"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "insert product",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{jwt_token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"productId\": \"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3\",\r\n    \"productName\": \"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3\",\r\n    \"productDescription\": \"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3\",\r\n    \"stock\": 0,\r\n    \"price\": 1,\r\n    \"smallImageUrl\": \"https://www.youtube.com/\",\r\n    \"bigImageUrl\": \"https://www.youtube.com/\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/v1/product",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"v1",
-						"product"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "update product",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{jwt_token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"productName\": \"updated6\",\r\n    \"productDescription\": \"updated\",\r\n    \"stock\": 0,\r\n    \"price\": 1,\r\n    \"smallImageUrl\": \"https://www.youtube.com/\",\r\n    \"bigImageUrl\": \"https://www.youtube.com/\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/v1/product/0d3302bb-ce9a-4cc2-913c-3cf62799c4d3",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"v1",
-						"product",
-						"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "delete product",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{jwt_token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/v1/product/0d3302bb-ce9a-4cc2-913c-3cf62799c4d3",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"v1",
-						"product",
-						"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3"
-					]
-				}
-			},
-			"response": []
+			]
 		},
 		{
 			"name": "Sign Up",

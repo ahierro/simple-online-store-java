@@ -41,19 +41,19 @@ class ProductControllerTest {
     @MockBean
     ProductService productService;
 
-    @Value("classpath:json/responses/getAllResponse.json")
+    @Value("classpath:json/product/responses/getAllResponse.json")
     Resource getAllResponse;
 
-    @Value("classpath:json/responses/getProductPageResponse.json")
+    @Value("classpath:json/product/responses/getPageResponse.json")
     Resource getProductPageResponse;
 
-    @Value("classpath:json/responses/getProductByIdResponse.json")
+    @Value("classpath:json/product/responses/getByIdResponse.json")
     Resource getProductByIdResponse;
 
-    @Value("classpath:json/requests/createProductRequest.json")
+    @Value("classpath:json/product/requests/createRequest.json")
     Resource createProductRequest;
 
-    @Value("classpath:json/requests/updateProductRequest.json")
+    @Value("classpath:json/product/requests/updateRequest.json")
     Resource updateProductRequest;
 
     @Test

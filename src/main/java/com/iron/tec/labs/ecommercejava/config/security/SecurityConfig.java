@@ -36,6 +36,8 @@ public class SecurityConfig {
         http.authorizeExchange()
                 .pathMatchers(HttpMethod.POST, "/login").permitAll()
                 .pathMatchers(HttpMethod.POST, "/signup").permitAll()
+                .pathMatchers(HttpMethod.GET, "/v1/product/**").permitAll()
+                .pathMatchers(HttpMethod.GET, "/v1/category/**").permitAll()
                 .pathMatchers(HttpMethod.POST, "/v1/**").hasAuthority("SCOPE_ROLE_ADMIN")
                 .pathMatchers(HttpMethod.PUT, "/v1/**").hasAuthority("SCOPE_ROLE_ADMIN")
                 .pathMatchers(HttpMethod.DELETE, "/v1/**").hasAuthority("SCOPE_ROLE_ADMIN")
