@@ -2,7 +2,7 @@ package com.iron.tec.labs.ecommercejava.db.dao;
 
 import com.iron.tec.labs.ecommercejava.db.entities.Category;
 import com.iron.tec.labs.ecommercejava.db.repository.CategoryRepository;
-import com.iron.tec.labs.ecommercejava.exceptions.DuplicateKey;
+import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.MessageService;
 import lombok.AllArgsConstructor;
@@ -24,7 +24,7 @@ import static com.iron.tec.labs.ecommercejava.constants.Constants.*;
 @AllArgsConstructor
 @Transactional
 @Log4j2
-public class CategoryDAOImpl implements CategoryDAO{
+public class CategoryDAOImpl implements CategoryDAO {
 
     private final CategoryRepository categoryRepository;
     private final MessageService messageService;
@@ -52,7 +52,7 @@ public class CategoryDAOImpl implements CategoryDAO{
     @Override
     public Mono<Category> create(Category product) {
         return categoryRepository.save(product).doOnError(DataIntegrityViolationException.class, e -> {
-            throw new DuplicateKey(messageService.getRequestLocalizedMessage(ERROR_CATEGORY,
+            throw new Conflict(messageService.getRequestLocalizedMessage(ERROR_CATEGORY,
                     ALREADY_EXISTS, product.getId().toString()));
         });
     }
@@ -67,10 +67,14 @@ public class CategoryDAOImpl implements CategoryDAO{
 
     @Override
     public Mono<Void> delete(String id) {
-        return this.categoryRepository.deleteProductById(UUID.fromString(id)).flatMap(numberOfDeletedRows -> {
-            if (numberOfDeletedRows == 0)
-                return Mono.error(new NotFound(messageService.getRequestLocalizedMessage(ERROR_CATEGORY, NOT_FOUND, id)));
-            return Mono.empty();
-        });
+        return this.categoryRepository.deleteProductById(UUID.fromString(id))
+                .doOnError(DataIntegrityViolationException.class, e -> {
+                    throw new Conflict(messageService.getRequestLocalizedMessage(ERROR_CATEGORY, CONFLICT));
+                })
+                .flatMap(numberOfDeletedRows -> {
+                    if (numberOfDeletedRows == 0)
+                        return Mono.error(new NotFound(messageService.getRequestLocalizedMessage(ERROR_CATEGORY, NOT_FOUND, id)));
+                    return Mono.empty();
+                });
     }
 }

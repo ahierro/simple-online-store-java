@@ -3,7 +3,7 @@ package com.iron.tec.labs.ecommercejava.controllers;
 import com.iron.tec.labs.ecommercejava.dto.PageRequestDTO;
 import com.iron.tec.labs.ecommercejava.dto.PageResponseDTO;
 import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
-import com.iron.tec.labs.ecommercejava.exceptions.DuplicateKey;
+import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.ProductService;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
@@ -55,35 +54,6 @@ class ProductControllerTest {
 
     @Value("classpath:json/product/requests/updateRequest.json")
     Resource updateProductRequest;
-
-    @Test
-    @WithMockUser(authorities = "SCOPE_ROLE_USER")
-    void getAll() {
-        when(productService.getAll()).thenReturn(Flux.just(ProductDTO.builder()
-                        .productId("baffc3a4-5447-48ab-b9c0-7604e448371d")
-                        .productName("Laptop")
-                        .stock(16)
-                        .price(BigDecimal.valueOf(123))
-                        .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
-                        .smallImageUrl("https://github.com/1.jpg")
-                        .bigImageUrl("https://github.com/2.jpg")
-                        .build(),
-                ProductDTO.builder()
-                        .productId("63466fc5-dccd-43c2-a3c7-4028bd9684bb")
-                        .productName("Laptop")
-                        .stock(16)
-                        .price(BigDecimal.valueOf(100))
-                        .productDescription("Laptop 4gb RAM 320gb SDD CPU 4 cores")
-                        .smallImageUrl("https://github.com/1.jpg")
-                        .bigImageUrl("https://github.com/2.jpg")
-                        .build()));
-        testClient.get().uri("/v1/product")
-                .exchange()
-                .expectStatus()
-                .is2xxSuccessful()
-                .expectBody()
-                .json(ResourceUtils.readFile(getAllResponse));
-    }
 
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_USER")
@@ -154,7 +124,7 @@ class ProductControllerTest {
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void createExistingProduct() {
 
-        when(productService.createProduct(any())).thenThrow(DuplicateKey.class);
+        when(productService.createProduct(any())).thenThrow(Conflict.class);
 
         testClient.post().uri("/v1/product")
                 .contentType(MediaType.APPLICATION_JSON)

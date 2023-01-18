@@ -25,14 +25,6 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping()
-    public Flux<ProductDTO> getProducts() {
-        return Mono.empty()
-                .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before products obtained")))
-                .thenMany(productService.getAll())
-                .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Products obtained")));
-    }
-
     @GetMapping("/page")
     public Mono<PageResponseDTO<ProductDTO>> getProductsPaged(@Valid PageRequestDTO pageRequest) {
         return Mono.empty()

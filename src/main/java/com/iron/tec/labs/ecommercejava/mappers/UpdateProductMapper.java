@@ -11,6 +11,7 @@ import org.springframework.lang.NonNull;
 public interface UpdateProductMapper extends Converter<ProductUpdateDTO, Product>  {
     @Mapping(target = "description", source = "productDescription")
     @Mapping(target = "name", source = "productName")
+    @Mapping(target = "idCategory", source = "categoryId")
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
     Product convert(@NonNull ProductUpdateDTO product);
 

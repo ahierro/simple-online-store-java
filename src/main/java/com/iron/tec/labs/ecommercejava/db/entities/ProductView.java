@@ -5,20 +5,23 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
-//import org.springframework.data.relational.core.sql.Table;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Table("PRODUCT")
+@Table("PRODUCT_VIEW")
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class Product extends AuditableEntity {
-
-    private String name;
-    private String description;
+@EqualsAndHashCode
+public class ProductView {
+    @Id
+    private UUID id;
+    private String productName;
+    private String productDescription;
     private Integer stock;
     @DecimalMin("1.0")
     @EqualsAndHashCode.Exclude
@@ -32,4 +35,10 @@ public class Product extends AuditableEntity {
         return price != null ? price.stripTrailingZeros() : null;
     }
     private UUID idCategory;
+    private String categoryName;
+    private String categoryDescription;
+    @EqualsAndHashCode.Exclude
+    protected LocalDateTime productCreatedAt;
+    @EqualsAndHashCode.Exclude
+    protected LocalDateTime categoryCreatedAt;
 }

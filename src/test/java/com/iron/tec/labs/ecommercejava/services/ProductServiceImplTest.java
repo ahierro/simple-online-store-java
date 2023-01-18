@@ -2,6 +2,7 @@ package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.db.dao.ProductDAO;
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
+import com.iron.tec.labs.ecommercejava.db.entities.ProductView;
 import com.iron.tec.labs.ecommercejava.dto.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -128,65 +129,27 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testGetAll() {
-        when(productDAO.getAll()).thenReturn(Flux.just(Product.builder()
-                        .id(UUID.randomUUID())
-                        .name("Laptop")
-                        .stock(16)
-                        .price(BigDecimal.valueOf(123))
-                        .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
-                        .smallImageUrl("https://github.com/1.jpg")
-                        .bigImageUrl("https://github.com/2.jpg")
-                        .build(),
-                Product.builder()
-                        .id(UUID.randomUUID())
-                        .name("Laptop")
-                        .stock(16)
-                        .price(BigDecimal.valueOf(123))
-                        .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
-                        .smallImageUrl("https://github.com/1.jpg")
-                        .bigImageUrl("https://github.com/2.jpg")
-                        .build()));
-
-        when(conversionService.convert(any(Product.class), eq(ProductDTO.class)))
-                .thenAnswer(x -> ProductDTO.builder()
-                        .productId(UUID.randomUUID().toString())
-                        .productName("Laptop")
-                        .stock(16)
-                        .price(BigDecimal.valueOf(123))
-                        .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
-                        .smallImageUrl("https://github.com/1.jpg")
-                        .bigImageUrl("https://github.com/2.jpg")
-                        .build());
-
-        StepVerifier.create(productService.getAll())
-                .expectNextCount(2)
-                .verifyComplete();
-
-    }
-
-    @Test
     void getProductPage() {
-        when(productDAO.getProductPage(0, 1)).thenReturn(Mono.just(new PageImpl<>(
-                Arrays.asList(Product.builder()
+        when(productDAO.getProductViewPage(0, 1)).thenReturn(Mono.just(new PageImpl<>(
+                Arrays.asList(ProductView.builder()
                                 .id(UUID.randomUUID())
-                                .name("Laptop")
+                                .productName("Laptop")
                                 .stock(16)
                                 .price(BigDecimal.valueOf(123))
-                                .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                                .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
                                 .smallImageUrl("https://github.com/1.jpg")
                                 .bigImageUrl("https://github.com/2.jpg")
                                 .build(),
-                        Product.builder()
+                        ProductView.builder()
                                 .id(UUID.randomUUID())
-                                .name("Laptop")
+                                .productName("Laptop")
                                 .stock(16)
                                 .price(BigDecimal.valueOf(123))
-                                .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                                .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
                                 .smallImageUrl("https://github.com/1.jpg")
                                 .bigImageUrl("https://github.com/2.jpg")
                                 .build()), PageRequest.of(0,1),2)));
-        when(conversionService.convert(any(Product.class), eq(ProductDTO.class)))
+        when(conversionService.convert(any(ProductView.class), eq(ProductDTO.class)))
                 .thenAnswer(x -> ProductDTO.builder()
                         .productId(UUID.randomUUID().toString())
                         .productName("Laptop")
@@ -210,26 +173,15 @@ class ProductServiceImplTest {
 
     @Test
     void testGetById() {
-        when(productDAO.getById(any(UUID.class))).thenReturn(Mono.just(Product.builder()
-                .id(UUID.randomUUID())
-                .name("Laptop")
+        when(productDAO.findById(any(UUID.class))).thenReturn(Mono.just(ProductDTO.builder()
+                .productId(UUID.randomUUID().toString())
+                .productName("Laptop")
                 .stock(16)
                 .price(BigDecimal.valueOf(123))
-                .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
                 .smallImageUrl("https://github.com/1.jpg")
                 .bigImageUrl("https://github.com/2.jpg")
                 .build()));
-
-        when(conversionService.convert(any(Product.class), eq(ProductDTO.class)))
-                .thenAnswer(x -> ProductDTO.builder()
-                        .productId(UUID.randomUUID().toString())
-                        .productName("Laptop")
-                        .stock(16)
-                        .price(BigDecimal.valueOf(123))
-                        .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
-                        .smallImageUrl("https://github.com/1.jpg")
-                        .bigImageUrl("https://github.com/2.jpg")
-                        .build());
 
         StepVerifier.create(productService.getById(UUID.randomUUID()))
                 .expectNextCount(1)

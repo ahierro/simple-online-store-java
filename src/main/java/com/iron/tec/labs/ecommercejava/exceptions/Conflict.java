@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.CONFLICT)
-public class DuplicateKey extends RuntimeException {
-    public DuplicateKey() {
+public class Conflict extends RuntimeException {
+    public Conflict() {
     }
 
-    public DuplicateKey(String message) {
+    public Conflict(String message) {
         super(message);
     }
 }

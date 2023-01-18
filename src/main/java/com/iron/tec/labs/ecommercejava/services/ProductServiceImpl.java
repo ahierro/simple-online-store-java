@@ -19,8 +19,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Mono<ProductDTO> getById(UUID id) {
-        return productDAO.getById(id)
-                .mapNotNull(product -> conversionService.convert(product, ProductDTO.class));
+        return productDAO.findById(id);
     }
 
     public Mono<ProductDTO> createProduct(ProductCreationDTO productCreationDTO) {
@@ -39,13 +38,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Flux<ProductDTO> getAll() {
-        return productDAO.getAll().mapNotNull(product -> conversionService.convert(product, ProductDTO.class));
-    }
-
-    @Override
     public Mono<PageResponseDTO<ProductDTO>> getProductPage(PageRequestDTO pageRequest) {
-        return productDAO.getProductPage(pageRequest.getPage(), pageRequest.getSize())
+        return productDAO.getProductViewPage(pageRequest.getPage(), pageRequest.getSize())
                 .mapNotNull(page ->
                         new PageResponseDTO<>(
                                 page.getContent().stream()
@@ -53,7 +47,6 @@ public class ProductServiceImpl implements ProductService {
                                 , page.getPageable()
                                 , page.getTotalPages()));
     }
-
     @Override
     public Mono<Void> deleteProduct(String id) {
         return productDAO.delete(id);

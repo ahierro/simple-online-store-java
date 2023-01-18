@@ -17,4 +17,5 @@ public class ProductDTO {
     private String smallImageUrl;
     private String bigImageUrl;
     private LocalDateTime createdAt;
+    private CategoryDTO category;
 }

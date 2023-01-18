@@ -3,7 +3,7 @@ package com.iron.tec.labs.ecommercejava.controllers;
 import com.iron.tec.labs.ecommercejava.dto.CategoryDTO;
 import com.iron.tec.labs.ecommercejava.dto.PageRequestDTO;
 import com.iron.tec.labs.ecommercejava.dto.PageResponseDTO;
-import com.iron.tec.labs.ecommercejava.exceptions.DuplicateKey;
+import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.CategoryService;
 import org.junit.jupiter.api.Test;
@@ -133,7 +133,7 @@ class CategoryControllerTest {
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void createExistingCategory() {
 
-        when(categoryService.createCategory(any())).thenThrow(DuplicateKey.class);
+        when(categoryService.createCategory(any())).thenThrow(Conflict.class);
 
         testClient.post().uri("/v1/category")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -1,9 +1,12 @@
 package com.iron.tec.labs.ecommercejava.db.dao;
 
 import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
+import com.iron.tec.labs.ecommercejava.db.entities.Category;
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
+import com.iron.tec.labs.ecommercejava.db.entities.ProductView;
+import com.iron.tec.labs.ecommercejava.db.repository.CategoryRepository;
 import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
-import com.iron.tec.labs.ecommercejava.exceptions.DuplicateKey;
+import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.MessageService;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +26,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataR2dbcTest
 class ProductDAOImplTest extends PostgresIntegrationSetup {
@@ -35,9 +37,10 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
     static {
         init(postgresqlContainer);
     }
+
     @DynamicPropertySource
     public static void overrideProps(DynamicPropertyRegistry registry) {
-        overrideProperties(postgresqlContainer,registry);
+        overrideProperties(postgresqlContainer, registry);
     }
 
     @Autowired
@@ -46,15 +49,26 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
 
     @MockBean
     MessageService messageService;
 
     Product product = null;
+    Category category = null;
 
     @BeforeEach
     public void setup() {
         StepVerifier.create(productRepository.deleteAll()).verifyComplete();
+        StepVerifier.create(categoryRepository.deleteAll()).verifyComplete();
+
+        category = Category.builder()
+                .id(UUID.fromString("9ea1e0f8-27ad-4915-9b49-9845b51f06d4"))
+                .name("Motherboards")
+                .description("A motherboard is the main printed circuit board (PCB) in general-purpose computers and other expandable systems.")
+                .build();
 
         product = Product.builder()
                 .id(UUID.randomUUID())
@@ -64,7 +78,13 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
                 .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
                 .smallImageUrl("https://github.com/1.jpg")
                 .bigImageUrl("https://github.com/2.jpg")
+                .idCategory(category.getId())
                 .build();
+
+        StepVerifier.create(categoryRepository.save(category)
+                        .thenMany(categoryRepository.findAll()))
+                .expectNextCount(1)
+                .verifyComplete();
     }
 
     @Test
@@ -86,7 +106,7 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
         product.setCreatedAt(null);
         StepVerifier.create(productDAO.create(product)
                         .thenMany(productRepository.findAll()))
-                .verifyError(DuplicateKey.class);
+                .verifyError(Conflict.class);
     }
 
     @Test
@@ -138,50 +158,35 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
     }
 
     @Test
-    @DisplayName("Create a product and get all products to verify if it is returned")
-    void getAll_ok() {
-        create_ok();
-        StepVerifier.create(productDAO.getAll())
-                .expectNextCount(1)
-                .verifyComplete();
-    }
-
-    @Test
     @DisplayName("Create product and get a product page to verify if it is returned")
     void getPage_ok() {
         create_ok();
-        PageImpl<Product> page = productDAO.getProductPage(0, 2).block();
+        PageImpl<ProductView> page = productDAO.getProductViewPage(0, 2).block();
         assertNotNull(page);
-        assertEquals(1,page.getTotalPages());
-        assertEquals(0,page.getNumber());
-        assertEquals(1,page.getTotalElements());
+        assertEquals(1, page.getTotalPages());
+        assertEquals(0, page.getNumber());
+        assertEquals(1, page.getTotalElements());
         assertNotNull(page.getContent());
-        assertEquals(1,page.getContent().size());
+        assertEquals(1, page.getContent().size());
     }
+
     @Test
     @DisplayName("Get a product page when the table is empty")
     void getPage_empty() {
         PageImpl<Product> page = productDAO.getProductPage(0, 2).block();
         assertNotNull(page);
-        assertEquals(0,page.getTotalPages());
-        assertEquals(0,page.getNumber());
-        assertEquals(0,page.getTotalElements());
+        assertEquals(0, page.getTotalPages());
+        assertEquals(0, page.getNumber());
+        assertEquals(0, page.getTotalElements());
         assertNotNull(page.getContent());
-        assertEquals(0,page.getContent().size());
-    }
-    @Test
-    @DisplayName("Get all products on an empty table to verify that it is not returned")
-    void getAll_empty_ok() {
-        StepVerifier.create(productDAO.getAll())
-                .expectNextCount(0)
-                .verifyComplete();
+        assertEquals(0, page.getContent().size());
     }
 
     @Test
     @DisplayName("Create a product and get product by id to verify if it is returned")
-    void getById_ok() {
+    void findById_ok() {
         create_ok();
-        StepVerifier.create(productDAO.getById(product.getId()))
+        StepVerifier.create(productDAO.findById(product.getId()))
                 .expectNextCount(1)
                 .verifyComplete();
     }
@@ -189,7 +194,7 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
     @Test
     @DisplayName("Get non existing product")
     void getById_notFound() {
-        StepVerifier.create(productDAO.getById(UUID.randomUUID()))
+        StepVerifier.create(productDAO.findById(UUID.randomUUID()))
                 .verifyError(NotFound.class);
     }
 }

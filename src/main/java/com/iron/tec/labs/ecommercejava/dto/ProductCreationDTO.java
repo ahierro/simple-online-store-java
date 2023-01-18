@@ -19,4 +19,5 @@ public class ProductCreationDTO{
     @Positive private BigDecimal price;
     @NotEmpty @URL private String smallImageUrl;
     @NotEmpty @URL private String bigImageUrl;
+    @NotEmpty @UUID private String categoryId;
 }

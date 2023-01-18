@@ -6,6 +6,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
+import org.hibernate.validator.constraints.UUID;
 
 import java.math.BigDecimal;
 @Data
@@ -17,4 +18,5 @@ public class ProductUpdateDTO {
     @Positive private BigDecimal price;
     @NotEmpty @URL private String smallImageUrl;
     @NotEmpty @URL private String bigImageUrl;
+    @NotEmpty @UUID private String categoryId;
 }

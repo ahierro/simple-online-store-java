@@ -2,8 +2,11 @@ package com.iron.tec.labs.ecommercejava.db.dao;
 
 import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
 import com.iron.tec.labs.ecommercejava.db.entities.Category;
+import com.iron.tec.labs.ecommercejava.db.entities.Product;
+import com.iron.tec.labs.ecommercejava.db.entities.ProductView;
 import com.iron.tec.labs.ecommercejava.db.repository.CategoryRepository;
-import com.iron.tec.labs.ecommercejava.exceptions.DuplicateKey;
+import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
+import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.MessageService;
 import org.junit.jupiter.api.*;
@@ -17,6 +20,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import reactor.test.StepVerifier;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -42,6 +46,9 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
     private CategoryDAO categoryDAO;
 
     @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
     private CategoryRepository categoryRepository;
 
 
@@ -52,6 +59,7 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
 
     @BeforeEach
     public void setup() {
+        StepVerifier.create(productRepository.deleteAll()).verifyComplete();
         StepVerifier.create(categoryRepository.deleteAll()).verifyComplete();
 
         category = Category.builder()
@@ -80,7 +88,7 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
         category.setCreatedAt(null);
         StepVerifier.create(categoryDAO.create(category)
                         .thenMany(categoryRepository.findAll()))
-                .verifyError(DuplicateKey.class);
+                .verifyError(Conflict.class);
     }
 
     @Test
@@ -116,6 +124,26 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
                         .then(categoryRepository.findById(category.getId())))
                 .expectNextCount(0)
                 .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Delete a category associated to products should throw exception")
+    void delete_with_conflict() {
+        create_ok();
+        productRepository.save(Product.builder()
+                .id(UUID.randomUUID())
+                .name("Laptop")
+                .stock(16)
+                .price(BigDecimal.valueOf(123))
+                .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                .smallImageUrl("https://github.com/1.jpg")
+                .bigImageUrl("https://github.com/2.jpg")
+                .idCategory(category.getId())
+                .build()).block();
+        assert category.getId() != null;
+        StepVerifier.create(categoryDAO.delete(category.getId().toString())
+                        .then(categoryRepository.findById(category.getId())))
+                .verifyError(Conflict.class);
     }
 
     @Test

@@ -12,6 +12,7 @@ public interface SaveProductMapper extends Converter<ProductCreationDTO, Product
     @Mapping(target = "description", source = "productDescription")
     @Mapping(target = "name", source = "productName")
     @Mapping(target = "id", source = "productId")
+    @Mapping(target = "idCategory", source = "categoryId")
     Product convert(@NonNull ProductCreationDTO product);
 
 }
