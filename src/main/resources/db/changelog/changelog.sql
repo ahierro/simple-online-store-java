@@ -1,5 +1,19 @@
 -- liquibase formatted sql
 
+-- changeset alejandro:1672328951071-1
+-- preconditions onFail:HALT onError:HALT
+-- precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM information_schema.tables where table_name = 'category'
+-- comment: Initial creation of table category
+CREATE TABLE "category"
+(
+    "id"              UUID           NOT NULL,
+    "name"            VARCHAR(50)   NOT NULL,
+    "description"     TEXT           NOT NULL,
+    "created_at"      TIMESTAMP WITHOUT TIME ZONE,
+    CONSTRAINT "category_pkey" PRIMARY KEY ("id")
+);
+--rollback drop table category;
+
 -- changeset alejandro:1672328951072-1
 -- preconditions onFail:HALT onError:HALT
 -- precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM information_schema.tables where table_name = 'product'
@@ -14,8 +28,10 @@ CREATE TABLE "product"
     "small_image_url" VARCHAR(255)   NOT NULL,
     "big_image_url"   VARCHAR(255)   NOT NULL,
     "created_at"      TIMESTAMP WITHOUT TIME ZONE,
+    "id_category"     UUID NOT NULL,
     CONSTRAINT "product_pkey" PRIMARY KEY ("id")
 );
+alter table "product" add constraint "p_category_fk" foreign key ("id_category") references "category" ("id");
 --rollback drop table product;
 
 -- changeset alejandro:1672328951073-1
@@ -42,28 +58,6 @@ create unique index ix_users_email on users (email);
 --rollback drop table users;
 
 -- changeset alejandro:1672328951074-1
--- preconditions onFail:HALT onError:HALT
--- precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM information_schema.tables where table_name = 'category'
--- comment: Initial creation of table category
-CREATE TABLE "category"
-(
-    "id"              UUID           NOT NULL,
-    "name"            VARCHAR(50)   NOT NULL,
-    "description"     TEXT           NOT NULL,
-    "created_at"      TIMESTAMP WITHOUT TIME ZONE,
-    CONSTRAINT "category_pkey" PRIMARY KEY ("id")
-);
---rollback drop table category;
-
-
--- changeset alejandro:1672328951075-1
--- preconditions onFail:HALT onError:HALT
--- comment: Initial creation of table category
-ALTER TABLE "product" ADD COLUMN "id_category" UUID;
-alter table "product" add constraint "p_category_fk" foreign key ("id_category") references "category" ("id");
---rollback ALTER TABLE "product" DROP COLUMN "id_category";
-
--- changeset alejandro:1672328951076-1
 -- preconditions onFail:HALT onError:HALT
 -- precondition-sql-check expectedResult:0 SELECT COUNT(*) FROM information_schema.tables where table_name = 'product_view'
 -- comment: Initial creation of table category
