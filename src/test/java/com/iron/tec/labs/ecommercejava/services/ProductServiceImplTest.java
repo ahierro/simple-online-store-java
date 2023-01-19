@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -130,7 +129,10 @@ class ProductServiceImplTest {
 
     @Test
     void getProductPage() {
-        when(productDAO.getProductViewPage(0, 1)).thenReturn(Mono.just(new PageImpl<>(
+        when(productDAO.getProductViewPage(0, 1,
+                ProductView.builder()
+                .build(),null
+        )).thenReturn(Mono.just(new PageImpl<>(
                 Arrays.asList(ProductView.builder()
                                 .id(UUID.randomUUID())
                                 .productName("Laptop")
@@ -161,7 +163,7 @@ class ProductServiceImplTest {
                         .build());
 
         PageResponseDTO<ProductDTO> page =
-                productService.getProductPage(PageRequestDTO.builder().page(0).size(1).build()).block();
+                productService.getProductPage(ProductPageRequestDTO.builder().page(0).size(1).build()).block();
 
         assertNotNull(page);
         assertEquals(2,page.getTotalPages());

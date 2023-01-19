@@ -34,7 +34,7 @@ public class CategoryController {
     }
 
     @GetMapping("/page")
-    public Mono<PageResponseDTO<CategoryDTO>> getCategoriesPaged(@Valid PageRequestDTO pageRequest) {
+    public Mono<PageResponseDTO<CategoryDTO>> getCategoriesPaged(@Valid ProductPageRequestDTO pageRequest) {
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before categories obtained")))
                 .then(categoryService.getCategoryPage(pageRequest))

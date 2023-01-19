@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -53,7 +54,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     public Mono<Category> create(Category product) {
         return categoryRepository.save(product).doOnError(DataIntegrityViolationException.class, e -> {
             throw new Conflict(messageService.getRequestLocalizedMessage(ERROR_CATEGORY,
-                    ALREADY_EXISTS, product.getId().toString()));
+                    ALREADY_EXISTS, ObjectUtils.nullSafeToString(product.getId())));
         });
     }
 
@@ -61,7 +62,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     public Mono<Category> update(Category product) {
         return categoryRepository.save(product).doOnError(TransientDataAccessResourceException.class, e -> {
             throw new NotFound(messageService.getRequestLocalizedMessage(ERROR_CATEGORY, NOT_FOUND,
-                    product.getId().toString()));
+                    ObjectUtils.nullSafeToString(product.getId())));
         });
     }
 

@@ -2,11 +2,11 @@ package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.db.dao.ProductDAO;
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
+import com.iron.tec.labs.ecommercejava.db.entities.ProductView;
 import com.iron.tec.labs.ecommercejava.dto.*;
 import lombok.AllArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -38,8 +38,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Mono<PageResponseDTO<ProductDTO>> getProductPage(PageRequestDTO pageRequest) {
-        return productDAO.getProductViewPage(pageRequest.getPage(), pageRequest.getSize())
+    public Mono<PageResponseDTO<ProductDTO>> getProductPage(ProductPageRequestDTO pageRequest) {
+        UUID categoryId = (pageRequest.getCategoryId() == null) ? null : UUID.fromString(pageRequest.getCategoryId());
+        return productDAO.getProductViewPage(pageRequest.getPage(), pageRequest.getSize(),
+                        ProductView.builder()
+                                .idCategory(categoryId)
+                                .productDescription(pageRequest.getQueryString()).build(),
+                        pageRequest.getSortByPrice())
                 .mapNotNull(page ->
                         new PageResponseDTO<>(
                                 page.getContent().stream()
@@ -47,6 +52,7 @@ public class ProductServiceImpl implements ProductService {
                                 , page.getPageable()
                                 , page.getTotalPages()));
     }
+
     @Override
     public Mono<Void> deleteProduct(String id) {
         return productDAO.delete(id);

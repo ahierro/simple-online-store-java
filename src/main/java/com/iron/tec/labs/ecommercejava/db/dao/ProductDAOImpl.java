@@ -13,10 +13,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.TransientDataAccessResourceException;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -35,22 +35,16 @@ public class ProductDAOImpl implements ProductDAO {
     private final ProductViewRepository productViewRepository;
 
     @Override
-    public Mono<PageImpl<Product>> getProductPage(int page, int size) {
+    public Mono<Page<ProductView>> getProductViewPage(int page, int size, ProductView productViewExample,Sort.Direction sortByPrice) {
+        ExampleMatcher matcher = ExampleMatcher.matchingAll()
+                .withMatcher("productDescription", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+        Example<ProductView> example = Example.of(productViewExample, matcher);
         PageRequest pageRequest = PageRequest.of(page, size);
-        return this.productRepository.findBy(pageRequest).collectList()
-                .zipWith(this.productRepository.count())
-                .map(t -> new PageImpl<>(t.getT1(), pageRequest, t.getT2()));
-    }
-    @Override
-    public Mono<PageImpl<ProductView>> getProductViewPage(int page, int size) {
-//        ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAny()
-//                .withMatcher("PRODUCT_ID", ExampleMatcher.GenericPropertyMatcher)
-//                .withMatcher("firstName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-//                .withMatcher("lastName", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return this.productViewRepository.findBy(pageRequest).collectList()
-                .zipWith(this.productViewRepository.count())
-                .map(t -> new PageImpl<>(t.getT1(), pageRequest, t.getT2()));
+        return this.productViewRepository.findBy(example,
+                queryFunction ->
+                        queryFunction.sortBy((sortByPrice==null)?Sort.unsorted()
+                                        :Sort.by(new Sort.Order(sortByPrice, PRICE)))
+                        .page(pageRequest));
     }
 
     @Override
@@ -64,7 +58,7 @@ public class ProductDAOImpl implements ProductDAO {
     public Mono<Product> create(Product product) {
         return productRepository.save(product).doOnError(DataIntegrityViolationException.class, e -> {
             throw new Conflict(messageService.getRequestLocalizedMessage(ERROR_PRODUCT,
-                    ALREADY_EXISTS, product.getId().toString()));
+                    ALREADY_EXISTS, ObjectUtils.nullSafeToString(product.getId())));
         });
     }
 
@@ -72,7 +66,7 @@ public class ProductDAOImpl implements ProductDAO {
     public Mono<Product> update(Product product) {
         return productRepository.save(product).doOnError(TransientDataAccessResourceException.class, e -> {
             throw new NotFound(messageService.getRequestLocalizedMessage(ERROR_PRODUCT, NOT_FOUND,
-                    product.getId().toString()));
+                    ObjectUtils.nullSafeToString(product.getId())));
         });
     }
 

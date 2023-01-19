@@ -2,16 +2,18 @@ package com.iron.tec.labs.ecommercejava.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
-public class PageRequestDTO {
+@SuperBuilder
+@NoArgsConstructor
+public abstract class PageRequestDTO {
     @NotNull
     @Min(0)
-    private Integer page;
+    protected Integer page;
     @NotNull
     @Min(1)
-    private Integer size;
+    protected Integer size;
 }

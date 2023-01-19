@@ -44,7 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Mono<PageResponseDTO<CategoryDTO>> getCategoryPage(PageRequestDTO pageRequest) {
+    public Mono<PageResponseDTO<CategoryDTO>> getCategoryPage(ProductPageRequestDTO pageRequest) {
         return productDAO.getPage(pageRequest.getPage(), pageRequest.getSize())
                 .mapNotNull(page ->
                         new PageResponseDTO<>(

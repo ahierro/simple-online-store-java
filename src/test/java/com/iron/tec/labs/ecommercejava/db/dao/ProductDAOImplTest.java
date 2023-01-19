@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -26,7 +26,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataR2dbcTest
 class ProductDAOImplTest extends PostgresIntegrationSetup {
@@ -161,25 +162,13 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
     @DisplayName("Create product and get a product page to verify if it is returned")
     void getPage_ok() {
         create_ok();
-        PageImpl<ProductView> page = productDAO.getProductViewPage(0, 2).block();
+        Page<ProductView> page = productDAO.getProductViewPage(0, 2, ProductView.builder().build(),null).block();
         assertNotNull(page);
         assertEquals(1, page.getTotalPages());
         assertEquals(0, page.getNumber());
         assertEquals(1, page.getTotalElements());
         assertNotNull(page.getContent());
         assertEquals(1, page.getContent().size());
-    }
-
-    @Test
-    @DisplayName("Get a product page when the table is empty")
-    void getPage_empty() {
-        PageImpl<Product> page = productDAO.getProductPage(0, 2).block();
-        assertNotNull(page);
-        assertEquals(0, page.getTotalPages());
-        assertEquals(0, page.getNumber());
-        assertEquals(0, page.getTotalElements());
-        assertNotNull(page.getContent());
-        assertEquals(0, page.getContent().size());
     }
 
     @Test

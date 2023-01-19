@@ -14,7 +14,7 @@ public interface CategoryService {
     Mono<CategoryDTO> updateCategory(String id, CategoryUpdateDTO categoryCreationDTO);
 
     Flux<CategoryDTO> getAll();
-    Mono<PageResponseDTO<CategoryDTO>> getCategoryPage(PageRequestDTO pageRequest);
+    Mono<PageResponseDTO<CategoryDTO>> getCategoryPage(ProductPageRequestDTO pageRequest);
 
     Mono<Void> deleteCategory(String id);
 }

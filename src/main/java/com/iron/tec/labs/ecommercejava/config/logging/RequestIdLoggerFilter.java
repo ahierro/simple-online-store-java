@@ -1,6 +1,5 @@
 package com.iron.tec.labs.ecommercejava.config.logging;
 
-import com.iron.tec.labs.ecommercejava.config.logging.CustomBodyExchange;
 import com.iron.tec.labs.ecommercejava.util.LoggingUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Configuration;

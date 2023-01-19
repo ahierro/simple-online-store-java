@@ -74,5 +74,19 @@ SELECT p.id as id,
        p.id_category as id_category,
        p.created_at as product_created_at,
        c.created_at as category_created_at
-FROM product p INNER JOIN category c on c.id = p.id_category
+FROM product p INNER JOIN category c on c.id = p.id_category;
 --rollback drop view product_view;
+
+-- changeset alejandro:1672328951075-1
+-- preconditions onFail:HALT onError:HALT
+-- precondition-sql-check expectedResult:1 SELECT COUNT(*) FROM information_schema.tables where table_name = 'product'
+-- comment: Initial creation of indexes
+CREATE INDEX ix_product_description ON product (upper(description));
+--rollback DROP INDEX ix_product_description;
+
+-- changeset alejandro:1672328951076-1
+-- preconditions onFail:HALT onError:HALT
+-- precondition-sql-check expectedResult:1 SELECT COUNT(*) FROM information_schema.tables where table_name = 'product'
+-- comment: Initial creation of indexes
+CREATE INDEX ix_product_id_category ON product (id_category);
+--rollback DROP INDEX ix_product_id_category;

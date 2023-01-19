@@ -1,8 +1,8 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
-import com.iron.tec.labs.ecommercejava.dto.PageRequestDTO;
 import com.iron.tec.labs.ecommercejava.dto.PageResponseDTO;
 import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
+import com.iron.tec.labs.ecommercejava.dto.ProductPageRequestDTO;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.ProductService;
@@ -58,7 +58,7 @@ class ProductControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void getProductPage() {
-        when(productService.getProductPage(any(PageRequestDTO.class))).thenReturn(Mono.just(new PageResponseDTO<>(
+        when(productService.getProductPage(any(ProductPageRequestDTO.class))).thenReturn(Mono.just(new PageResponseDTO<>(
                 Collections.singletonList(ProductDTO.builder()
                         .productId("f133d126-6cb1-4759-af63-9972f106a51d")
                         .productName("Test")

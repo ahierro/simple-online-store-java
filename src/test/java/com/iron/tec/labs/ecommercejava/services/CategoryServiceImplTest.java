@@ -153,7 +153,7 @@ class CategoryServiceImplTest {
                         .build());
 
         PageResponseDTO<CategoryDTO> page =
-                categoryService.getCategoryPage(PageRequestDTO.builder().page(0).size(1).build()).block();
+                categoryService.getCategoryPage(ProductPageRequestDTO.builder().page(0).size(1).build()).block();
 
         assertNotNull(page);
         assertEquals(2,page.getTotalPages());

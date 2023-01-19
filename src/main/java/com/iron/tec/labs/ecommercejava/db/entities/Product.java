@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.relational.core.mapping.Table;
-//import org.springframework.data.relational.core.sql.Table;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 

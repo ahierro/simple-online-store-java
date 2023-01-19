@@ -5,7 +5,6 @@ import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;

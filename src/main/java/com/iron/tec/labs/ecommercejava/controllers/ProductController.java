@@ -9,7 +9,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
@@ -26,7 +25,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/page")
-    public Mono<PageResponseDTO<ProductDTO>> getProductsPaged(@Valid PageRequestDTO pageRequest) {
+    public Mono<PageResponseDTO<ProductDTO>> getProductsPaged(@Valid ProductPageRequestDTO pageRequest) {
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before products obtained")))
                 .then(productService.getProductPage(pageRequest))

@@ -3,7 +3,6 @@ package com.iron.tec.labs.ecommercejava.db.dao;
 import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
 import com.iron.tec.labs.ecommercejava.db.entities.Category;
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
-import com.iron.tec.labs.ecommercejava.db.entities.ProductView;
 import com.iron.tec.labs.ecommercejava.db.repository.CategoryRepository;
 import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
