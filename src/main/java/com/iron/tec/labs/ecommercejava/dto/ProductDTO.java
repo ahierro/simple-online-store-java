@@ -18,4 +18,6 @@ public class ProductDTO {
     private String bigImageUrl;
     private LocalDateTime createdAt;
     private CategoryDTO category;
+    private Boolean deleted;
+
 }

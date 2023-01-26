@@ -1,4 +1,4 @@
-package com.iron.tec.labs.ecommercejava.mappers;
+package com.iron.tec.labs.ecommercejava.mappers.product;
 
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
 import com.iron.tec.labs.ecommercejava.dto.ProductUpdateDTO;
@@ -11,6 +11,7 @@ import org.springframework.lang.NonNull;
 public interface UpdateProductMapper extends Converter<ProductUpdateDTO, Product>  {
     @Mapping(target = "description", source = "productDescription")
     @Mapping(target = "name", source = "productName")
+    @Mapping(target = "deleted", source = "deleted", defaultValue = "false")
     @Mapping(target = "idCategory", source = "categoryId")
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
     Product convert(@NonNull ProductUpdateDTO product);

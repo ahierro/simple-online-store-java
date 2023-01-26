@@ -1,4 +1,4 @@
-package com.iron.tec.labs.ecommercejava.mappers;
+package com.iron.tec.labs.ecommercejava.mappers.product;
 
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
 import com.iron.tec.labs.ecommercejava.dto.ProductCreationDTO;

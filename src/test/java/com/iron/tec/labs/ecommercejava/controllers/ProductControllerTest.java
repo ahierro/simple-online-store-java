@@ -2,7 +2,6 @@ package com.iron.tec.labs.ecommercejava.controllers;
 
 import com.iron.tec.labs.ecommercejava.dto.PageResponseDTO;
 import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
-import com.iron.tec.labs.ecommercejava.dto.ProductPageRequestDTO;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.ProductService;
@@ -40,9 +39,6 @@ class ProductControllerTest {
     @MockBean
     ProductService productService;
 
-    @Value("classpath:json/product/responses/getAllResponse.json")
-    Resource getAllResponse;
-
     @Value("classpath:json/product/responses/getPageResponse.json")
     Resource getProductPageResponse;
 
@@ -58,7 +54,7 @@ class ProductControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void getProductPage() {
-        when(productService.getProductPage(any(ProductPageRequestDTO.class))).thenReturn(Mono.just(new PageResponseDTO<>(
+        when(productService.getProductPage(any(),any())).thenReturn(Mono.just(new PageResponseDTO<>(
                 Collections.singletonList(ProductDTO.builder()
                         .productId("f133d126-6cb1-4759-af63-9972f106a51d")
                         .productName("Test")
@@ -128,7 +124,7 @@ class ProductControllerTest {
 
         testClient.post().uri("/v1/product")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(ResourceUtils.readFile(createProductRequest))
+                .bodyValue(createProductRequest)
                 .exchange()
                 .expectStatus()
                 .isEqualTo(HttpStatus.CONFLICT);

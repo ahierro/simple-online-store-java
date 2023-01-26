@@ -1,4 +1,4 @@
-package com.iron.tec.labs.ecommercejava.mappers;
+package com.iron.tec.labs.ecommercejava.mappers.category;
 
 import com.iron.tec.labs.ecommercejava.db.entities.Category;
 import com.iron.tec.labs.ecommercejava.dto.CategoryDTO;

@@ -10,7 +10,7 @@
 			"name": "products",
 			"item": [
 				{
-					"name": "get products",
+					"name": "get products page",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -18,28 +18,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/product",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"v1",
-								"product"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get products Paged",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/v1/product/page?page=0&size=1",
+							"raw": "{{baseUrl}}/v1/product/page?page=0&size=10",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -55,7 +34,22 @@
 								},
 								{
 									"key": "size",
-									"value": "1"
+									"value": "10"
+								},
+								{
+									"key": "categoryId",
+									"value": "7836a937-5467-4191-9d2c-b65bba26f64e",
+									"disabled": true
+								},
+								{
+									"key": "sortByPrice",
+									"value": "ASC",
+									"disabled": true
+								},
+								{
+									"key": "queryString",
+									"value": "Asus",
+									"disabled": true
 								}
 							]
 						}
@@ -71,14 +65,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/product/f833d126-6cb1-4759-af63-9972f106a50d",
+							"raw": "{{baseUrl}}/v1/product/1b88712a-f74a-4d2c-ad3e-b4f9a8243cc6",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"v1",
 								"product",
-								"f833d126-6cb1-4759-af63-9972f106a50d"
+								"1b88712a-f74a-4d2c-ad3e-b4f9a8243cc6"
 							]
 						}
 					},
@@ -101,7 +95,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"productId\": \"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3\",\r\n    \"productName\": \"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3\",\r\n    \"productDescription\": \"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3\",\r\n    \"stock\": 0,\r\n    \"price\": 1,\r\n    \"smallImageUrl\": \"https://www.youtube.com/\",\r\n    \"bigImageUrl\": \"https://www.youtube.com/\"\r\n}",
+							"raw": "{\r\n    \"productId\": \"1b88712a-f74a-4d2c-ad3e-b4f9a8243cc6\",\r\n    \"productName\": \"Mother ASUS ROG STRIX B550-XE Gaming Wifi AM4\",\r\n    \"productDescription\": \"Mother ASUS ROG STRIX B550-XE Gaming Wifi AM4 \",\r\n    \"stock\": 2,\r\n    \"price\":4,\r\n    \"smallImageUrl\": \"https://www.youtube.com/small.jpg\",\r\n    \"bigImageUrl\": \"https://www.youtube.com/big.jpg\",\r\n    \"categoryId\": \"7836a937-5467-4191-9d2c-b65bba26f64e\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -138,7 +132,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"productName\": \"updated6\",\r\n    \"productDescription\": \"updated\",\r\n    \"stock\": 0,\r\n    \"price\": 1,\r\n    \"smallImageUrl\": \"https://www.youtube.com/\",\r\n    \"bigImageUrl\": \"https://www.youtube.com/\"\r\n}",
+							"raw": "{\r\n    \"productName\": \"Mother ASUS ROG STRIX B550-XE Gaming Wifi AM4\",\r\n    \"productDescription\": \"Mother ASUS ROG STRIX B550-XE Gaming Wifi AM4 \",\r\n    \"stock\": 2,\r\n    \"price\": 55.00,\r\n    \"smallImageUrl\": \"https://www.youtube.com/small.jpg\",\r\n    \"bigImageUrl\": \"https://www.youtube.com/small.jpg\",\r\n    \"categoryId\": \"7836a937-5467-4191-9d2c-b65bba26f64e\",\r\n    \"deleted\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -146,14 +140,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/v1/product/0d3302bb-ce9a-4cc2-913c-3cf62799c4d3",
+							"raw": "{{baseUrl}}/v1/product/1b88712a-f74a-4d2c-ad3e-b4f9a8243cc6",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"v1",
 								"product",
-								"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3"
+								"1b88712a-f74a-4d2c-ad3e-b4f9a8243cc6"
 							]
 						}
 					},
@@ -194,27 +188,6 @@
 			"name": "categories",
 			"item": [
 				{
-					"name": "get categories",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/v1/category",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"v1",
-								"category"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "get categories Paged",
 					"request": {
 						"auth": {
@@ -223,7 +196,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/category/page?page=0&size=1",
+							"raw": "{{baseUrl}}/v1/category/page?page=0&size=2",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -239,7 +212,7 @@
 								},
 								{
 									"key": "size",
-									"value": "1"
+									"value": "2"
 								}
 							]
 						}
@@ -255,14 +228,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/category/f833d126-6cb1-4759-af63-9972f106a51d",
+							"raw": "{{baseUrl}}/v1/category/9096c206-fde3-4c35-9e95-fe6b85addb95",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"v1",
 								"category",
-								"f833d126-6cb1-4759-af63-9972f106a51d"
+								"9096c206-fde3-4c35-9e95-fe6b85addb95"
 							]
 						}
 					},
@@ -285,7 +258,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"f833d126-6cb1-4759-af63-9972f106a51d\",\r\n  \"name\": \"Motherboards\",\r\n  \"description\": \"Motherboards\"\r\n}",
+							"raw": "{\r\n  \"id\": \"9096c206-fde3-4c35-9e95-fe6b85addb95\",\r\n  \"name\": \"Power Supply\",\r\n  \"description\": \"Power Supply\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -322,7 +295,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Motherboards 1\",\r\n  \"description\": \"Motherboards 1\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Power Supply\",\r\n    \"description\": \"Power Supply\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -330,14 +303,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/v1/category/f833d126-6cb1-4759-af63-9972f106a51d",
+							"raw": "{{baseUrl}}/v1/category/9096c206-fde3-4c35-9e95-fe6b85addb95",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"v1",
 								"category",
-								"f833d126-6cb1-4759-af63-9972f106a51d"
+								"9096c206-fde3-4c35-9e95-fe6b85addb95"
 							]
 						}
 					},
@@ -359,14 +332,162 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/category/f833d126-6cb1-4759-af63-9972f106a51d",
+							"raw": "{{baseUrl}}/v1/category/d18dcd21-b76e-481f-b4df-88bc07a5c13e",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"v1",
 								"category",
-								"f833d126-6cb1-4759-af63-9972f106a51d"
+								"d18dcd21-b76e-481f-b4df-88bc07a5c13e"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "purchase orders",
+			"item": [
+				{
+					"name": "get purchase orders paged",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/purchase-order/page?page=0&size=2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"purchase-order",
+								"page"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get purchase order by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/purchase-order/e5ade578-6108-4c68-af78-0ca6c42c85ad",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"purchase-order",
+								"e5ade578-6108-4c68-af78-0ca6c42c85ad"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "insert purchase order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"e5ade578-6108-4c68-af78-0ca6c42c85ad\",\r\n    \"idProduct\": \"f558f20e-aa01-41a3-bba0-45f0177e5344\",\r\n    \"quantity\": 1,\r\n    \"total\": 1000.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/purchase-order",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"purchase-order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update purchase order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\": \"CANCELED1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/purchase-order/01cf6e3e-7667-478f-bab7-bbf9ffece11e",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"purchase-order",
+								"01cf6e3e-7667-478f-bab7-bbf9ffece11e"
 							]
 						}
 					},

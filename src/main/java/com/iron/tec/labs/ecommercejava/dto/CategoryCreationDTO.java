@@ -11,4 +11,5 @@ public class CategoryCreationDTO {
     @NotEmpty @UUID private String id;
     @NotEmpty private String name;
     @NotEmpty private String description;
+    private Boolean deleted;
 }

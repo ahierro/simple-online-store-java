@@ -121,6 +121,7 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
         product.setStock(15);
         product.setBigImageUrl("https://google.com/1.jpg");
         product.setSmallImageUrl("https://google.com/2.jpg");
+        product.setDeleted(false);
         assert product.getId() != null;
         StepVerifier.create(productDAO.update(product)
                         .then(productRepository.findById(product.getId())))

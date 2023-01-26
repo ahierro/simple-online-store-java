@@ -22,18 +22,6 @@ public class ReactivePostgresConfig extends AbstractR2dbcConfiguration {
 
     private final ObjectMapper objectMapper;
 
-//    private final DatasourceProps datasourceProps;
-//
-//    /**
-//     * @noinspection NullableProblems
-//     */
-//    @Override
-//    public ConnectionFactory connectionFactory() {
-//        return ConnectionFactories.get(datasourceProps.getPrefix() + datasourceProps.getUsername() + ":" +
-//                datasourceProps.getPassword() + "@" + datasourceProps.getHost() + ":" + datasourceProps.getPort() +
-//                "/" + datasourceProps.getDatabase());
-//    }
-
     @Override
     public ConnectionFactory connectionFactory() {
         return null;

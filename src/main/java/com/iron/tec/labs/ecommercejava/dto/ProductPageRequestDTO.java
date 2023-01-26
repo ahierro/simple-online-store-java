@@ -15,6 +15,7 @@ public class ProductPageRequestDTO extends PageRequestDTO {
 
     private @UUID String categoryId;
     private String queryString;
+    private Boolean deleted;
     private Sort.Direction sortByPrice;
 
 }

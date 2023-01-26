@@ -42,7 +42,7 @@ public class ProductDAOImpl implements ProductDAO {
         PageRequest pageRequest = PageRequest.of(page, size);
         return this.productViewRepository.findBy(example,
                 queryFunction ->
-                        queryFunction.sortBy((sortByPrice==null)?Sort.unsorted()
+                        queryFunction.sortBy((sortByPrice==null)?Sort.by("productCreatedAt").descending()
                                         :Sort.by(new Sort.Order(sortByPrice, PRICE)))
                         .page(pageRequest));
     }

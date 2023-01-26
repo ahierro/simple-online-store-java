@@ -9,7 +9,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
@@ -24,14 +23,6 @@ import static org.springframework.http.ResponseEntity.ok;
 public class CategoryController {
 
     private final CategoryService categoryService;
-
-    @GetMapping()
-    public Flux<CategoryDTO> getCategories() {
-        return Mono.empty()
-                .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before categories obtained")))
-                .thenMany(categoryService.getAll())
-                .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Categories obtained")));
-    }
 
     @GetMapping("/page")
     public Mono<PageResponseDTO<CategoryDTO>> getCategoriesPaged(@Valid ProductPageRequestDTO pageRequest) {

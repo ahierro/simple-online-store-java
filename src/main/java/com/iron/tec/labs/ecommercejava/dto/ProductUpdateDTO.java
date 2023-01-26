@@ -19,4 +19,5 @@ public class ProductUpdateDTO {
     @NotEmpty @URL private String smallImageUrl;
     @NotEmpty @URL private String bigImageUrl;
     @NotEmpty @UUID private String categoryId;
+    private Boolean deleted;
 }

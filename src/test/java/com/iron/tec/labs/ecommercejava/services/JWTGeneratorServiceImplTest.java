@@ -1,5 +1,6 @@
 package com.iron.tec.labs.ecommercejava.services;
 
+import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,6 +14,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -34,7 +36,8 @@ class JWTGeneratorServiceImplTest {
         Jwt jwt = mock(Jwt.class);
         when(encoder.encode(any())).thenReturn(jwt);
         when(jwt.getTokenValue()).thenReturn(jwtExample);
-        when(authentication.getName()).thenReturn("admin");
+        when(authentication.getPrincipal()).thenReturn(AppUser.builder().id(UUID.randomUUID()).build());
+
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
         when(authentication.getAuthorities()).thenAnswer(x -> authorities);
 

@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -34,6 +35,9 @@ class ProductServiceImplTest {
 
     @Mock
     ConversionService conversionService;
+
+    @Mock
+    Authentication authentication;
 
     @InjectMocks
     ProductServiceImpl productService;
@@ -163,7 +167,7 @@ class ProductServiceImplTest {
                         .build());
 
         PageResponseDTO<ProductDTO> page =
-                productService.getProductPage(ProductPageRequestDTO.builder().page(0).size(1).build()).block();
+                productService.getProductPage(ProductPageRequestDTO.builder().page(0).size(1).build(),null).block();
 
         assertNotNull(page);
         assertEquals(2,page.getTotalPages());

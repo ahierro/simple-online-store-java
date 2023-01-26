@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -40,9 +39,6 @@ class CategoryControllerTest {
     @MockBean
     CategoryService categoryService;
 
-    @Value("classpath:json/category/responses/getAllResponse.json")
-    Resource getAllResponse;
-
     @Value("classpath:json/category/responses/getPageResponse.json")
     Resource getCategoryPageResponse;
 
@@ -54,27 +50,6 @@ class CategoryControllerTest {
 
     @Value("classpath:json/category/requests/updateRequest.json")
     Resource updateCategoryRequest;
-
-    @Test
-    @WithMockUser(authorities = "SCOPE_ROLE_USER")
-    void getAll() {
-        when(categoryService.getAll()).thenReturn(Flux.just(CategoryDTO.builder()
-                        .id("baffc3a4-5447-48ab-b9c0-7604e448371d")
-                        .name("Motherboards")
-                        .description("Motherboards")
-                        .build(),
-                CategoryDTO.builder()
-                        .id("63466fc5-dccd-43c2-a3c7-4028bd9684bb")
-                        .name("GPUs")
-                        .description("Graphical Processing Units")
-                        .build()));
-        testClient.get().uri("/v1/category")
-                .exchange()
-                .expectStatus()
-                .is2xxSuccessful()
-                .expectBody()
-                .json(ResourceUtils.readFile(getAllResponse));
-    }
 
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_USER")

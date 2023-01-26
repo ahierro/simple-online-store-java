@@ -12,7 +12,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -97,6 +97,7 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
         assert category.getId() != null;
         category.setName("Motherboard");
         category.setDescription("Description updated");
+        category.setDeleted(false);
         assert category.getId() != null;
         StepVerifier.create(categoryDAO.update(category)
                         .then(categoryRepository.findById(category.getId())))
@@ -155,19 +156,10 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
     }
 
     @Test
-    @DisplayName("Create a category and get all categorys to verify if it is returned")
-    void getAll_ok() {
-        create_ok();
-        StepVerifier.create(categoryDAO.getAll())
-                .expectNextCount(1)
-                .verifyComplete();
-    }
-
-    @Test
     @DisplayName("Create category and get a category page to verify if it is returned")
     void getPage_ok() {
         create_ok();
-        PageImpl<Category> page = categoryDAO.getPage(0, 2).block();
+        Page<Category> page = categoryDAO.getPage(0, 2).block();
         assertNotNull(page);
         assertEquals(1, page.getTotalPages());
         assertEquals(0, page.getNumber());
@@ -179,21 +171,13 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
     @Test
     @DisplayName("Get a category page when the table is empty")
     void getPage_empty() {
-        PageImpl<Category> page = categoryDAO.getPage(0, 2).block();
+        Page<Category> page = categoryDAO.getPage(0, 2).block();
         assertNotNull(page);
         assertEquals(0, page.getTotalPages());
         assertEquals(0, page.getNumber());
         assertEquals(0, page.getTotalElements());
         assertNotNull(page.getContent());
         assertEquals(0, page.getContent().size());
-    }
-
-    @Test
-    @DisplayName("Get all categorys on an empty table to verify that it is not returned")
-    void getAll_empty_ok() {
-        StepVerifier.create(categoryDAO.getAll())
-                .expectNextCount(0)
-                .verifyComplete();
     }
 
     @Test

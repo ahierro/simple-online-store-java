@@ -1,7 +1,10 @@
 package com.iron.tec.labs.ecommercejava.db;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iron.tec.labs.ecommercejava.db.dao.CategoryDAOImpl;
 import com.iron.tec.labs.ecommercejava.db.dao.ProductDAOImpl;
+import com.iron.tec.labs.ecommercejava.db.dao.PurchaseOrderDAO;
+import com.iron.tec.labs.ecommercejava.db.dao.PurchaseOrderDAOImpl;
 import com.iron.tec.labs.ecommercejava.db.repository.*;
 import com.iron.tec.labs.ecommercejava.db.rowmappers.ColumnConverter;
 import com.iron.tec.labs.ecommercejava.db.rowmappers.ProductRowMapper;
@@ -36,7 +39,11 @@ public class DatabaseAccessConfig {
 	public CategoryDAOImpl categoryImpl(CategoryRepository categoryRepository, MessageService messageService){
 		return new CategoryDAOImpl(categoryRepository,messageService);
 	}
-
+	@Bean
+	public PurchaseOrderDAO purchaseOrderDAOImpl(PurchaseOrderRepository purchaseOrderRepository, MessageService messageService,
+												 PurchaseOrderViewRepository purchaseOrderViewRepository){
+		return new PurchaseOrderDAOImpl(purchaseOrderRepository,messageService,purchaseOrderViewRepository);
+	}
 	@Bean
 	public CustomProductRepository CustomProductRepositoryImpl(DatabaseClient db, ProductRowMapper productRowMapper){
 		return new CustomProductRepositoryImpl(db,productRowMapper);
@@ -51,5 +58,14 @@ public class DatabaseAccessConfig {
 	public ColumnConverter columnConverter(R2dbcCustomConversions conversions, R2dbcConverter r2dbcConverter){
 		return new ColumnConverter(conversions,r2dbcConverter);
 	}
+
+//	@Configuration
+//	public ReactivePostgresConfig reactivePostgresConfig(){
+//			return new ReactivePostgresConfig(new ObjectMapper());
+//	}
+	@Bean
+	public ObjectMapper objectMapper(){
+		return new ObjectMapper();
+    }
 
 }

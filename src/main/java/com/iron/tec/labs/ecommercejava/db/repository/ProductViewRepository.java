@@ -9,5 +9,4 @@ import java.util.UUID;
 @Repository
 public interface ProductViewRepository extends R2dbcRepository<ProductView, UUID> {
 
-//    Flux<ProductView> findAll(Example<ProductView> example, Pageable pageable);
 }

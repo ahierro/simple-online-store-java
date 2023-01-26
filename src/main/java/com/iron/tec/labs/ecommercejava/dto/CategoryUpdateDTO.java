@@ -11,4 +11,5 @@ public class CategoryUpdateDTO {
     private String name;
     @NotEmpty
     private String description;
+    private Boolean deleted;
 }

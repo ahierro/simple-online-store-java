@@ -1,4 +1,4 @@
-package com.iron.tec.labs.ecommercejava.mappers;
+package com.iron.tec.labs.ecommercejava.mappers.user;
 
 import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
 import com.iron.tec.labs.ecommercejava.dto.RegisterUserDTO;

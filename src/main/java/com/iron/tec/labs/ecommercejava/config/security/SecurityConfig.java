@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.POST, "/v1/**").hasAuthority("SCOPE_ROLE_ADMIN")
                 .pathMatchers(HttpMethod.PUT, "/v1/**").hasAuthority("SCOPE_ROLE_ADMIN")
                 .pathMatchers(HttpMethod.DELETE, "/v1/**").hasAuthority("SCOPE_ROLE_ADMIN")
+                .pathMatchers(HttpMethod.GET, "/v1/purchase-order/**").hasAuthority("SCOPE_ROLE_ADMIN")
                 .anyExchange()
                 .authenticated()
                 .and()

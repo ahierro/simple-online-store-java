@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -107,32 +106,6 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    void testGetAll() {
-        when(categoryDAO.getAll()).thenReturn(Flux.just(Category.builder()
-                        .id(UUID.randomUUID())
-                        .name("Motherboards")
-                        .description("A motherboard is the main printed circuit board (PCB) in general-purpose computers and other expandable systems.")
-                        .build(),
-                Category.builder()
-                        .id(UUID.randomUUID())
-                        .name("Motherboards")
-                        .description("A motherboard is the main printed circuit board (PCB) in general-purpose computers and other expandable systems.")
-                        .build()));
-
-        when(conversionService.convert(any(Category.class), eq(CategoryDTO.class)))
-                .thenAnswer(x -> CategoryDTO.builder()
-                        .id(UUID.randomUUID().toString())
-                        .name("Motherboards")
-                        .description("A motherboard is the main printed circuit board (PCB) in general-purpose computers and other expandable systems.")
-                        .build());
-
-        StepVerifier.create(categoryService.getAll())
-                .expectNextCount(2)
-                .verifyComplete();
-
-    }
-
-    @Test
     void getCategoryPage() {
         when(categoryDAO.getPage(0, 1)).thenReturn(Mono.just(new PageImpl<>(
                 Arrays.asList(Category.builder()
@@ -153,7 +126,7 @@ class CategoryServiceImplTest {
                         .build());
 
         PageResponseDTO<CategoryDTO> page =
-                categoryService.getCategoryPage(ProductPageRequestDTO.builder().page(0).size(1).build()).block();
+                categoryService.getCategoryPage(PageRequestDTO.builder().page(0).size(1).build()).block();
 
         assertNotNull(page);
         assertEquals(2,page.getTotalPages());

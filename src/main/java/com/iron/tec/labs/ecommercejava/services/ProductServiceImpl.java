@@ -4,8 +4,11 @@ import com.iron.tec.labs.ecommercejava.db.dao.ProductDAO;
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
 import com.iron.tec.labs.ecommercejava.db.entities.ProductView;
 import com.iron.tec.labs.ecommercejava.dto.*;
+import com.iron.tec.labs.ecommercejava.exceptions.NotAuthorized;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -38,11 +41,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Mono<PageResponseDTO<ProductDTO>> getProductPage(ProductPageRequestDTO pageRequest) {
+    public Mono<PageResponseDTO<ProductDTO>> getProductPage(ProductPageRequestDTO pageRequest, Authentication authentication) {
+        if(BooleanUtils.isTrue(pageRequest.getDeleted())
+                && (authentication==null ||
+                authentication.getAuthorities().stream().noneMatch(x -> x.getAuthority().equals("SCOPE_ROLE_ADMIN")))){
+            throw new NotAuthorized();
+        }
         UUID categoryId = (pageRequest.getCategoryId() == null) ? null : UUID.fromString(pageRequest.getCategoryId());
         return productDAO.getProductViewPage(pageRequest.getPage(), pageRequest.getSize(),
                         ProductView.builder()
                                 .idCategory(categoryId)
+                                .deleted(pageRequest.getDeleted())
                                 .productDescription(pageRequest.getQueryString()).build(),
                         pageRequest.getSortByPrice())
                 .mapNotNull(page ->

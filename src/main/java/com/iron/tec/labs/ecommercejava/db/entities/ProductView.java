@@ -1,6 +1,5 @@
 package com.iron.tec.labs.ecommercejava.db.entities;
 
-import jakarta.validation.constraints.DecimalMin;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -23,13 +22,10 @@ public class ProductView {
     private String productName;
     private String productDescription;
     private Integer stock;
-    @DecimalMin("1.0")
     @EqualsAndHashCode.Exclude
     private BigDecimal price;
     private String smallImageUrl;
     private String bigImageUrl;
-
-
     @EqualsAndHashCode.Include
     private BigDecimal priceWithoutTrailingZeros() {
         return price != null ? price.stripTrailingZeros() : null;
@@ -38,7 +34,9 @@ public class ProductView {
     private String categoryName;
     private String categoryDescription;
     @EqualsAndHashCode.Exclude
-    protected LocalDateTime productCreatedAt;
+    private LocalDateTime productCreatedAt;
     @EqualsAndHashCode.Exclude
-    protected LocalDateTime categoryCreatedAt;
+    private LocalDateTime categoryCreatedAt;
+    private Boolean deleted;
+
 }

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -25,10 +26,10 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/page")
-    public Mono<PageResponseDTO<ProductDTO>> getProductsPaged(@Valid ProductPageRequestDTO pageRequest) {
+    public Mono<PageResponseDTO<ProductDTO>> getProductsPaged(@Valid ProductPageRequestDTO pageRequest, Authentication authentication){
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before products obtained")))
-                .then(productService.getProductPage(pageRequest))
+                .then(productService.getProductPage(pageRequest,authentication))
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Products obtained")));
     }
 

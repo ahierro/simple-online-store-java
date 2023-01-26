@@ -16,7 +16,7 @@ public interface CategoryRepository extends R2dbcRepository<Category, UUID> {
 
     @Modifying
     @Query("delete from category where id = :id")
-    Mono<Integer> deleteProductById(UUID id);
+    Mono<Integer> deleteCategoryById(UUID id);
 
     Flux<Category> findBy(Pageable pageable);
 }

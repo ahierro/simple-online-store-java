@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public abstract class PageRequestDTO {
+public class PageRequestDTO {
     @NotNull
     @Min(0)
     protected Integer page;

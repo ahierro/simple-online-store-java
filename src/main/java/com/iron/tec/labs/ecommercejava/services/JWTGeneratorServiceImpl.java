@@ -1,5 +1,6 @@
 package com.iron.tec.labs.ecommercejava.services;
 
+import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,9 +8,11 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +30,8 @@ public class JWTGeneratorServiceImpl implements JWTGeneratorService {
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plus(1, ChronoUnit.HOURS))
-                .subject(authentication.getName())
+                .id(UUID.randomUUID().toString())
+                .subject(ObjectUtils.nullSafeToString(((AppUser)authentication.getPrincipal()).getId()))
                 .claim("scope", scope)
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

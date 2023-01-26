@@ -1,4 +1,4 @@
-package com.iron.tec.labs.ecommercejava.config.db;
+package com.iron.tec.labs.ecommercejava.config.init;
 
 import io.r2dbc.spi.ConnectionFactory;
 import lombok.extern.java.Log;

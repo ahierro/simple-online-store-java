@@ -6,7 +6,6 @@ import com.iron.tec.labs.ecommercejava.dto.*;
 import lombok.AllArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -14,17 +13,17 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
-    private final CategoryDAO productDAO;
+    private final CategoryDAO categoryDAO;
     private final ConversionService conversionService;
 
     @Override
     public Mono<CategoryDTO> getById(UUID id) {
-        return productDAO.getById(id)
+        return categoryDAO.getById(id)
                 .mapNotNull(product -> conversionService.convert(product, CategoryDTO.class));
     }
 
     public Mono<CategoryDTO> createCategory(CategoryCreationDTO productCreationDTO) {
-        return productDAO.create(conversionService.convert(productCreationDTO, Category.class))
+        return categoryDAO.create(conversionService.convert(productCreationDTO, Category.class))
                 .mapNotNull(product -> conversionService.convert(product, CategoryDTO.class));
     }
 
@@ -34,18 +33,13 @@ public class CategoryServiceImpl implements CategoryService {
         if (product != null) {
             product.setId(UUID.fromString(id));
         }
-        return productDAO.update(product)
+        return categoryDAO.update(product)
                 .mapNotNull(productUpdated -> conversionService.convert(productUpdated, CategoryDTO.class));
     }
 
     @Override
-    public Flux<CategoryDTO> getAll() {
-        return productDAO.getAll().mapNotNull(product -> conversionService.convert(product, CategoryDTO.class));
-    }
-
-    @Override
-    public Mono<PageResponseDTO<CategoryDTO>> getCategoryPage(ProductPageRequestDTO pageRequest) {
-        return productDAO.getPage(pageRequest.getPage(), pageRequest.getSize())
+    public Mono<PageResponseDTO<CategoryDTO>> getCategoryPage(PageRequestDTO pageRequest) {
+        return categoryDAO.getPage(pageRequest.getPage(), pageRequest.getSize())
                 .mapNotNull(page ->
                         new PageResponseDTO<>(
                                 page.getContent().stream()
@@ -56,6 +50,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Mono<Void> deleteCategory(String id) {
-        return productDAO.delete(id);
+        return categoryDAO.delete(id);
     }
 }

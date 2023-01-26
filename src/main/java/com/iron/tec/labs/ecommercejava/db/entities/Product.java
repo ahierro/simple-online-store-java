@@ -1,6 +1,6 @@
 package com.iron.tec.labs.ecommercejava.db.entities;
 
-import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -20,12 +20,12 @@ public class Product extends AuditableEntity {
     private String name;
     private String description;
     private Integer stock;
-    @DecimalMin("1.0")
+    @Positive
     @EqualsAndHashCode.Exclude
     private BigDecimal price;
     private String smallImageUrl;
     private String bigImageUrl;
-
+    private Boolean deleted;
 
     @EqualsAndHashCode.Include
     private BigDecimal priceWithoutTrailingZeros() {
