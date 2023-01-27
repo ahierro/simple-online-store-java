@@ -13,7 +13,14 @@
 					"name": "get products page",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
 						"header": [],
@@ -49,6 +56,11 @@
 								{
 									"key": "queryString",
 									"value": "Asus",
+									"disabled": true
+								},
+								{
+									"key": "deleted",
+									"value": "true",
 									"disabled": true
 								}
 							]
@@ -95,7 +107,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"productId\": \"1b88712a-f74a-4d2c-ad3e-b4f9a8243cc6\",\r\n    \"productName\": \"Mother ASUS ROG STRIX B550-XE Gaming Wifi AM4\",\r\n    \"productDescription\": \"Mother ASUS ROG STRIX B550-XE Gaming Wifi AM4 \",\r\n    \"stock\": 2,\r\n    \"price\":4,\r\n    \"smallImageUrl\": \"https://www.youtube.com/small.jpg\",\r\n    \"bigImageUrl\": \"https://www.youtube.com/big.jpg\",\r\n    \"categoryId\": \"7836a937-5467-4191-9d2c-b65bba26f64e\"\r\n}",
+							"raw": "{\r\n    \"productId\": \"264f4959-69a2-4a2b-8b25-212398835aaf\",\r\n    \"productName\": \"Mother Gigabyte GA-A320M-H AM4\",\r\n    \"productDescription\": \"Mother Gigabyte GA-A320M-H AM4\",\r\n    \"stock\": 2,\r\n    \"price\":4,\r\n    \"smallImageUrl\": \"https://www.youtube.com/small.jpg\",\r\n    \"bigImageUrl\": \"https://www.youtube.com/big.jpg\",\r\n    \"categoryId\": \"7836a937-5467-4191-9d2c-b65bba26f64e\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -258,7 +270,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"9096c206-fde3-4c35-9e95-fe6b85addb95\",\r\n  \"name\": \"Power Supply\",\r\n  \"description\": \"Power Supply\"\r\n}",
+							"raw": "{\r\n  \"id\": \"7836a937-5467-4191-9d2c-b65bba26f64e\",\r\n  \"name\": \"Motherboards\",\r\n  \"description\": \"Motherboards\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -405,14 +417,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/purchase-order/e5ade578-6108-4c68-af78-0ca6c42c85ad",
+							"raw": "{{baseUrl}}/v1/purchase-order/ab803daa-af2f-4538-8fef-3d35e9135f9d",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"v1",
 								"purchase-order",
-								"e5ade578-6108-4c68-af78-0ca6c42c85ad"
+								"ab803daa-af2f-4538-8fef-3d35e9135f9d"
 							]
 						}
 					},
@@ -435,7 +447,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"e5ade578-6108-4c68-af78-0ca6c42c85ad\",\r\n    \"idProduct\": \"f558f20e-aa01-41a3-bba0-45f0177e5344\",\r\n    \"quantity\": 1,\r\n    \"total\": 1000.0\r\n}",
+							"raw": "{\r\n    \"id\": \"ab803daa-af2f-4538-8fef-3d35e9135f9d\",\r\n    \"lines\": [\r\n        {\r\n            \"idProduct\": \"1b88712a-f74a-4d2c-ad3e-b4f9a8243cc6\",\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"idProduct\": \"264f4959-69a2-4a2b-8b25-212398835aaf\",\r\n            \"quantity\": 12\r\n        }\r\n    ],\r\n    \"total\": 1000.0\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -472,7 +484,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"status\": \"CANCELED1\"\r\n}",
+							"raw": "{\r\n  \"status\": \"DELIVERED\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -480,14 +492,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/v1/purchase-order/01cf6e3e-7667-478f-bab7-bbf9ffece11e",
+							"raw": "{{baseUrl}}/v1/purchase-order/ab803daa-af2f-4538-8fef-3d35e9135f9d",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"v1",
 								"purchase-order",
-								"01cf6e3e-7667-478f-bab7-bbf9ffece11e"
+								"ab803daa-af2f-4538-8fef-3d35e9135f9d"
 							]
 						}
 					},
@@ -525,7 +537,7 @@
 			"response": []
 		},
 		{
-			"name": "Login",
+			"name": "Login admin",
 			"event": [
 				{
 					"listen": "test",
@@ -547,6 +559,47 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n    \"username\":\"admin\",\r\n    \"password\":\"p4ssw0rd\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login normal user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var tokenValue = pm.response.text();\r",
+							"pm.environment.set(\"jwt_token\",tokenValue);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"alejandrohierro\",\r\n    \"password\":\"p4ssw0rd\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

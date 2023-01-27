@@ -1,9 +1,24 @@
 {
   "id": "e5ade578-6108-4c68-af78-0ca6c42c85ad",
   "idUser": "130b1b88-5850-4d25-b81f-786925d09ab7",
-  "idProduct": "f558f20e-aa01-41a3-bba0-45f0177e5344",
-  "quantity": 10,
+  "lines": [
+    {
+      "idProduct": "f558f20e-aa01-41a3-bba0-45f0177e5344",
+      "productName": "Mother ASUS ROG STRIX B550-XE Gaming Wifi AM4",
+      "stock": 2,
+      "price": 4,
+      "smallImageUrl": "https://www.youtube.com/small.jpg",
+      "categoryName": "Motherboards",
+      "quantity": 10
+    }
+  ],
   "total": 1000.00,
   "status": "PENDING",
-  "createdAt": "2023-01-21T21:37:51.647479"
+  "createdAt": "2023-01-21T21:37:51.647479",
+  "user": {
+    "username": "admin",
+    "email": "admin@gmail.com",
+    "firstName": "Alejandro",
+    "lastName": "Admin"
+  }
 }

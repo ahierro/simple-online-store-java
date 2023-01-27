@@ -41,8 +41,11 @@ public class DatabaseAccessConfig {
 	}
 	@Bean
 	public PurchaseOrderDAO purchaseOrderDAOImpl(PurchaseOrderRepository purchaseOrderRepository, MessageService messageService,
-												 PurchaseOrderViewRepository purchaseOrderViewRepository){
-		return new PurchaseOrderDAOImpl(purchaseOrderRepository,messageService,purchaseOrderViewRepository);
+												 PurchaseOrderViewRepository purchaseOrderViewRepository,
+												 PurchaseOrderLineViewRepository purchaseOrderLineViewRepository,
+												 UserRepository appUserRepository){
+		return new PurchaseOrderDAOImpl(purchaseOrderRepository,messageService,purchaseOrderViewRepository,
+				purchaseOrderLineViewRepository,appUserRepository);
 	}
 	@Bean
 	public CustomProductRepository CustomProductRepositoryImpl(DatabaseClient db, ProductRowMapper productRowMapper){

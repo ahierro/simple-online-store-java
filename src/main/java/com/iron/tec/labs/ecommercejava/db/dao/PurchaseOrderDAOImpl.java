@@ -1,9 +1,11 @@
 package com.iron.tec.labs.ecommercejava.db.dao;
 
-import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrder;
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderView;
-import com.iron.tec.labs.ecommercejava.db.repository.*;
+import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderLineViewRepository;
+import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderRepository;
+import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderViewRepository;
+import com.iron.tec.labs.ecommercejava.db.repository.UserRepository;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.MessageService;
@@ -20,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import reactor.core.publisher.Mono;
 
-import java.util.HashSet;
 import java.util.UUID;
 
 import static com.iron.tec.labs.ecommercejava.constants.Constants.*;

@@ -71,9 +71,8 @@ class PurchaseOrderServiceImplTest {
     PurchaseOrder purchaseOrder = PurchaseOrder.builder()
             .id(UUID.randomUUID())
             .idUser(appUser.getId())
-            .idProduct(product.getId())
+            .line(PurchaseOrderLine.builder().idProduct(product.getId()).quantity(10).build())
             .status("PENDING")
-            .quantity(10)
             .total(BigDecimal.valueOf(1000))
             .build();
 
@@ -82,14 +81,18 @@ class PurchaseOrderServiceImplTest {
 
         PurchaseOrderCreationDTO purchaseOrderCreationDTO = PurchaseOrderCreationDTO.builder()
                 .id(ObjectUtils.nullSafeToString(purchaseOrder.getId()))
-                .idProduct(ObjectUtils.nullSafeToString(product.getId()))
-                .quantity(purchaseOrder.getQuantity())
+                .line(PurchaseOrderLineCreationDTO.builder()
+                        .idProduct(ObjectUtils.nullSafeToString(product.getId()))
+                        .quantity(purchaseOrder.getLines().get(0).getQuantity())
+                        .build())
                 .total(purchaseOrder.getTotal())
                 .build();
         PurchaseOrderDTO purchaseOrderDTO = PurchaseOrderDTO.builder()
                 .id(purchaseOrder.getId().toString())
-                .idProduct(product.getId().toString())
-                .quantity(purchaseOrder.getQuantity())
+                .line(PurchaseOrderLineDTO.builder()
+                        .idProduct(product.getId().toString())
+                        .quantity(purchaseOrder.getLines().get(0).getQuantity())
+                        .build())
                 .total(purchaseOrder.getTotal())
                 .build();
         when(conversionService.convert(any(PurchaseOrderCreationDTO.class), eq(PurchaseOrder.class)))
@@ -115,9 +118,8 @@ class PurchaseOrderServiceImplTest {
         PurchaseOrder purchaseOrder = PurchaseOrder.builder()
                 .id(UUID.randomUUID())
                 .idUser(appUser.getId())
-                .idProduct(product.getId())
+                .line(PurchaseOrderLine.builder().idProduct(product.getId()).quantity(100).build())
                 .status("PENDING")
-                .quantity(100)
                 .total(BigDecimal.valueOf(100000))
                 .build();
         PurchaseOrderPatchDTO purchaseOrderDTO = new PurchaseOrderPatchDTO(PurchaseOrderStatus.DELIVERED);
@@ -125,9 +127,8 @@ class PurchaseOrderServiceImplTest {
         when(purchaseOrderDAO.update(argumentCaptor.capture())).thenReturn(Mono.just(PurchaseOrder.builder()
                 .id(UUID.randomUUID())
                 .idUser(appUser.getId())
-                .idProduct(product.getId())
+                .line(PurchaseOrderLine.builder().idProduct(product.getId()).quantity(100).build())
                 .status("DELIVERED")
-                .quantity(100)
                 .total(BigDecimal.valueOf(100000))
                 .build()));
         when(purchaseOrderDAO.getById(id)).thenReturn(Mono.just(purchaseOrder));
@@ -143,24 +144,18 @@ class PurchaseOrderServiceImplTest {
                 Arrays.asList(PurchaseOrderView.builder()
                                 .id(UUID.randomUUID())
                                 .idUser(appUser.getId())
-                                .idProduct(product.getId())
                                 .status("PENDING")
-                                .quantity(100)
                                 .total(BigDecimal.valueOf(100000))
                                 .build(),
                         PurchaseOrderView.builder()
                                 .id(UUID.randomUUID())
                                 .idUser(appUser.getId())
-                                .idProduct(product.getId())
                                 .status("PENDING")
-                                .quantity(100)
                                 .total(BigDecimal.valueOf(100000))
                                 .build()), PageRequest.of(0, 1), 2)));
         when(conversionService.convert(any(PurchaseOrderView.class), eq(PurchaseOrderViewDTO.class)))
                 .thenAnswer(x -> PurchaseOrderViewDTO.builder()
                         .id(ObjectUtils.nullSafeToString(purchaseOrder.getId()))
-                        .idProduct(ObjectUtils.nullSafeToString(product.getId()))
-                        .quantity(purchaseOrder.getQuantity())
                         .total(purchaseOrder.getTotal())
                         .build());
 
@@ -180,12 +175,12 @@ class PurchaseOrderServiceImplTest {
         when(purchaseOrderDAO.getById(any(UUID.class))).thenReturn(Mono.just(PurchaseOrder.builder()
                 .id(UUID.randomUUID())
                 .idUser(appUser.getId())
-                        .line(PurchaseOrderLine.builder()
-                                .id(UUID.randomUUID())
-                                .idPurchaseOrder(UUID.randomUUID())
-                                .idProduct(UUID.randomUUID())
-                                .quantity(100)
-                                .build())
+                .line(PurchaseOrderLine.builder()
+                        .id(UUID.randomUUID())
+                        .idPurchaseOrder(UUID.randomUUID())
+                        .idProduct(UUID.randomUUID())
+                        .quantity(100)
+                        .build())
                 .status("PENDING")
                 .total(BigDecimal.valueOf(100000))
                 .build()));

@@ -3,20 +3,13 @@
     {
       "id": "e5ade578-6108-4c68-af78-0ca6c42c85ad",
       "idUser": "130b1b88-5850-4d25-b81f-786925d09ab7",
-      "idProduct": "f558f20e-aa01-41a3-bba0-45f0177e5344",
-      "quantity": 10,
       "total": 1000.00,
       "status": "PENDING",
       "createdAt": "2023-01-21T21:37:51.647479",
       "username": "admin",
       "email": "admin@gmail.com",
       "firstName": "Alejandro",
-      "lastName": "Admin",
-      "productName": "Asus b400",
-      "stock": 1,
-      "price": 1.00,
-      "idCategory": "7836a937-5467-4191-9d2c-b65bba26f64e",
-      "categoryName": "Motherboards"
+      "lastName": "Admin"
     }
   ],
   "totalPages": 1,

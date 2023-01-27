@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static com.iron.tec.labs.ecommercejava.enums.PurchaseOrderStatus.CANCELLED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -106,9 +107,8 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
         purchaseOrder = PurchaseOrder.builder()
                 .id(UUID.randomUUID())
                 .idUser(appUser.getId())
-                .idProduct(product.getId())
+                .line(PurchaseOrderLine.builder().idProduct(product.getId()).quantity(10).build())
                 .status("PENDING")
-                .quantity(100)
                 .total(BigDecimal.valueOf(100000))
                 .build();
 
@@ -160,8 +160,11 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
         assert purchaseOrder.getId() != null;
         StepVerifier.create(purchaseOrderDAO.update(purchaseOrder)
                         .then(purchaseOrderRepository.findById(purchaseOrder.getId())))
-                .expectNextMatches(PurchaseOrder -> PurchaseOrder != this.purchaseOrder
-                        && PurchaseOrder.equals(this.purchaseOrder))
+                .expectNextMatches(purchaseOrder -> {
+                    assertNotNull(purchaseOrder);
+                    assertEquals(CANCELLED.name(), purchaseOrder.getStatus());
+                    return true;
+                })
                 .verifyComplete();
     }
 
