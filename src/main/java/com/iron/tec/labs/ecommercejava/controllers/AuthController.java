@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,11 @@ public class AuthController {
         return authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(userLogin.username(), userLogin.password()))
                 .map(jwtGeneratorService::generateToken);
+    }
+
+    @GetMapping("/confirm")
+    public Mono<String> confirm(String token) {
+        return userService.confirm(token);
     }
 
     @PostMapping("signup")

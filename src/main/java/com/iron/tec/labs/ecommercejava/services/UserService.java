@@ -5,4 +5,6 @@ import reactor.core.publisher.Mono;
 
 public interface UserService {
     Mono<Void> create(RegisterUserDTO user);
+
+    Mono<String> confirm(String token);
 }

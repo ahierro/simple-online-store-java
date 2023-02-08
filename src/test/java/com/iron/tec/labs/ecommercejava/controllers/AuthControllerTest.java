@@ -65,4 +65,14 @@ class AuthControllerTest {
                 .expectStatus()
                 .is2xxSuccessful();
     }
+
+    @Test
+    void confirm() {
+        when(userService.confirm(any())).thenReturn(Mono.just("token"));
+
+        testClient.get().uri("/confirm?token=token")
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful();
+    }
 }
