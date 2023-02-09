@@ -53,7 +53,7 @@ class PurchaseOrderControllerTest {
     Resource updatePurchaseOrderRequest;
 
     @Test
-    @WithMockUser(authorities = "SCOPE_ROLE_USER")
+    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void getPurchaseOrderPage() {
         when(purchaseOrderService.getPurchaseOrderPage(any(ProductPageRequestDTO.class))).thenReturn(
                 Mono.just(new PageResponseDTO<>(
@@ -78,7 +78,7 @@ class PurchaseOrderControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "SCOPE_ROLE_USER")
+    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void getById() {
         when(purchaseOrderService.getById(any(UUID.class))).thenReturn(Mono.just(PurchaseOrderDTO.builder()
                 .id("e5ade578-6108-4c68-af78-0ca6c42c85ad")
@@ -106,7 +106,7 @@ class PurchaseOrderControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
+    @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void createPurchaseOrder() {
         when(purchaseOrderService.createPurchaseOrder(any(), any())).thenReturn(Mono.just(PurchaseOrderDTO.builder()
                 .id("63466fc5-dccd-43c2-a3c7-4028bd9684bb")
@@ -129,7 +129,7 @@ class PurchaseOrderControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
+    @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void createExistingPurchaseOrder() {
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken("test", "test", Collections.emptyList());

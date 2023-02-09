@@ -18,6 +18,7 @@ import java.util.UUID;
 public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     private final PurchaseOrderDAO purchaseOrderDAO;
     private final ConversionService conversionService;
+    private final StockValidator stockValidator;
 
     @Override
     public Mono<PurchaseOrderDTO> getById(UUID id) {
@@ -30,7 +31,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         if (purchaseOrder == null) throw new IllegalArgumentException();
         purchaseOrder.setStatus(PurchaseOrderStatus.PENDING.name());
         purchaseOrder.setIdUser(UUID.fromString(authentication.getName()));
-        return purchaseOrderDAO.create(purchaseOrder)
+        return stockValidator.validateStock(purchaseOrder)
+                .flatMap(purchaseOrderDAO::create)
                 .mapNotNull(product -> conversionService.convert(product, PurchaseOrderDTO.class));
     }
 

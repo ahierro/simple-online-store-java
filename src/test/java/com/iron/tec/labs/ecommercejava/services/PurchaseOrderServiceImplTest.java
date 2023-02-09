@@ -4,6 +4,7 @@ import com.iron.tec.labs.ecommercejava.db.dao.PurchaseOrderDAO;
 import com.iron.tec.labs.ecommercejava.db.entities.*;
 import com.iron.tec.labs.ecommercejava.dto.*;
 import com.iron.tec.labs.ecommercejava.enums.PurchaseOrderStatus;
+import com.iron.tec.labs.ecommercejava.exceptions.BadRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -20,11 +21,9 @@ import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -33,11 +32,12 @@ import static org.mockito.Mockito.*;
 class PurchaseOrderServiceImplTest {
     @Mock
     PurchaseOrderDAO purchaseOrderDAO;
-
     @Mock
     ConversionService conversionService;
     @Mock
     Authentication authentication;
+    @Mock
+    StockValidator stockValidator;
 
     @InjectMocks
     PurchaseOrderServiceImpl purchaseOrderService;
@@ -87,6 +87,9 @@ class PurchaseOrderServiceImplTest {
                         .build())
                 .total(purchaseOrder.getTotal())
                 .build();
+
+        when(stockValidator.validateStock(any())).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
         PurchaseOrderDTO purchaseOrderDTO = PurchaseOrderDTO.builder()
                 .id(purchaseOrder.getId().toString())
                 .line(PurchaseOrderLineDTO.builder()
@@ -110,6 +113,33 @@ class PurchaseOrderServiceImplTest {
         assertNotNull(argumentCaptor.getValue());
         assertEquals(purchaseOrder, argumentCaptor.getValue());
         verify(purchaseOrderDAO).create(any(PurchaseOrder.class));
+    }
+
+    @Test()
+    void createPurchaseOrderTestWithoutStock() {
+
+        PurchaseOrderCreationDTO purchaseOrderCreationDTO = PurchaseOrderCreationDTO.builder()
+                .id(ObjectUtils.nullSafeToString(purchaseOrder.getId()))
+                .line(PurchaseOrderLineCreationDTO.builder()
+                        .idProduct(ObjectUtils.nullSafeToString(product.getId()))
+                        .quantity(purchaseOrder.getLines().get(0).getQuantity())
+                        .build())
+                .total(purchaseOrder.getTotal())
+                .build();
+
+        when(stockValidator.validateStock(any())).thenAnswer(invocation -> Mono.error(new BadRequest("Stock is not enough")));
+
+        when(conversionService.convert(any(PurchaseOrderCreationDTO.class), eq(PurchaseOrder.class)))
+                .thenReturn(purchaseOrder);
+        when(authentication.getName()).thenReturn(UUID.randomUUID().toString());
+
+        StepVerifier.create(purchaseOrderService.createPurchaseOrder(purchaseOrderCreationDTO, authentication))
+                .verifyErrorMatches(x -> {
+                    assertTrue(x instanceof BadRequest);
+                    assertEquals("Stock is not enough", x.getMessage());
+                    return true;
+                });
+
     }
 
     @Test
