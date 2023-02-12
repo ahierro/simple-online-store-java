@@ -17,9 +17,6 @@ It includes CRUD operations for Product, Category, User, PurchaseOrder and Purch
 * Junit
 * Lombok
 
-### Local PostgreSQL instance can be started with Docker using the following command
-docker run --detach --name postgres --env POSTGRES_PASSWORD=postgres --publish 5432:5432 postgres
-
 ### Swagger documentation can be found at 
 http://localhost:8080/swagger-ui.html
 
@@ -29,6 +26,9 @@ http://localhost:8080/swagger-ui.html
 * openssl rsa -in keypair.pem -pubout -out public.pem
 * openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out private.pem
 * delete keypair.pem
+
+### Local PostgreSQL instance can be started with Docker using the following command
+docker run --detach --name postgres --env POSTGRES_PASSWORD=postgres --publish 5432:5432 postgres
 
 ### Initialize Database this must be run before running
 ./mvnw liquibase:update

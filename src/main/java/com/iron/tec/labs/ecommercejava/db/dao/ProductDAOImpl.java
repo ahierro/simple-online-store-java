@@ -31,7 +31,6 @@ public class ProductDAOImpl implements ProductDAO {
     private final ProductRepository productRepository;
     private final MessageService messageService;
     private final CustomProductRepository customProductRepository;
-
     private final ProductViewRepository productViewRepository;
 
     @Override

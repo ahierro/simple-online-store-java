@@ -2,7 +2,6 @@ package com.iron.tec.labs.ecommercejava.controllers;
 
 import com.iron.tec.labs.ecommercejava.dto.CategoryDTO;
 import com.iron.tec.labs.ecommercejava.dto.PageResponseDTO;
-import com.iron.tec.labs.ecommercejava.dto.ProductPageRequestDTO;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.CategoryService;
@@ -54,7 +53,7 @@ class CategoryControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void getCategoryPage() {
-        when(categoryService.getCategoryPage(any(ProductPageRequestDTO.class))).thenReturn(Mono.just(new PageResponseDTO<>(
+        when(categoryService.getCategoryPage(any())).thenReturn(Mono.just(new PageResponseDTO<>(
                 Collections.singletonList(CategoryDTO.builder()
                         .id("f133d126-6cb1-4759-af63-9972f106a51d")
                         .name("Test")

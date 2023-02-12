@@ -55,7 +55,7 @@ class PurchaseOrderControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void getPurchaseOrderPage() {
-        when(purchaseOrderService.getPurchaseOrderPage(any(ProductPageRequestDTO.class))).thenReturn(
+        when(purchaseOrderService.getPurchaseOrderPage(any())).thenReturn(
                 Mono.just(new PageResponseDTO<>(
                         Collections.singletonList(PurchaseOrderViewDTO.builder()
                                 .id("e5ade578-6108-4c68-af78-0ca6c42c85ad")

@@ -1,15 +1,26 @@
 package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
+import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderView;
 import com.iron.tec.labs.ecommercejava.db.repository.UserRepository;
 import com.iron.tec.labs.ecommercejava.dto.RegisterUserDTO;
+import com.iron.tec.labs.ecommercejava.exceptions.BadRequest;
+import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
+import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Example;
+import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
+
+import static com.iron.tec.labs.ecommercejava.constants.Constants.*;
 
 @Service
 @AllArgsConstructor
@@ -17,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final MessageService messageService;
 
     @Override
     public Mono<Void> create(@NotNull RegisterUserDTO user) {
@@ -30,6 +42,10 @@ public class UserServiceImpl implements UserService {
                         .active(false)
                         .authority(user.isAdmin()?"ROLE_ADMIN":"ROLE_USER")
                         .build())
+                .doOnError(DuplicateKeyException.class, e -> {
+                    throw new Conflict(messageService.getRequestLocalizedMessage(ERROR_USER,
+                            ALREADY_EXISTS));
+                })
                 .flatMap(userCreated -> {
                     emailService.sendEmailInParallel(userCreated.getEmail(),
                             "Welcome to EcommerceJava! - Please confirm your e-mail",
@@ -40,7 +56,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<String> confirm(String token) {
-        return userRepository.findById(UUID.fromString(token))
+        return userRepository.findByIdAndActive(UUID.fromString(token), false)
+                .switchIfEmpty(Mono.error(new NotFound(messageService.getRequestLocalizedMessage(ERROR_USER,
+                        NOT_FOUND))))
                 .flatMap(user -> {
                     user.setActive(true);
                     return userRepository.save(user);

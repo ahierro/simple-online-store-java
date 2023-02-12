@@ -25,10 +25,13 @@ import org.springframework.security.web.server.context.NoOpServerSecurityContext
 
 import java.util.function.Function;
 
+import static com.iron.tec.labs.ecommercejava.constants.Constants.*;
+
 @EnableWebFluxSecurity
 @Configuration
 @AllArgsConstructor
 public class SecurityConfig {
+
     private final RsaKeyProperties jwtConfigProperties;
 
     @Bean
@@ -37,13 +40,16 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.POST, "/login").permitAll()
                 .pathMatchers(HttpMethod.POST, "/signup").permitAll()
                 .pathMatchers(HttpMethod.GET, "/confirm").permitAll()
+                .pathMatchers(HttpMethod.GET, "/webjars/swagger-ui/**").permitAll()
+                .pathMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
+                .pathMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
                 .pathMatchers(HttpMethod.GET, "/v1/product/**").permitAll()
                 .pathMatchers(HttpMethod.GET, "/v1/category/**").permitAll()
-                .pathMatchers(HttpMethod.POST, "/v1/purchase-order/**").hasAuthority("SCOPE_ROLE_USER")
-                .pathMatchers(HttpMethod.POST, "/v1/**").hasAuthority("SCOPE_ROLE_ADMIN")
-                .pathMatchers(HttpMethod.PUT, "/v1/**").hasAuthority("SCOPE_ROLE_ADMIN")
-                .pathMatchers(HttpMethod.DELETE, "/v1/**").hasAuthority("SCOPE_ROLE_ADMIN")
-                .pathMatchers(HttpMethod.GET, "/v1/purchase-order/**").hasAuthority("SCOPE_ROLE_ADMIN")
+                .pathMatchers(HttpMethod.POST, "/v1/purchase-order/**").hasAuthority(SCOPE_ROLE_USER)
+                .pathMatchers(HttpMethod.POST, V_1).hasAuthority(SCOPE_ROLE_ADMIN)
+                .pathMatchers(HttpMethod.PUT, V_1).hasAuthority(SCOPE_ROLE_ADMIN)
+                .pathMatchers(HttpMethod.DELETE, V_1).hasAuthority(SCOPE_ROLE_ADMIN)
+                .pathMatchers(HttpMethod.GET, "/v1/purchase-order/**").hasAuthority(SCOPE_ROLE_ADMIN)
                 .anyExchange()
                 .authenticated()
                 .and()
