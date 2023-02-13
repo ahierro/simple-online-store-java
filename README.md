@@ -28,8 +28,9 @@ http://localhost:8080/swagger-ui.html
 * delete keypair.pem
 
 ### Local PostgreSQL instance can be started with Docker using the following command
+``` shell
 docker run --detach --name postgres --env POSTGRES_PASSWORD=postgres --publish 5432:5432 postgres
-
+``` 
 ### Initialize Database this must be run before running
 ./mvnw liquibase:update
 
@@ -45,3 +46,13 @@ INSERT INTO public.users (id, username, password, email, first_name, last_name, 
 
 ### Postman collection file
 simple-online-store-java.postman_collection.json
+
+### Docker image building
+``` shell
+./mvnw spring-boot:build-image
+``` 
+### Docker Run
+
+``` shell
+docker run -d --add-host host.docker.internal:host-gateway --name ecommerce-java -p 8080:8080 ecommerce-java:0.0.1-SNAPSHOT
+``` 
