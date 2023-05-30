@@ -32,6 +32,10 @@ public class JWTGeneratorServiceImpl implements JWTGeneratorService {
                 .expiresAt(now.plus(1, ChronoUnit.HOURS))
                 .id(UUID.randomUUID().toString())
                 .subject(ObjectUtils.nullSafeToString(((AppUser)authentication.getPrincipal()).getId()))
+                .claim("name", authentication.getName())
+                .claim("email", ((AppUser)authentication.getPrincipal()).getEmail())
+                .claim("firstName", ((AppUser)authentication.getPrincipal()).getFirstName())
+                .claim("lastName", ((AppUser)authentication.getPrincipal()).getLastName())
                 .claim("scope", scope)
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

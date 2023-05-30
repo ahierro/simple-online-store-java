@@ -27,7 +27,7 @@ import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/v1/purchase-order")
+@RequestMapping("/api/purchase-order")
 @Log4j2
 @Tag(name = "Purchase Orders")
 public class PurchaseOrderController {

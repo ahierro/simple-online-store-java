@@ -26,7 +26,7 @@ import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/v1/category")
+@RequestMapping("/api/category")
 @Log4j2
 @Tag(name = "Categories")
 public class CategoryController {

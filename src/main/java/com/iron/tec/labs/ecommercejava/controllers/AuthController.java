@@ -31,7 +31,7 @@ public class AuthController {
     @Operation(summary = "Login with user and password and returns JWT token", responses = {
             @ApiResponse(responseCode = "200",description = "Successful Operation", content = @Content),
             @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content)})
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public Mono<String> login(@RequestBody LoginRequest userLogin) {
         return authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(userLogin.username(), userLogin.password()))
@@ -41,7 +41,7 @@ public class AuthController {
     @Operation(summary = "E-mail confirmation endpoint that activates user", responses = {
             @ApiResponse(responseCode = "200",description = "Successful Operation", content = @Content),
             @ApiResponse(responseCode = "404", description = "Not found", content = @Content)})
-    @GetMapping("/confirm")
+    @GetMapping("/api/confirm")
     public Mono<String> confirm(String token) {
         return userService.confirm(token);
     }
@@ -49,7 +49,7 @@ public class AuthController {
     @Operation(summary = "Sign up and sends e-mail with confirmation link", responses = {
             @ApiResponse(responseCode = "200",description = "Successful Operation", content = @Content),
             @ApiResponse(responseCode = "409", description = "User already exists", content = @Content)})
-    @PostMapping("signup")
+    @PostMapping("/api/signup")
     public Mono<Void> signup(@RequestBody RegisterUserDTO user) {
         return userService.create(user);
     }

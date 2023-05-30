@@ -19,6 +19,7 @@ It includes CRUD operations for Product, Category, User, PurchaseOrder and Purch
 
 ### Swagger documentation can be found at 
 http://localhost:8080/swagger-ui.html
+![swagger](/swagger.jpg "Swagger")
 
 ### Create public and private keys to sign and verify JWT tokens
 * cd src/main/resources/cert

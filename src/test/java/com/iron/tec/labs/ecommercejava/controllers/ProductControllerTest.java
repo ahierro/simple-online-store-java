@@ -65,7 +65,7 @@ class ProductControllerTest {
                         .bigImageUrl("https://github.com/2.jpg")
                         .createdAt(LocalDateTime.parse("2023-01-05T09:50:06.912024", DateTimeFormatter.ISO_DATE_TIME))
                         .build()), PageRequest.of(0, 1), 2)));
-        testClient.get().uri("/v1/product/page?page=0&size=1")
+        testClient.get().uri("/api/product/page?page=0&size=1")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -85,7 +85,7 @@ class ProductControllerTest {
                 .smallImageUrl("https://github.com/1.jpg")
                 .bigImageUrl("https://github.com/2.jpg")
                 .build()));
-        testClient.get().uri("/v1/product/baffc3a4-5447-48ab-b9c0-7604e448371d")
+        testClient.get().uri("/api/product/baffc3a4-5447-48ab-b9c0-7604e448371d")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -107,7 +107,7 @@ class ProductControllerTest {
                 .bigImageUrl("https://github.com/2.jpg")
                 .build()));
 
-        testClient.post().uri("/v1/product")
+        testClient.post().uri("/api/product")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(createProductRequest))
                 .exchange()
@@ -122,7 +122,7 @@ class ProductControllerTest {
 
         when(productService.createProduct(any())).thenThrow(Conflict.class);
 
-        testClient.post().uri("/v1/product")
+        testClient.post().uri("/api/product")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(createProductRequest)
                 .exchange()
@@ -137,7 +137,7 @@ class ProductControllerTest {
 
         when(productService.updateProduct(anyString(), any())).thenReturn(Mono.empty());
 
-        testClient.put().uri("/v1/product/f833d126-6cb1-4759-af63-9972f106a51d")
+        testClient.put().uri("/api/product/f833d126-6cb1-4759-af63-9972f106a51d")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(updateProductRequest))
                 .exchange()
@@ -152,7 +152,7 @@ class ProductControllerTest {
 
         when(productService.updateProduct(anyString(), any())).thenThrow(NotFound.class);
 
-        testClient.put().uri("/v1/product/f833d126-6cb1-4759-af63-9972f106a51d")
+        testClient.put().uri("/api/product/f833d126-6cb1-4759-af63-9972f106a51d")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(updateProductRequest))
                 .exchange()
@@ -166,7 +166,7 @@ class ProductControllerTest {
 
         when(productService.deleteProduct(anyString())).thenReturn(Mono.empty());
 
-        testClient.delete().uri("/v1/product/f833d126-6cb1-4759-af63-9972f106a51d")
+        testClient.delete().uri("/api/product/f833d126-6cb1-4759-af63-9972f106a51d")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful();
@@ -178,7 +178,7 @@ class ProductControllerTest {
 
         when(productService.deleteProduct(anyString())).thenThrow(NotFound.class);
 
-        testClient.delete().uri("/v1/product/f833d126-6cb1-4759-af63-9972f106a51d")
+        testClient.delete().uri("/api/product/f833d126-6cb1-4759-af63-9972f106a51d")
                 .exchange()
                 .expectStatus()
                 .isNotFound();

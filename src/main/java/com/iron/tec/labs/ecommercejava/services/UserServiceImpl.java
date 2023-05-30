@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
                 .flatMap(userCreated -> {
                     emailService.sendEmailInParallel(userCreated.getEmail(),
                             "Welcome to EcommerceJava! - Please confirm your e-mail",
-                            "Welcome to EcommerceJava "+userCreated.getFirstName()+"! Please confirm your e-mail by clicking on the following link:<a href=\"http://localhost:8080/confirm?token="+userCreated.getId()+"\">Confirm Mail!</a>" );
+                            "Welcome to EcommerceJava "+userCreated.getFirstName()+"! Please confirm your e-mail by clicking on the following link:<a href=\"http://localhost:8080/api/confirm?token="+userCreated.getId()+"\">Confirm Mail!</a>" );
                     return Mono.empty();
                 }).then();
     }

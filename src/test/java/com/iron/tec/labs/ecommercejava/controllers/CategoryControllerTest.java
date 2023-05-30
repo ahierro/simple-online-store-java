@@ -60,7 +60,7 @@ class CategoryControllerTest {
                         .description("Test2")
                         .createdAt(LocalDateTime.parse("2023-01-05T09:50:06.912024", DateTimeFormatter.ISO_DATE_TIME))
                         .build()), PageRequest.of(0, 1), 2)));
-        testClient.get().uri("/v1/category/page?page=0&size=1")
+        testClient.get().uri("/api/category/page?page=0&size=1")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -76,7 +76,7 @@ class CategoryControllerTest {
                 .name("Motherboards")
                 .description("Motherboards")
                 .build()));
-        testClient.get().uri("/v1/category/baffc3a4-5447-48ab-b9c0-7604e448371d")
+        testClient.get().uri("/api/category/baffc3a4-5447-48ab-b9c0-7604e448371d")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -94,7 +94,7 @@ class CategoryControllerTest {
                 .description("Motherboards")
                 .build()));
 
-        testClient.post().uri("/v1/category")
+        testClient.post().uri("/api/category")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(createCategoryRequest))
                 .exchange()
@@ -109,7 +109,7 @@ class CategoryControllerTest {
 
         when(categoryService.createCategory(any())).thenThrow(Conflict.class);
 
-        testClient.post().uri("/v1/category")
+        testClient.post().uri("/api/category")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(createCategoryRequest))
                 .exchange()
@@ -124,7 +124,7 @@ class CategoryControllerTest {
 
         when(categoryService.updateCategory(anyString(), any())).thenReturn(Mono.empty());
 
-        testClient.put().uri("/v1/category/f833d126-6cb1-4759-af63-9972f106a51d")
+        testClient.put().uri("/api/category/f833d126-6cb1-4759-af63-9972f106a51d")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(updateCategoryRequest))
                 .exchange()
@@ -139,7 +139,7 @@ class CategoryControllerTest {
 
         when(categoryService.updateCategory(anyString(), any())).thenThrow(NotFound.class);
 
-        testClient.put().uri("/v1/category/f833d126-6cb1-4759-af63-9972f106a51d")
+        testClient.put().uri("/api/category/f833d126-6cb1-4759-af63-9972f106a51d")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(updateCategoryRequest))
                 .exchange()
@@ -153,7 +153,7 @@ class CategoryControllerTest {
 
         when(categoryService.deleteCategory(anyString())).thenReturn(Mono.empty());
 
-        testClient.delete().uri("/v1/category/f833d126-6cb1-4759-af63-9972f106a51d")
+        testClient.delete().uri("/api/category/f833d126-6cb1-4759-af63-9972f106a51d")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful();
@@ -165,7 +165,7 @@ class CategoryControllerTest {
 
         when(categoryService.deleteCategory(anyString())).thenThrow(NotFound.class);
 
-        testClient.delete().uri("/v1/category/f833d126-6cb1-4759-af63-9972f106a51d")
+        testClient.delete().uri("/api/category/f833d126-6cb1-4759-af63-9972f106a51d")
                 .exchange()
                 .expectStatus()
                 .isNotFound();

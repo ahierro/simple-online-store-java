@@ -54,7 +54,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
                                 page.getContent().stream()
                                         .map(x -> conversionService.convert(x, PurchaseOrderViewDTO.class)).toList()
                                 , page.getPageable()
-                                , page.getTotalPages()));
+                                , page.getTotalElements()));
     }
 
 }

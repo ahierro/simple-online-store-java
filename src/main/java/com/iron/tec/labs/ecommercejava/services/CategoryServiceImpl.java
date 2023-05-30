@@ -45,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
                                 page.getContent().stream()
                                         .map(x -> conversionService.convert(x, CategoryDTO.class)).toList()
                                 , page.getPageable()
-                                , page.getTotalPages()));
+                                , page.getTotalElements()));
     }
 
     @Override

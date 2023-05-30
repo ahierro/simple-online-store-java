@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
                                 page.getContent().stream()
                                         .map(x -> conversionService.convert(x, ProductDTO.class)).toList()
                                 , page.getPageable()
-                                , page.getTotalPages()));
+                                , page.getTotalElements()));
     }
 
     @Override

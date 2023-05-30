@@ -3,7 +3,7 @@ package com.iron.tec.labs.ecommercejava.constants;
 public final class Constants {
     public static final String SCOPE_ROLE_USER = "SCOPE_ROLE_USER";
     public static final String SCOPE_ROLE_ADMIN = "SCOPE_ROLE_ADMIN";
-    public static final String V_1 = "/v1/**";
+    public static final String API = "/api/**";
     public static final String ERROR_CATEGORY = "error.category";
     public static final String ERROR_PURCHASE_ORDER = "error.purchase.order";
     public static final String PRICE = "price";

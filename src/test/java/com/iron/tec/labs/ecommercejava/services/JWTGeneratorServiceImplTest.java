@@ -36,7 +36,12 @@ class JWTGeneratorServiceImplTest {
         Jwt jwt = mock(Jwt.class);
         when(encoder.encode(any())).thenReturn(jwt);
         when(jwt.getTokenValue()).thenReturn(jwtExample);
-        when(authentication.getPrincipal()).thenReturn(AppUser.builder().id(UUID.randomUUID()).build());
+        when(authentication.getPrincipal()).thenReturn(AppUser.builder().id(UUID.randomUUID())
+                .email("asd@gmail.com")
+                .lastName("Smith")
+                .firstName("John")
+                .build());
+        when(authentication.getName()).thenReturn("Mary");
 
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
         when(authentication.getAuthorities()).thenAnswer(x -> authorities);

@@ -69,7 +69,7 @@ class PurchaseOrderControllerTest {
                                 .status("PENDING")
                                 .total(BigDecimal.valueOf(1000))
                                 .build()), PageRequest.of(0, 1), 1)));
-        testClient.get().uri("/v1/purchase-order/page?page=0&size=1")
+        testClient.get().uri("/api/purchase-order/page?page=0&size=1")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -97,7 +97,7 @@ class PurchaseOrderControllerTest {
                 .createdAt(LocalDateTime.parse("2023-01-21T21:37:51.647479", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")))
                 .user(UserDTO.builder().username("admin").email("admin@gmail.com").firstName("Alejandro").lastName("Admin").build())
                 .build()));
-        testClient.get().uri("/v1/purchase-order/baffc3a4-5447-48ab-b9c0-7604e448371d")
+        testClient.get().uri("/api/purchase-order/baffc3a4-5447-48ab-b9c0-7604e448371d")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
@@ -119,7 +119,7 @@ class PurchaseOrderControllerTest {
                 .total(BigDecimal.valueOf(1000))
                 .build()));
 
-        testClient.post().uri("/v1/purchase-order")
+        testClient.post().uri("/api/purchase-order")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(createPurchaseOrderRequest))
                 .exchange()
@@ -135,7 +135,7 @@ class PurchaseOrderControllerTest {
                 new UsernamePasswordAuthenticationToken("test", "test", Collections.emptyList());
         when(purchaseOrderService.createPurchaseOrder(any(), any())).thenThrow(Conflict.class);
 
-        testClient.post().uri("/v1/purchase-order")
+        testClient.post().uri("/api/purchase-order")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(createPurchaseOrderRequest))
                 .exchange()
@@ -149,7 +149,7 @@ class PurchaseOrderControllerTest {
 
         when(purchaseOrderService.patchPurchaseOrder(anyString(), any())).thenReturn(Mono.empty());
 
-        testClient.patch().uri("/v1/purchase-order/f833d126-6cb1-4759-af63-9972f106a51d")
+        testClient.patch().uri("/api/purchase-order/f833d126-6cb1-4759-af63-9972f106a51d")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(updatePurchaseOrderRequest))
                 .exchange()
@@ -164,7 +164,7 @@ class PurchaseOrderControllerTest {
 
         when(purchaseOrderService.patchPurchaseOrder(anyString(), any())).thenThrow(NotFound.class);
 
-        testClient.patch().uri("/v1/purchase-order/f833d126-6cb1-4759-af63-9972f106a51d")
+        testClient.patch().uri("/api/purchase-order/f833d126-6cb1-4759-af63-9972f106a51d")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(updatePurchaseOrderRequest))
                 .exchange()

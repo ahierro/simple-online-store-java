@@ -28,7 +28,7 @@ import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/v1/product")
+@RequestMapping("/api/product")
 @Log4j2
 @Tag(name = "Products")
 public class ProductController {

@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "68d17907-acd3-4ef6-aa05-c2d66934e698",
+		"_postman_id": "8ba81411-8163-47ed-950c-6eb7ed890d5b",
 		"name": "simple-online-store-java",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "1070046"
+		"_exporter_id": "27189102"
 	},
 	"item": [
 		{
@@ -25,12 +25,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/product/page?page=0&size=10",
+							"raw": "{{baseUrl}}/api/product/page?page=0&size=1",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"v1",
+								"api",
 								"product",
 								"page"
 							],
@@ -41,7 +41,7 @@
 								},
 								{
 									"key": "size",
-									"value": "10"
+									"value": "1"
 								},
 								{
 									"key": "categoryId",
@@ -77,12 +77,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/product/1b88712a-f74a-4d2c-ad3e-b4f9a8243cc6",
+							"raw": "{{baseUrl}}/api/product/1b88712a-f74a-4d2c-ad3e-b4f9a8243cc6",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"v1",
+								"api",
 								"product",
 								"1b88712a-f74a-4d2c-ad3e-b4f9a8243cc6"
 							]
@@ -115,12 +115,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/v1/product",
+							"raw": "{{baseUrl}}/api/product",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"v1",
+								"api",
 								"product"
 							]
 						}
@@ -152,12 +152,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/v1/product/1b88712a-f74a-4d2c-ad3e-b4f9a8243cc6",
+							"raw": "{{baseUrl}}/api/product/1b88712a-f74a-4d2c-ad3e-b4f9a8243cc6",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"v1",
+								"api",
 								"product",
 								"1b88712a-f74a-4d2c-ad3e-b4f9a8243cc6"
 							]
@@ -181,12 +181,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/product/0d3302bb-ce9a-4cc2-913c-3cf62799c4d3",
+							"raw": "{{baseUrl}}/api/product/0d3302bb-ce9a-4cc2-913c-3cf62799c4d3",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"v1",
+								"api",
 								"product",
 								"0d3302bb-ce9a-4cc2-913c-3cf62799c4d3"
 							]
@@ -208,23 +208,23 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/category/page?page=0&size=2",
+							"raw": "{{baseUrl}}/api/category/page?page=2&size=1",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"v1",
+								"api",
 								"category",
 								"page"
 							],
 							"query": [
 								{
 									"key": "page",
-									"value": "0"
+									"value": "2"
 								},
 								{
 									"key": "size",
-									"value": "2"
+									"value": "1"
 								}
 							]
 						}
@@ -240,12 +240,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/category/9096c206-fde3-4c35-9e95-fe6b85addb95",
+							"raw": "{{baseUrl}}/api/category/9096c206-fde3-4c35-9e95-fe6b85addb95",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"v1",
+								"api",
 								"category",
 								"9096c206-fde3-4c35-9e95-fe6b85addb95"
 							]
@@ -270,7 +270,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": \"7836a937-5467-4191-9d2c-b65bba26f64e\",\r\n  \"name\": \"Motherboards\",\r\n  \"description\": \"Motherboards\"\r\n}",
+							"raw": "{\r\n  \"id\": \"61fef552-17b1-46ef-9452-48b93ad51022\",\r\n  \"name\": \"Speakers\",\r\n  \"description\": \"Speakers\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -278,12 +278,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/v1/category",
+							"raw": "{{baseUrl}}/api/category",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"v1",
+								"api",
 								"category"
 							]
 						}
@@ -307,7 +307,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Power Supply\",\r\n    \"description\": \"Power Supply\"\r\n}",
+							"raw": "{\r\n  \"id\": \"570bd7a8-2885-438d-b4ff-5e766923adb7\",\r\n  \"name\": \"Mouses\",\r\n  \"description\": \"Mouses\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -315,12 +315,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/v1/category/9096c206-fde3-4c35-9e95-fe6b85addb95",
+							"raw": "{{baseUrl}}/api/category/9096c206-fde3-4c35-9e95-fe6b85addb95",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"v1",
+								"api",
 								"category",
 								"9096c206-fde3-4c35-9e95-fe6b85addb95"
 							]
@@ -344,12 +344,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/category/d18dcd21-b76e-481f-b4df-88bc07a5c13e",
+							"raw": "{{baseUrl}}/api/category/d18dcd21-b76e-481f-b4df-88bc07a5c13e",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"v1",
+								"api",
 								"category",
 								"d18dcd21-b76e-481f-b4df-88bc07a5c13e"
 							]
@@ -378,12 +378,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/purchase-order/page?page=0&size=2",
+							"raw": "{{baseUrl}}/api/purchase-order/page?page=0&size=2",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"v1",
+								"api",
 								"purchase-order",
 								"page"
 							],
@@ -417,12 +417,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/v1/purchase-order/ab803daa-af2f-4538-8fef-3d35e9135f9d",
+							"raw": "{{baseUrl}}/api/purchase-order/ab803daa-af2f-4538-8fef-3d35e9135f9d",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"v1",
+								"api",
 								"purchase-order",
 								"ab803daa-af2f-4538-8fef-3d35e9135f9d"
 							]
@@ -455,12 +455,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/v1/purchase-order",
+							"raw": "{{baseUrl}}/api/purchase-order",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"v1",
+								"api",
 								"purchase-order"
 							]
 						}
@@ -525,11 +525,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/signup",
+					"raw": "{{baseUrl}}/api/signup",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
+						"api",
 						"signup"
 					]
 				}
@@ -566,11 +567,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/login",
+					"raw": "{{baseUrl}}/api/login",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
+						"api",
 						"login"
 					]
 				}
@@ -607,11 +609,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/login",
+					"raw": "{{baseUrl}}/api/login",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
+						"api",
 						"login"
 					]
 				}
@@ -643,6 +646,11 @@
 		{
 			"key": "baseUrl",
 			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMzBiMWI4OC01ODUwLTRkMjUtYjgxZi03ODY5MjVkMDlhYjciLCJmaXJzdE5hbWUiOiJBbGVqYW5kcm8iLCJsYXN0TmFtZSI6IkFkbWluIiwic2NvcGUiOiJST0xFX0FETUlOIiwiaXNzIjoic2VsZiIsIm5hbWUiOiJhZG1pbiIsImV4cCI6MTY4NTM5MzM2NiwiaWF0IjoxNjg1Mzg5NzY2LCJqdGkiOiJmMWIyMTIzZC04NzMxLTQ1NTMtODRkMi0xNGU1ZmVkMmM4OTciLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSJ9.VmHECYRxWZlro0JQ2ABrx4i8cjC3yPGCXmRmMkBNQxRBvTdFbVSQYYfMzB6IpLzJPlZo3FXb15p4IRkXYImCGcI06ZSQbDREAKG1hSTWo-9IWqd7qK2lGzBz9buTUrEGgHapjt41Oy0HqxaCGNhfiPIRSh-r44RV4V282gQ7CIqHQY118WR6RUC0yeQf7SViWYVR1igRael-DHU7zCrzd6T4PtT3CdhUDoBGKN_pKjVUnWIqrEStKUEycTqJui9iykvli64WLV7OvNFu5xSAXs-10ZsgWdkhY2_dYEcCmTQ0FcTR3zYaEP800eEnMcjNfJGp5bW26TGsOfJpswo4Aw",
 			"type": "string"
 		}
 	]

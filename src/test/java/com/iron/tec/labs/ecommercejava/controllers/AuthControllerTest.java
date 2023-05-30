@@ -45,7 +45,7 @@ class AuthControllerTest {
         when(authenticationManager.authenticate(any())).thenReturn(Mono.just(authentication));
         when(jwtGeneratorService.generateToken(any())).thenReturn("token");
 
-        testClient.post().uri("/login")
+        testClient.post().uri("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(loginRequest))
                 .exchange()
@@ -58,7 +58,7 @@ class AuthControllerTest {
 
         when(userService.create(any())).thenReturn(Mono.empty());
 
-        testClient.post().uri("/signup")
+        testClient.post().uri("/api/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(signUpRequest))
                 .exchange()
@@ -70,7 +70,7 @@ class AuthControllerTest {
     void confirm() {
         when(userService.confirm(any())).thenReturn(Mono.just("token"));
 
-        testClient.get().uri("/confirm?token=token")
+        testClient.get().uri("/api/confirm?token=token")
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful();
