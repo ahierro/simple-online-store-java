@@ -14,6 +14,7 @@ public class RequestBodyLogger extends ServerHttpRequestDecorator {
         super(delegate);
     }
 
+    @Override
     public Flux<DataBuffer> getBody() {
         return super.getBody().doOnNext(this::capture);
     }

@@ -14,7 +14,7 @@ public class CustomLogFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange serverWebExchange, WebFilterChain webFilterChain) {
         CustomBodyExchange bodyExchange = new CustomBodyExchange(serverWebExchange);
         return webFilterChain.filter(bodyExchange)
-                .doOnSuccess((se) -> {
+                .doOnSuccess(se -> {
             log.info("{} Body request {}", serverWebExchange.getLogPrefix(), bodyExchange.getRequest().getFullBody());
             log.info("{} Body response {} ", serverWebExchange.getLogPrefix(), bodyExchange.getResponse().getFullBody());
         });
