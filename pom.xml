@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.0</version>
+		<version>3.2.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.iron.tec.labs</groupId>
@@ -14,11 +14,11 @@
 	<name>ecommerce-java</name>
 	<description>Simple REST API for ecommerce site</description>
 	<properties>
-		<java.version>17</java.version>
-		<testcontainers.version>1.17.6</testcontainers.version>
+		<java.version>21</java.version>
+		<testcontainers.version>1.19.7</testcontainers.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-		<org.mapstruct.extensions.spring.version>0.1.2</org.mapstruct.extensions.spring.version>
-		<org.projectlombok.version>1.18.26</org.projectlombok.version>
+		<org.mapstruct.extensions.spring.version>1.1.1</org.mapstruct.extensions.spring.version>
+		<org.projectlombok.version>1.18.30</org.projectlombok.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -163,10 +163,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
+				<version>3.12.1</version>
 				<configuration>
-					<source>17</source> <!-- depending on your project -->
-					<target>17</target> <!-- depending on your project -->
+					<source>21</source> <!-- depending on your project -->
+					<target>21</target> <!-- depending on your project -->
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
