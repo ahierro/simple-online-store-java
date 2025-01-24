@@ -164,3 +164,8 @@ SELECT
     p.deleted as deleted
 FROM purchase_order_line po INNER JOIN product p ON po.id_product = p.id INNER JOIN category c on c.id = p.id_category;
 --rollback drop view purchase_order_line_view;
+
+-- changeset alejandro:1672328951182-2
+-- preconditions onFail:HALT onError:HALT
+-- comment: Initial Admin User Creation
+INSERT INTO public.users (id, username, password, email, first_name, last_name, active, locked, authorities, created_at) VALUES ('130b1b88-5850-4d25-b81f-786925d09ab7', 'admin', '$2a$10$7EVF8hBxswNOWMPfpIImruKVkUbNcL51KK.TueUqUPjnfdAghhJmC', 'admin@gmail.com', 'Alejandro', 'Admin', true, false, '["ROLE_ADMIN"]', '2023-01-06 18:47:26.046147');
