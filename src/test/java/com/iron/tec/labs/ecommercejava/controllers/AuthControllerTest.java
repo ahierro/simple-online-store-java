@@ -7,11 +7,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -25,11 +25,11 @@ class AuthControllerTest {
     @Autowired
     WebTestClient testClient;
 
-    @MockBean
+    @MockitoBean
     UserService userService;
-    @MockBean
+    @MockitoBean
     JWTGeneratorService jwtGeneratorService;
-    @MockBean
+    @MockitoBean
     ReactiveAuthenticationManager authenticationManager;
 
     @Value("classpath:json/user/loginRequest.json")

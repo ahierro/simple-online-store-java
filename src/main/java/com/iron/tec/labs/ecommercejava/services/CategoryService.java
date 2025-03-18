@@ -1,18 +1,15 @@
 package com.iron.tec.labs.ecommercejava.services;
 
-import com.iron.tec.labs.ecommercejava.dto.*;
+import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
+import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
 public interface CategoryService {
-    Mono<CategoryDTO> getById(UUID id);
-
-    Mono<CategoryDTO> createCategory(CategoryCreationDTO categoryCreationDTO);
-
-    Mono<CategoryDTO> updateCategory(String id, CategoryUpdateDTO categoryCreationDTO);
-
-    Mono<PageResponseDTO<CategoryDTO>> getCategoryPage(PageRequestDTO pageRequest);
-
+    Mono<CategoryDomain> getById(UUID id);
+    Mono<CategoryDomain> createCategory(CategoryDomain categoryCreationDTO);
+    Mono<CategoryDomain> updateCategory(CategoryDomain categoryCreationDTO);
+    Mono<PageDomain<CategoryDomain>> getCategoryPage(int page, int size);
     Mono<Void> deleteCategory(String id);
 }

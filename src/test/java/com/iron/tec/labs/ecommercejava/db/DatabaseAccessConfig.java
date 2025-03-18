@@ -12,6 +12,7 @@ import com.iron.tec.labs.ecommercejava.services.MessageService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.convert.R2dbcCustomConversions;
@@ -19,10 +20,10 @@ import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication
-@EnableTransactionManagement
-@EnableR2dbcAuditing
-@EnableR2dbcRepositories
+//@SpringBootApplication
+//@EnableTransactionManagement
+//@EnableR2dbcAuditing
+//@EnableR2dbcRepositories
 public class DatabaseAccessConfig {
 
 	public static void main(String[] args) {
@@ -36,8 +37,9 @@ public class DatabaseAccessConfig {
 		return new ProductDAOImpl(productRepository,messageService,customProductRepository,productViewRepository);
 	}
 	@Bean
-	public CategoryDAOImpl categoryImpl(CategoryRepository categoryRepository, MessageService messageService){
-		return new CategoryDAOImpl(categoryRepository,messageService);
+	public CategoryDAOImpl categoryImpl(CategoryRepository categoryRepository, MessageService messageService,
+										ConversionService conversionService){
+		return new CategoryDAOImpl(conversionService,categoryRepository,messageService);
 	}
 	@Bean
 	public PurchaseOrderDAO purchaseOrderDAOImpl(PurchaseOrderRepository purchaseOrderRepository, MessageService messageService,
@@ -62,10 +64,6 @@ public class DatabaseAccessConfig {
 		return new ColumnConverter(conversions,r2dbcConverter);
 	}
 
-//	@Configuration
-//	public ReactivePostgresConfig reactivePostgresConfig(){
-//			return new ReactivePostgresConfig(new ObjectMapper());
-//	}
 	@Bean
 	public ObjectMapper objectMapper(){
 		return new ObjectMapper();

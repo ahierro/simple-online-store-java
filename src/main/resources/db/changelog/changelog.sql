@@ -17,6 +17,7 @@ create table "users"
     "locked"     boolean     not null default false,
     "authorities" json NOT NULL,
     "created_at" TIMESTAMP WITHOUT TIME ZONE,
+    "updated_at" TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
 create unique index ix_users_username on "users" (username);
@@ -33,7 +34,8 @@ CREATE TABLE "category"
     "name"            VARCHAR(50)   NOT NULL,
     "description"     TEXT           NOT NULL,
     "created_at"      TIMESTAMP WITHOUT TIME ZONE,
-    deleted boolean NOT NULL DEFAULT false,
+    "updated_at" TIMESTAMP WITHOUT TIME ZONE,
+    "deleted" boolean NOT NULL DEFAULT false,
     CONSTRAINT "category_pkey" PRIMARY KEY ("id")
 );
 --rollback drop table category;
@@ -53,7 +55,8 @@ CREATE TABLE "product"
     "big_image_url"   VARCHAR(255)   NOT NULL,
     "created_at"      TIMESTAMP WITHOUT TIME ZONE,
     "id_category"     UUID NOT NULL,
-    deleted boolean NOT NULL DEFAULT false,
+    "deleted" boolean NOT NULL DEFAULT false,
+    "updated_at" TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT "product_pkey" PRIMARY KEY ("id")
 );
 alter table "product" add constraint "p_category_fk" foreign key ("id_category") references "category" ("id");
@@ -78,6 +81,7 @@ create table "purchase_order"
     "status"     VARCHAR(50) NOT NULL,
     "total"      numeric(16, 2) NOT NULL,
     "created_at" TIMESTAMP WITHOUT TIME ZONE,
+    "updated_at" TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT "purchase_order_pkey" PRIMARY KEY ("id")
 );
 alter table "purchase_order" add constraint "po_id_user_fk" foreign key ("id_user") references "users" ("id");

@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -29,7 +29,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@DataR2dbcTest
+@SpringBootTest
 class ProductDAOImplTest extends PostgresIntegrationSetup {
 
     @Container
@@ -53,8 +53,7 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
     @Autowired
     private CategoryRepository categoryRepository;
 
-
-    @MockBean
+    @Autowired
     MessageService messageService;
 
     Product product = null;
@@ -104,7 +103,6 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
                         .thenMany(productRepository.findAll()))
                 .expectNextCount(1)
                 .verifyComplete();
-        product.setCreatedAt(null);
         StepVerifier.create(productDAO.create(product)
                         .thenMany(productRepository.findAll()))
                 .verifyError(Conflict.class);

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static com.iron.tec.labs.ecommercejava.constants.Constants.*;
@@ -72,6 +73,7 @@ public class PurchaseOrderDAOImpl implements PurchaseOrderDAO {
 
     @Override
     public Mono<PurchaseOrder> update(PurchaseOrder product) {
+        product.setUpdatedAt(LocalDateTime.now());
         return purchaseOrderRepository.save(product).doOnError(TransientDataAccessResourceException.class, e -> {
             throw new NotFound(messageService.getRequestLocalizedMessage(ERROR_PURCHASE_ORDER, NOT_FOUND,
                     ObjectUtils.nullSafeToString(product.getId())));

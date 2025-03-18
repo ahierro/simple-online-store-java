@@ -1,17 +1,15 @@
 package com.iron.tec.labs.ecommercejava.db.dao;
 
-import com.iron.tec.labs.ecommercejava.db.entities.Category;
-import org.springframework.data.domain.Page;
+import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
+import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
 public interface CategoryDAO {
-    Mono<Category> getById(UUID id);
-
-    Mono<Page<Category>> getPage(int page, int size);
-
-    Mono<Category> create(Category product);
-    Mono<Category> update(Category product);
+    Mono<CategoryDomain> getById(UUID id);
+    Mono<PageDomain<CategoryDomain>> getPage(int page, int size);
+    Mono<CategoryDomain> create(CategoryDomain o);
+    Mono<CategoryDomain> update(CategoryDomain o);
     Mono<Void> delete(String id);
 }

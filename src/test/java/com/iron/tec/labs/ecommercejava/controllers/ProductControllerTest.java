@@ -1,5 +1,6 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
+import com.iron.tec.labs.ecommercejava.config.ConverterConfig;
 import com.iron.tec.labs.ecommercejava.dto.PageResponseDTO;
 import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
@@ -10,12 +11,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -32,11 +34,12 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @WebFluxTest(ProductController.class)
+@Import(ConverterConfig.class)
 class ProductControllerTest {
     @Autowired
     WebTestClient testClient;
 
-    @MockBean
+    @MockitoBean
     ProductService productService;
 
     @Value("classpath:json/product/responses/getPageResponse.json")

@@ -1,7 +1,8 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
-import com.iron.tec.labs.ecommercejava.dto.CategoryDTO;
-import com.iron.tec.labs.ecommercejava.dto.PageResponseDTO;
+import com.iron.tec.labs.ecommercejava.config.ConverterConfig;
+import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
+import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.CategoryService;
@@ -10,12 +11,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -25,17 +26,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @WebFluxTest(CategoryController.class)
+@Import(ConverterConfig.class)
 class CategoryControllerTest {
     @Autowired
     WebTestClient testClient;
 
-    @MockBean
+    @MockitoBean
     CategoryService categoryService;
 
     @Value("classpath:json/category/responses/getPageResponse.json")
@@ -53,13 +54,13 @@ class CategoryControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void getCategoryPage() {
-        when(categoryService.getCategoryPage(any())).thenReturn(Mono.just(new PageResponseDTO<>(
-                Collections.singletonList(CategoryDTO.builder()
-                        .id("f133d126-6cb1-4759-af63-9972f106a51d")
+        when(categoryService.getCategoryPage(anyInt(), anyInt())).thenReturn(Mono.just(new PageDomain<>(
+                Collections.singletonList(CategoryDomain.builder()
+                        .id(UUID.fromString("f133d126-6cb1-4759-af63-9972f106a51d"))
                         .name("Test")
                         .description("Test2")
                         .createdAt(LocalDateTime.parse("2023-01-05T09:50:06.912024", DateTimeFormatter.ISO_DATE_TIME))
-                        .build()), PageRequest.of(0, 1), 2)));
+                        .build()), 2, 2, 0)));
         testClient.get().uri("/api/category/page?page=0&size=1")
                 .exchange()
                 .expectStatus()
@@ -71,8 +72,8 @@ class CategoryControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void getById() {
-        when(categoryService.getById(any(UUID.class))).thenReturn(Mono.just(CategoryDTO.builder()
-                .id("baffc3a4-5447-48ab-b9c0-7604e448371d")
+        when(categoryService.getById(any(UUID.class))).thenReturn(Mono.just(CategoryDomain.builder()
+                .id(UUID.fromString("baffc3a4-5447-48ab-b9c0-7604e448371d"))
                 .name("Motherboards")
                 .description("Motherboards")
                 .build()));
@@ -88,8 +89,8 @@ class CategoryControllerTest {
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void createCategory() {
 
-        when(categoryService.createCategory(any())).thenReturn(Mono.just(CategoryDTO.builder()
-                .id("63466fc5-dccd-43c2-a3c7-4028bd9684bb")
+        when(categoryService.createCategory(any())).thenReturn(Mono.just(CategoryDomain.builder()
+                .id(UUID.fromString("63466fc5-dccd-43c2-a3c7-4028bd9684bb"))
                 .name("Motherboards")
                 .description("Motherboards")
                 .build()));
@@ -122,7 +123,7 @@ class CategoryControllerTest {
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void updateCategory() {
 
-        when(categoryService.updateCategory(anyString(), any())).thenReturn(Mono.empty());
+        when(categoryService.updateCategory(any())).thenReturn(Mono.empty());
 
         testClient.put().uri("/api/category/f833d126-6cb1-4759-af63-9972f106a51d")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -137,7 +138,7 @@ class CategoryControllerTest {
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void updateNonExistingCategory() {
 
-        when(categoryService.updateCategory(anyString(), any())).thenThrow(NotFound.class);
+        when(categoryService.updateCategory(any())).thenThrow(NotFound.class);
 
         testClient.put().uri("/api/category/f833d126-6cb1-4759-af63-9972f106a51d")
                 .contentType(MediaType.APPLICATION_JSON)

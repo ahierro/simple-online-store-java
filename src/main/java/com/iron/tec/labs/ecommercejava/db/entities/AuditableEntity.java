@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.InsertOnlyProperty;
 
@@ -24,8 +25,11 @@ public abstract class AuditableEntity implements Persistable<UUID> {
     @EqualsAndHashCode.Exclude
     protected LocalDateTime createdAt;
 
+    @EqualsAndHashCode.Exclude
+    protected LocalDateTime updatedAt;
+
     @Override
     public boolean isNew() {
-        return createdAt == null;
+        return updatedAt == null;
     }
 }

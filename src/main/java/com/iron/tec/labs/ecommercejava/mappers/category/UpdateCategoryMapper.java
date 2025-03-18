@@ -2,15 +2,24 @@ package com.iron.tec.labs.ecommercejava.mappers.category;
 
 import com.iron.tec.labs.ecommercejava.db.entities.Category;
 import com.iron.tec.labs.ecommercejava.dto.CategoryUpdateDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface UpdateCategoryMapper extends Converter<CategoryUpdateDTO, Category>  {
-    @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "deleted", source = "deleted", defaultValue = "false")
-    Category convert(@NonNull CategoryUpdateDTO product);
+import java.time.LocalDateTime;
 
+@Component
+public class UpdateCategoryMapper implements Converter<CategoryUpdateDTO, Category> {
+
+    @Override
+    public Category convert(@NonNull CategoryUpdateDTO source) {
+        Category category = Category.builder()
+                .name(source.getName())
+                .description(source.getDescription())
+                .deleted(source.getDeleted() != null ? source.getDeleted() : false)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        return category;
+    }
 }

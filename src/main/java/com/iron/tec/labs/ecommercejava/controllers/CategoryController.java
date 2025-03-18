@@ -1,5 +1,7 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
+import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
+import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import com.iron.tec.labs.ecommercejava.dto.*;
 import com.iron.tec.labs.ecommercejava.services.CategoryService;
 import com.iron.tec.labs.ecommercejava.util.LoggingUtils;
@@ -14,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +35,7 @@ import static org.springframework.http.ResponseEntity.ok;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final ConversionService conversionService;
 
     @Operation(summary = "Get page of categories",
             parameters = { @Parameter(in = ParameterIn.QUERY, name = "page", description = "Page"),
@@ -41,10 +45,18 @@ public class CategoryController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CategoryPage.class)))})
     @GetMapping("/page")
-    public Mono<PageResponseDTO<CategoryDTO>> getCategoriesPaged(@Valid PageRequestDTO pageRequest) {
+    public Mono<PageDomain<CategoryDTO>> getCategoriesPaged(@Valid PageRequestDTO pageRequest) {
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before categories obtained")))
-                .then(categoryService.getCategoryPage(pageRequest))
+                .then(categoryService.getCategoryPage(pageRequest.getPage(), pageRequest.getSize())
+                        .mapNotNull(page ->
+                                new PageDomain<>(
+                                        page.getContent().stream()
+                                                .map(x -> conversionService.convert(x, CategoryDTO.class)).toList()
+                                        , page.getTotalPages()
+                                        , page.getTotalElements(),
+                                          pageRequest.getPage()))
+                )
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Categories obtained")));
     }
 
@@ -57,7 +69,8 @@ public class CategoryController {
     public Mono<CategoryDTO> getCategory(@PathVariable UUID id) {
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before categories obtained")))
-                .then(categoryService.getById(id))
+                .then(categoryService.getById(id)
+                        .mapNotNull(category -> conversionService.convert(category, CategoryDTO.class)))
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Categories obtained")));
     }
 
@@ -72,7 +85,8 @@ public class CategoryController {
                                                      ServerHttpRequest serverHttpRequest) {
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before creating category")))
-                .then(categoryService.createCategory(categoryCreationDTO))
+                .then(categoryService.createCategory(conversionService.convert(categoryCreationDTO, CategoryDomain.class))
+                        .mapNotNull(o -> conversionService.convert(o, CategoryDTO.class)))
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Category created")))
                 .map(category -> ResponseEntity.created(
                         URI.create(serverHttpRequest.getPath().toString().concat("/")
@@ -88,9 +102,14 @@ public class CategoryController {
     @PutMapping("/{id}")
     public Mono<ResponseEntity<Void>> updateCategory(@PathVariable("id") String id,
                                                      @RequestBody @Valid CategoryUpdateDTO category) {
+        CategoryDomain categoryDomain = conversionService.convert(category, CategoryDomain.class);
+        if (categoryDomain != null) {
+            categoryDomain.setId(UUID.fromString(id));
+        }
+
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before updating category")))
-                .then(categoryService.updateCategory(id, category))
+                .then(categoryService.updateCategory(categoryDomain))
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Category updated")))
                 .map(x -> ok().build());
     }
@@ -107,7 +126,7 @@ public class CategoryController {
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before deleting category")))
                 .then(categoryService.deleteCategory(id))
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Category deleted")))
-                .map(x -> ok().build());
+                .then(Mono.fromCallable(() -> ok().build()));
     }
 
 }

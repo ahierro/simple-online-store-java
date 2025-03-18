@@ -7,5 +7,4 @@ import java.util.UUID;
 
 public interface CustomProductRepository {
     Mono<ProductDTO> findById(UUID id);
-
 }

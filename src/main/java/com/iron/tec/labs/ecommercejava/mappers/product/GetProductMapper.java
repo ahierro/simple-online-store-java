@@ -2,16 +2,25 @@ package com.iron.tec.labs.ecommercejava.mappers.product;
 
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
 import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface GetProductMapper extends Converter<Product, ProductDTO> {
+@Component
+public class GetProductMapper implements Converter<Product, ProductDTO> {
 
-    @Mapping(target = "productDescription", source = "description")
-    @Mapping(target = "productName", source = "name")
-    @Mapping(target = "productId", source = "id")
-    ProductDTO convert(@NonNull Product product);
+    @Override
+    public ProductDTO convert(@NonNull Product source) {
+        return ProductDTO.builder()
+                .productId(source.getId() != null ? source.getId().toString() : null)
+                .productName(source.getName())
+                .productDescription(source.getDescription())
+                .stock(source.getStock())
+                .price(source.getPrice())
+                .smallImageUrl(source.getSmallImageUrl())
+                .bigImageUrl(source.getBigImageUrl())
+                .deleted(source.getDeleted())
+                .createdAt(source.getCreatedAt())
+                .build();
+    }
 }

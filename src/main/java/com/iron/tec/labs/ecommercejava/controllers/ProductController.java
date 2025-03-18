@@ -1,9 +1,31 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
-import com.iron.tec.labs.ecommercejava.dto.*;
+import static org.springframework.http.ResponseEntity.ok;
+
+import java.net.URI;
+import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.iron.tec.labs.ecommercejava.dto.PageResponseDTO;
+import com.iron.tec.labs.ecommercejava.dto.ProductCreationDTO;
+import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
+import com.iron.tec.labs.ecommercejava.dto.ProductPage;
+import com.iron.tec.labs.ecommercejava.dto.ProductPageRequestDTO;
+import com.iron.tec.labs.ecommercejava.dto.ProductUpdateDTO;
 import com.iron.tec.labs.ecommercejava.services.ProductService;
 import com.iron.tec.labs.ecommercejava.util.LoggingUtils;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -15,16 +37,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
-import java.net.URI;
-import java.util.UUID;
-
-import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @AllArgsConstructor

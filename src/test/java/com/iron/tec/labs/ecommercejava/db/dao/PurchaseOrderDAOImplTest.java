@@ -2,21 +2,19 @@ package com.iron.tec.labs.ecommercejava.db.dao;
 
 import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
 import com.iron.tec.labs.ecommercejava.db.entities.*;
-import com.iron.tec.labs.ecommercejava.db.repository.CategoryRepository;
-import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
-import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderRepository;
-import com.iron.tec.labs.ecommercejava.db.repository.UserRepository;
+import com.iron.tec.labs.ecommercejava.db.repository.*;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.MessageService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import reactor.test.StepVerifier;
@@ -29,8 +27,7 @@ import static com.iron.tec.labs.ecommercejava.enums.PurchaseOrderStatus.CANCELLE
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@DataR2dbcTest
-@ComponentScan("com.iron.tec.labs.ecommercejava.config.db")
+@SpringBootTest
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
 
@@ -54,13 +51,17 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
 
     @Autowired
     private PurchaseOrderRepository purchaseOrderRepository;
+
+    @Autowired
+    private PurchaseOrderLineRepository purchaseOrderLineRepository;
+
     @Autowired
     private CategoryRepository categoryRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-    @MockBean
+    @MockitoBean
     MessageService messageService;
 
     PurchaseOrder purchaseOrder = null;
@@ -70,6 +71,7 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
 
     @BeforeEach
     public void setup() {
+        StepVerifier.create(purchaseOrderLineRepository.deleteAll()).verifyComplete();
         StepVerifier.create(purchaseOrderRepository.deleteAll()).verifyComplete();
         StepVerifier.create(productRepository.deleteAll()).verifyComplete();
         StepVerifier.create(categoryRepository.deleteAll()).verifyComplete();
@@ -145,7 +147,6 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
                         .thenMany(purchaseOrderRepository.findAll()))
                 .expectNextCount(1)
                 .verifyComplete();
-        purchaseOrder.setCreatedAt(null);
         StepVerifier.create(purchaseOrderDAO.create(purchaseOrder)
                         .thenMany(purchaseOrderRepository.findAll()))
                 .verifyError(Conflict.class);
