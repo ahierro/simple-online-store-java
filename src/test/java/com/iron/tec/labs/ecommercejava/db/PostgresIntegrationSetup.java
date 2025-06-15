@@ -12,7 +12,7 @@ public class PostgresIntegrationSetup {
     }
 
     public static void init(PostgreSQLContainer<?> postgresqlContainer) {
-        postgresqlContainer.withInitScript("schema.sql");
+        postgresqlContainer.withInitScript("db/changelog/changelog.sql");
     }
 
     public static void overrideProperties(PostgreSQLContainer<?> postgresqlContainer, DynamicPropertyRegistry registry) {
