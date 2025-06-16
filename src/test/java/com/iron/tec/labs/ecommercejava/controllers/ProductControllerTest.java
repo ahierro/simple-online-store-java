@@ -3,6 +3,8 @@ package com.iron.tec.labs.ecommercejava.controllers;
 import com.iron.tec.labs.ecommercejava.config.ConverterConfig;
 import com.iron.tec.labs.ecommercejava.dto.PageResponseDTO;
 import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
+import com.iron.tec.labs.ecommercejava.domain.PageDomain;
+import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.ProductService;
@@ -29,6 +31,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -57,17 +60,17 @@ class ProductControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void getProductPage() {
-        when(productService.getProductPage(any(),any())).thenReturn(Mono.just(new PageResponseDTO<>(
-                Collections.singletonList(ProductDTO.builder()
-                        .productId("f133d126-6cb1-4759-af63-9972f106a51d")
-                        .productName("Test")
+        when(productService.getProductPage(anyInt(), anyInt(), any(ProductDomain.class), any(), any())).thenReturn(Mono.just(
+                new PageDomain<>(Collections.singletonList(ProductDomain.builder()
+                        .id(UUID.fromString("f133d126-6cb1-4759-af63-9972f106a51d"))
+                        .name("Test")
                         .stock(0)
                         .price(BigDecimal.valueOf(1))
-                        .productDescription("Test2")
+                        .description("Test2")
                         .smallImageUrl("https://github.com/1.jpg")
                         .bigImageUrl("https://github.com/2.jpg")
                         .createdAt(LocalDateTime.parse("2023-01-05T09:50:06.912024", DateTimeFormatter.ISO_DATE_TIME))
-                        .build()), PageRequest.of(0, 1), 2)));
+                        .build()), 2, 2, 0)));
         testClient.get().uri("/api/product/page?page=0&size=1")
                 .exchange()
                 .expectStatus()
@@ -79,12 +82,12 @@ class ProductControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void getById() {
-        when(productService.getById(any(UUID.class))).thenReturn(Mono.just(ProductDTO.builder()
-                .productId("baffc3a4-5447-48ab-b9c0-7604e448371d")
-                .productName("Laptop")
+        when(productService.getById(any(UUID.class))).thenReturn(Mono.just(ProductDomain.builder()
+                .id(UUID.fromString("baffc3a4-5447-48ab-b9c0-7604e448371d"))
+                .name("Laptop")
                 .stock(16)
                 .price(BigDecimal.valueOf(123))
-                .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
                 .smallImageUrl("https://github.com/1.jpg")
                 .bigImageUrl("https://github.com/2.jpg")
                 .build()));
@@ -99,32 +102,27 @@ class ProductControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void createProduct() {
-
-        when(productService.createProduct(any())).thenReturn(Mono.just(ProductDTO.builder()
-                .productId("63466fc5-dccd-43c2-a3c7-4028bd9684bb")
-                .productName("Laptop")
+        when(productService.createProduct(any(ProductDomain.class))).thenReturn(Mono.just(ProductDomain.builder()
+                .id(UUID.fromString("63466fc5-dccd-43c2-a3c7-4028bd9684bb"))
+                .name("Laptop")
                 .stock(16)
                 .price(BigDecimal.valueOf(100))
-                .productDescription("Laptop 4gb RAM 320gb SDD CPU 4 cores")
+                .description("Laptop 4gb RAM 320gb SDD CPU 4 cores")
                 .smallImageUrl("https://github.com/1.jpg")
                 .bigImageUrl("https://github.com/2.jpg")
                 .build()));
-
         testClient.post().uri("/api/product")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(createProductRequest))
                 .exchange()
                 .expectStatus()
                 .isCreated();
-
     }
 
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void createExistingProduct() {
-
-        when(productService.createProduct(any())).thenThrow(Conflict.class);
-
+        when(productService.createProduct(any(ProductDomain.class))).thenThrow(Conflict.class);
         testClient.post().uri("/api/product")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(createProductRequest)
@@ -133,28 +131,22 @@ class ProductControllerTest {
                 .isEqualTo(HttpStatus.CONFLICT);
     }
 
-
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void updateProduct() {
-
-        when(productService.updateProduct(anyString(), any())).thenReturn(Mono.empty());
-
+        when(productService.updateProduct(any(ProductDomain.class))).thenReturn(Mono.empty());
         testClient.put().uri("/api/product/f833d126-6cb1-4759-af63-9972f106a51d")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(updateProductRequest))
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful();
-
     }
 
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void updateNonExistingProduct() {
-
-        when(productService.updateProduct(anyString(), any())).thenThrow(NotFound.class);
-
+        when(productService.updateProduct(any(ProductDomain.class))).thenThrow(NotFound.class);
         testClient.put().uri("/api/product/f833d126-6cb1-4759-af63-9972f106a51d")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(ResourceUtils.readFile(updateProductRequest))
@@ -166,9 +158,7 @@ class ProductControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void deleteProduct() {
-
         when(productService.deleteProduct(anyString())).thenReturn(Mono.empty());
-
         testClient.delete().uri("/api/product/f833d126-6cb1-4759-af63-9972f106a51d")
                 .exchange()
                 .expectStatus()
@@ -178,9 +168,7 @@ class ProductControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void deleteNonExistingProduct() {
-
         when(productService.deleteProduct(anyString())).thenThrow(NotFound.class);
-
         testClient.delete().uri("/api/product/f833d126-6cb1-4759-af63-9972f106a51d")
                 .exchange()
                 .expectStatus()

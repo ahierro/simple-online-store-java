@@ -68,6 +68,46 @@ public class ConverterConfig {
         return new UpdateProductMapper();
     }
 
+    @Bean
+    public ProductUpdateDTOToDomain productUpdateDTOToDomain() {
+        return new ProductUpdateDTOToDomain();
+    }
+
+    @Bean
+    public ProductEntityToDomain productEntityToDomain() {
+        return new ProductEntityToDomain();
+    }
+
+    @Bean
+    public ProductDTOToDomain productDTOToDomain() {
+        return new ProductDTOToDomain();
+    }
+
+    @Bean
+    public ProductDomainToEntity productDomainToEntity() {
+        return new ProductDomainToEntity();
+    }
+
+    @Bean
+    public ProductCreationDTOToDomain productCreationDTOToDomain() {
+        return new ProductCreationDTOToDomain();
+    }
+
+    @Bean
+    public ProductDomainToDTO productDomainToDTO() {
+        return new ProductDomainToDTO();
+    }
+
+    @Bean
+    public ProductDomainToProductView productDomainToProductView() {
+        return new ProductDomainToProductView();
+    }
+
+    @Bean
+    public ProductViewToProductDomain productViewToProductDomain() {
+        return new ProductViewToProductDomain();
+    }
+
     // User converters
     @Bean
     public GetUserMapper getUserMapper() {

@@ -1,21 +1,16 @@
 package com.iron.tec.labs.ecommercejava.db.dao;
 
-import com.iron.tec.labs.ecommercejava.db.entities.Product;
-import com.iron.tec.labs.ecommercejava.db.entities.ProductView;
-import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
-import org.springframework.data.domain.Page;
+import com.iron.tec.labs.ecommercejava.domain.PageDomain;
+import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import org.springframework.data.domain.Sort;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
 public interface ProductDAO {
-
-    Mono<ProductDTO> findById(UUID id);
-
-    Mono<Page<ProductView>> getProductViewPage(int page, int size, ProductView productViewExample, Sort.Direction orderByPrice);
-
-    Mono<Product> create(Product product);
-    Mono<Product> update(Product product);
+    Mono<ProductDomain> findById(UUID id);
+    Mono<PageDomain<ProductDomain>> getProductViewPage(int page, int size, ProductDomain productDomainExample, Sort.Direction orderByPrice);
+    Mono<ProductDomain> create(ProductDomain productDomain);
+    Mono<ProductDomain> update(ProductDomain productDomain);
     Mono<Void> delete(String id);
 }

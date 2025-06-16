@@ -1,31 +1,9 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
-import static org.springframework.http.ResponseEntity.ok;
-
-import java.net.URI;
-import java.util.UUID;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.iron.tec.labs.ecommercejava.dto.PageResponseDTO;
-import com.iron.tec.labs.ecommercejava.dto.ProductCreationDTO;
-import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
-import com.iron.tec.labs.ecommercejava.dto.ProductPage;
-import com.iron.tec.labs.ecommercejava.dto.ProductPageRequestDTO;
-import com.iron.tec.labs.ecommercejava.dto.ProductUpdateDTO;
+import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
+import com.iron.tec.labs.ecommercejava.dto.*;
 import com.iron.tec.labs.ecommercejava.services.ProductService;
 import com.iron.tec.labs.ecommercejava.util.LoggingUtils;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -37,7 +15,18 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
+import java.util.UUID;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @AllArgsConstructor
@@ -47,6 +36,7 @@ import reactor.core.publisher.Mono;
 public class ProductController {
 
     private final ProductService productService;
+    private final ConversionService conversionService;
 
     @Operation(summary = "Get page of products",
             parameters = { @Parameter(in = ParameterIn.QUERY, name = "page", description = "Page"),
@@ -59,9 +49,23 @@ public class ProductController {
     public Mono<PageResponseDTO<ProductDTO>> getProductsPaged(@Valid ProductPageRequestDTO pageRequest, Authentication authentication) {
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before products obtained")))
-                .then(productService.getProductPage(pageRequest, authentication))
+                .then(productService.getProductPage(pageRequest.getPage(), pageRequest.getSize(),
+                                ProductDomain.builder()
+                                        .idCategory((pageRequest.getCategoryId() == null) ? null : UUID.fromString(pageRequest.getCategoryId()))
+                                        .description(pageRequest.getQueryString())
+                                        .deleted(pageRequest.getDeleted()).build(), authentication,pageRequest.getSortByPrice())
+                        .mapNotNull(page ->
+                                new PageResponseDTO<>(
+                                        page.getContent().stream()
+                                                .map(x -> conversionService.convert(x, ProductDTO.class)).toList(),
+                                        PageRequest.of(page.getNumber(), pageRequest.getSize()),
+                                        page.getTotalElements()
+                                )
+                        )
+                )
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Products obtained")));
     }
+
     @Operation(summary = "Get Product Detail",
             responses = {
             @ApiResponse(responseCode = "200",description = "Successful Operation",
@@ -70,10 +74,8 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)})
     @GetMapping("/{id}")
     public Mono<ProductDTO> getProduct(@PathVariable UUID id) {
-        return Mono.empty()
-                .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before products obtained")))
-                .then(productService.getById(id))
-                .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Products obtained")));
+        return productService.getById(id)
+                .map(product -> conversionService.convert(product, ProductDTO.class));
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") },
@@ -82,13 +84,11 @@ public class ProductController {
             @ApiResponse(responseCode = "409", description = "Resource already exists", content = @Content),
             @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content)})
-
     @PostMapping()
     public Mono<ResponseEntity<Void>> createProduct(@RequestBody @Valid ProductCreationDTO productCreationDTO,
                                                     ServerHttpRequest serverHttpRequest) {
-        return Mono.empty()
-                .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before creating product")))
-                .then(productService.createProduct(productCreationDTO))
+        ProductDomain productDomain = conversionService.convert(productCreationDTO, ProductDomain.class);
+        return productService.createProduct(productDomain)
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Product created")))
                 .map(product -> ResponseEntity.created(
                         URI.create(serverHttpRequest.getPath().toString().concat("/")
@@ -103,10 +103,12 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)})
     @PutMapping("/{id}")
     public Mono<ResponseEntity<Void>> updateProduct(@PathVariable("id") String id,
-                                                    @RequestBody @Valid ProductUpdateDTO product) {
-        return Mono.empty()
-                .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before updating product")))
-                .then(productService.updateProduct(id, product))
+                                                    @RequestBody @Valid ProductUpdateDTO productUpdateDTO) {
+        ProductDomain productDomain = conversionService.convert(productUpdateDTO, ProductDomain.class);
+        if (productDomain != null) {
+            productDomain.setId(UUID.fromString(id));
+        }
+        return productService.updateProduct(productDomain)
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Product updated")))
                 .map(x -> ok().build());
     }
@@ -119,9 +121,7 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)})
     @DeleteMapping("/{id}")
     public Mono<ResponseEntity<Void>> deleteProduct(@PathVariable("id") String id) {
-        return Mono.empty()
-                .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before deleting product")))
-                .then(productService.deleteProduct(id))
+        return productService.deleteProduct(id)
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Product deleted")))
                 .map(x -> ok().build());
     }

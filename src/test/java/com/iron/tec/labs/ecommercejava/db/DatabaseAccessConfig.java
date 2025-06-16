@@ -33,8 +33,9 @@ public class DatabaseAccessConfig {
 	@Bean
 	public ProductDAOImpl productDaoImpl(ProductRepository productRepository, MessageService messageService,
 										 CustomProductRepository customProductRepository,
-										 ProductViewRepository productViewRepository){
-		return new ProductDAOImpl(productRepository,messageService,customProductRepository,productViewRepository);
+										 ProductViewRepository productViewRepository,
+										 ConversionService conversionService){
+		return new ProductDAOImpl(productRepository, messageService, customProductRepository, productViewRepository, conversionService);
 	}
 	@Bean
 	public CategoryDAOImpl categoryImpl(CategoryRepository categoryRepository, MessageService messageService,

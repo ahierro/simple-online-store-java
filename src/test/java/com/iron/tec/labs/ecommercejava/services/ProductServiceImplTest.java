@@ -45,7 +45,7 @@ class ProductServiceImplTest {
     @Test
     void createProductTest() {
         UUID id = UUID.randomUUID();
-        Product product = Product.builder()
+        com.iron.tec.labs.ecommercejava.domain.ProductDomain productDomain = com.iron.tec.labs.ecommercejava.domain.ProductDomain.builder()
                 .id(id)
                 .name("Laptop")
                 .stock(16)
@@ -54,39 +54,12 @@ class ProductServiceImplTest {
                 .smallImageUrl("https://github.com/1.jpg")
                 .bigImageUrl("https://github.com/2.jpg")
                 .build();
-
-        ProductCreationDTO productCreationDTO = ProductCreationDTO.builder()
-                .productId(id.toString())
-                .productName("Laptop")
-                .stock(16)
-                .price(BigDecimal.valueOf(123))
-                .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
-                .smallImageUrl("https://github.com/1.jpg")
-                .bigImageUrl("https://github.com/2.jpg")
-                .build();
-        ProductDTO productDTO = ProductDTO.builder()
-                .productId(id.toString())
-                .productName("Laptop")
-                .stock(16)
-                .price(BigDecimal.valueOf(123))
-                .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
-                .smallImageUrl("https://github.com/1.jpg")
-                .bigImageUrl("https://github.com/2.jpg")
-                .build();
-        when(conversionService.convert(any(ProductCreationDTO.class), eq(Product.class)))
-                .thenReturn(product);
-        when(conversionService.convert(any(Product.class), eq(ProductDTO.class)))
-                .thenReturn(productDTO);
-        ArgumentCaptor<Product> argumentCaptor = ArgumentCaptor.forClass(Product.class);
-        when(productDAO.create(argumentCaptor.capture())).thenReturn(Mono.just(product));
-        ProductDTO createdProduct = productService.createProduct(productCreationDTO).block();
-
+        when(productDAO.create(any(com.iron.tec.labs.ecommercejava.domain.ProductDomain.class))).thenReturn(Mono.just(productDomain));
+        com.iron.tec.labs.ecommercejava.domain.ProductDomain createdProduct = productService.createProduct(productDomain).block();
         assertNotNull(createdProduct);
-        assertNotNull(product.getId());
-        assertEquals(product.getId().toString(), createdProduct.getProductId());
-        assertNotNull(argumentCaptor.getValue());
-        assertEquals(product, argumentCaptor.getValue());
-        verify(productDAO).create(any(Product.class));
+        assertNotNull(productDomain.getId());
+        assertEquals(productDomain.getId(), createdProduct.getId());
+        verify(productDAO).create(any(com.iron.tec.labs.ecommercejava.domain.ProductDomain.class));
     }
 
     @Test
@@ -103,7 +76,7 @@ class ProductServiceImplTest {
     @Test
     void testUpdateExisting() {
         UUID id = UUID.randomUUID();
-        Product product = Product.builder()
+        com.iron.tec.labs.ecommercejava.domain.ProductDomain productDomain = com.iron.tec.labs.ecommercejava.domain.ProductDomain.builder()
                 .id(id)
                 .name("Laptop")
                 .stock(16)
@@ -112,86 +85,60 @@ class ProductServiceImplTest {
                 .smallImageUrl("https://github.com/1.jpg")
                 .bigImageUrl("https://github.com/2.jpg")
                 .build();
-        ProductUpdateDTO productDTO = ProductUpdateDTO.builder()
-                .productName("Laptop")
-                .stock(16)
-                .price(BigDecimal.valueOf(123))
-                .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
-                .smallImageUrl("https://github.com/1.jpg")
-                .bigImageUrl("https://github.com/2.jpg")
-                .build();
-        ArgumentCaptor<Product> argumentCaptor = ArgumentCaptor.forClass(Product.class);
-        when(conversionService.convert(any(ProductUpdateDTO.class), eq(Product.class)))
-                .thenReturn(product);
-        when(productDAO.update(argumentCaptor.capture())).thenReturn(Mono.empty());
-
-        productService.updateProduct(id.toString(), productDTO).block();
-
-        assertEquals(product, argumentCaptor.getValue());
-        verify(productDAO, times(1)).update(any(Product.class));
+        when(productDAO.update(any(com.iron.tec.labs.ecommercejava.domain.ProductDomain.class))).thenReturn(Mono.empty());
+        productService.updateProduct(productDomain).block();
+        verify(productDAO, times(1)).update(any(com.iron.tec.labs.ecommercejava.domain.ProductDomain.class));
     }
 
     @Test
     void getProductPage() {
-        when(productDAO.getProductViewPage(0, 1,
-                ProductView.builder()
-                .build(),null
-        )).thenReturn(Mono.just(new PageImpl<>(
-                Arrays.asList(ProductView.builder()
-                                .id(UUID.randomUUID())
-                                .productName("Laptop")
-                                .stock(16)
-                                .price(BigDecimal.valueOf(123))
-                                .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
-                                .smallImageUrl("https://github.com/1.jpg")
-                                .bigImageUrl("https://github.com/2.jpg")
-                                .build(),
-                        ProductView.builder()
-                                .id(UUID.randomUUID())
-                                .productName("Laptop")
-                                .stock(16)
-                                .price(BigDecimal.valueOf(123))
-                                .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
-                                .smallImageUrl("https://github.com/1.jpg")
-                                .bigImageUrl("https://github.com/2.jpg")
-                                .build()), PageRequest.of(0,1),2)));
-        when(conversionService.convert(any(ProductView.class), eq(ProductDTO.class)))
-                .thenAnswer(x -> ProductDTO.builder()
-                        .productId(UUID.randomUUID().toString())
-                        .productName("Laptop")
-                        .stock(16)
-                        .price(BigDecimal.valueOf(123))
-                        .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
-                        .smallImageUrl("https://github.com/1.jpg")
-                        .bigImageUrl("https://github.com/2.jpg")
-                        .build());
-
-        PageResponseDTO<ProductDTO> page =
-                productService.getProductPage(ProductPageRequestDTO.builder().page(0).size(1).build(),null).block();
-
+        com.iron.tec.labs.ecommercejava.domain.ProductDomain filter = com.iron.tec.labs.ecommercejava.domain.ProductDomain.builder().build();
+        when(productDAO.getProductViewPage(eq(0), eq(1), eq(filter), isNull())).thenReturn(Mono.just(
+                new com.iron.tec.labs.ecommercejava.domain.PageDomain<>(
+                        Arrays.asList(
+                                com.iron.tec.labs.ecommercejava.domain.ProductDomain.builder()
+                                        .id(UUID.randomUUID())
+                                        .name("Laptop")
+                                        .stock(16)
+                                        .price(BigDecimal.valueOf(123))
+                                        .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                                        .smallImageUrl("https://github.com/1.jpg")
+                                        .bigImageUrl("https://github.com/2.jpg")
+                                        .build(),
+                                com.iron.tec.labs.ecommercejava.domain.ProductDomain.builder()
+                                        .id(UUID.randomUUID())
+                                        .name("Laptop")
+                                        .stock(16)
+                                        .price(BigDecimal.valueOf(123))
+                                        .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                                        .smallImageUrl("https://github.com/1.jpg")
+                                        .bigImageUrl("https://github.com/2.jpg")
+                                        .build()
+                        ), 2, 2, 0)));
+        com.iron.tec.labs.ecommercejava.domain.PageDomain<com.iron.tec.labs.ecommercejava.domain.ProductDomain> page = productService.getProductPage(0, 1, filter, null, null).block();
         assertNotNull(page);
-        assertEquals(2,page.getTotalPages());
-        assertEquals(0,page.getNumber());
-        assertEquals(2,page.getTotalElements());
+        assertEquals(2, page.getTotalPages());
+        assertEquals(0, page.getNumber());
+        assertEquals(2, page.getTotalElements());
         assertNotNull(page.getContent());
-        assertEquals(2,page.getContent().size());
+        assertEquals(2, page.getContent().size());
     }
 
     @Test
     void testGetById() {
-        when(productDAO.findById(any(UUID.class))).thenReturn(Mono.just(ProductDTO.builder()
-                .productId(UUID.randomUUID().toString())
-                .productName("Laptop")
+        UUID id = UUID.randomUUID();
+        com.iron.tec.labs.ecommercejava.domain.ProductDomain productDomain = com.iron.tec.labs.ecommercejava.domain.ProductDomain.builder()
+                .id(id)
+                .name("Laptop")
                 .stock(16)
                 .price(BigDecimal.valueOf(123))
-                .productDescription("Laptop 16gb RAM 500gb SDD CPU 8 cores")
+                .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
                 .smallImageUrl("https://github.com/1.jpg")
                 .bigImageUrl("https://github.com/2.jpg")
-                .build()));
-
-        StepVerifier.create(productService.getById(UUID.randomUUID()))
+                .build();
+        when(productDAO.findById(any(UUID.class))).thenReturn(Mono.just(productDomain));
+        StepVerifier.create(productService.getById(id))
                 .expectNextCount(1)
                 .verifyComplete();
-
     }
 }

@@ -87,10 +87,25 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
                 .verifyComplete();
     }
 
+    private static com.iron.tec.labs.ecommercejava.domain.ProductDomain toDomain(Product product) {
+        return com.iron.tec.labs.ecommercejava.domain.ProductDomain.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .stock(product.getStock())
+                .price(product.getPrice())
+                .smallImageUrl(product.getSmallImageUrl())
+                .bigImageUrl(product.getBigImageUrl())
+                .idCategory(product.getIdCategory())
+                .deleted(product.getDeleted())
+                .createdAt(product.getCreatedAt())
+                .build();
+    }
+
     @Test
     @DisplayName("Create a product and find it to verify if it is persisted in the database")
     void create_ok() {
-        StepVerifier.create(productDAO.create(product)
+        StepVerifier.create(productDAO.create(toDomain(product))
                         .thenMany(productRepository.findAll()))
                 .expectNextCount(1)
                 .verifyComplete();
@@ -99,11 +114,11 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
     @Test
     @DisplayName("Create a product that is already persisted in the database")
     void create_with_existing_id() {
-        StepVerifier.create(productDAO.create(product)
+        StepVerifier.create(productDAO.create(toDomain(product))
                         .thenMany(productRepository.findAll()))
                 .expectNextCount(1)
                 .verifyComplete();
-        StepVerifier.create(productDAO.create(product)
+        StepVerifier.create(productDAO.create(toDomain(product))
                         .thenMany(productRepository.findAll()))
                 .verifyError(Conflict.class);
     }
@@ -115,13 +130,11 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
         assert product.getId() != null;
         product.setName("Stove");
         product.setDescription("Description updated");
-        product.setPrice(BigDecimal.ONE);
-        product.setStock(15);
         product.setBigImageUrl("https://google.com/1.jpg");
         product.setSmallImageUrl("https://google.com/2.jpg");
         product.setDeleted(false);
         assert product.getId() != null;
-        StepVerifier.create(productDAO.update(product)
+        StepVerifier.create(productDAO.update(toDomain(product))
                         .then(productRepository.findById(product.getId())))
                 .expectNextMatches(product -> product != this.product
                         && product.equals(this.product))
@@ -133,7 +146,7 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
     void update_nonExisting_error() {
         assert product.getId() != null;
         product.setCreatedAt(LocalDateTime.now());
-        StepVerifier.create(productDAO.update(product))
+        StepVerifier.create(productDAO.update(toDomain(product)))
                 .verifyError(NotFound.class);
     }
 
@@ -161,13 +174,18 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
     @DisplayName("Create product and get a product page to verify if it is returned")
     void getPage_ok() {
         create_ok();
-        Page<ProductView> page = productDAO.getProductViewPage(0, 2, ProductView.builder().build(),null).block();
-        assertNotNull(page);
-        assertEquals(1, page.getTotalPages());
-        assertEquals(0, page.getNumber());
-        assertEquals(1, page.getTotalElements());
-        assertNotNull(page.getContent());
-        assertEquals(1, page.getContent().size());
+        com.iron.tec.labs.ecommercejava.domain.ProductDomain filter = toDomain(product);
+        // Use StepVerifier to test the reactive result
+        StepVerifier.create(productDAO.getProductViewPage(0, 2, filter, null))
+                .assertNext(page -> {
+                    assertNotNull(page);
+                    assertEquals(1, page.getTotalPages());
+                    assertEquals(0, page.getNumber());
+                    assertEquals(1, page.getTotalElements());
+                    assertNotNull(page.getContent());
+                    assertEquals(1, page.getContent().size());
+                })
+                .verifyComplete();
     }
 
     @Test
