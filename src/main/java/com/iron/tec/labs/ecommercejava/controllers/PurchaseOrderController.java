@@ -1,5 +1,7 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
+import com.iron.tec.labs.ecommercejava.domain.PageDomain;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.dto.*;
 import com.iron.tec.labs.ecommercejava.services.PurchaseOrderService;
 import com.iron.tec.labs.ecommercejava.util.LoggingUtils;
@@ -14,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.core.Authentication;
@@ -33,6 +36,7 @@ import static org.springframework.http.ResponseEntity.ok;
 public class PurchaseOrderController {
 
     private final PurchaseOrderService purchaseOrderService;
+    private final ConversionService conversionService;
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") },
             parameters = { @Parameter(in = ParameterIn.QUERY, name = "page", description = "Page"),
@@ -46,7 +50,14 @@ public class PurchaseOrderController {
                                                                           Authentication authentication) {
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before purchaseOrders obtained")))
-                .then(purchaseOrderService.getPurchaseOrderPage(pageRequest))
+                .then(purchaseOrderService.getPurchaseOrderPage(pageRequest)
+                        .mapNotNull(page -> new PageResponseDTO<>(
+                                page.getContent().stream()
+                                        .map(po -> conversionService.convert(po, PurchaseOrderViewDTO.class))
+                                        .toList(),
+                                pageRequest,
+                                page.getTotalElements()
+                        )))
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("PurchaseOrders obtained")));
     }
 
@@ -61,7 +72,8 @@ public class PurchaseOrderController {
                                                    Authentication authentication) {
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before purchaseOrders obtained")))
-                .then(purchaseOrderService.getById(id))
+                .then(purchaseOrderService.getById(id)
+                        .mapNotNull(po -> conversionService.convert(po, PurchaseOrderDTO.class)))
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("PurchaseOrders obtained")));
     }
 
@@ -75,9 +87,10 @@ public class PurchaseOrderController {
     public Mono<ResponseEntity<Void>> createPurchaseOrder(@RequestBody @Valid PurchaseOrderCreationDTO purchaseOrderCreationDTO,
                                                      ServerHttpRequest serverHttpRequest,
                                                           Authentication authentication) {
+        PurchaseOrderDomain domain = conversionService.convert(purchaseOrderCreationDTO, PurchaseOrderDomain.class);
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before creating purchaseOrder")))
-                .then(purchaseOrderService.createPurchaseOrder(purchaseOrderCreationDTO,authentication))
+                .then(purchaseOrderService.createPurchaseOrder(domain,authentication))
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("PurchaseOrder created")))
                 .map(purchaseOrderDTO -> ResponseEntity.created(
                         URI.create(serverHttpRequest.getPath().toString().concat("/")
@@ -93,9 +106,10 @@ public class PurchaseOrderController {
     @PatchMapping("/{id}")
     public Mono<ResponseEntity<Void>> patchPurchaseOrder(@PathVariable("id") String id,
                                                          @RequestBody @Valid PurchaseOrderPatchDTO purchaseOrder) {
+        PurchaseOrderDomain domain = conversionService.convert(purchaseOrder, PurchaseOrderDomain.class);
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before updating purchaseOrder")))
-                .then(purchaseOrderService.patchPurchaseOrder(id, purchaseOrder))
+                .then(purchaseOrderService.patchPurchaseOrder(id, domain))
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("PurchaseOrder updated")))
                 .map(x -> ok().build());
     }

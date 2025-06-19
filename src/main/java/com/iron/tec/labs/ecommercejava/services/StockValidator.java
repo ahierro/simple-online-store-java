@@ -1,8 +1,8 @@
 package com.iron.tec.labs.ecommercejava.services;
 
-import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrder;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import reactor.core.publisher.Mono;
 
 public interface StockValidator {
-    Mono<PurchaseOrder> validateStock(PurchaseOrder purchaseOrder);
+    Mono<PurchaseOrderDomain> validateStock(PurchaseOrderDomain purchaseOrder);
 }
