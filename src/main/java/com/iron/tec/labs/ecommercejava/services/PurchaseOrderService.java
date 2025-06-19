@@ -1,18 +1,20 @@
 package com.iron.tec.labs.ecommercejava.services;
 
-import com.iron.tec.labs.ecommercejava.dto.*;
+import com.iron.tec.labs.ecommercejava.domain.PageDomain;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
+import com.iron.tec.labs.ecommercejava.dto.PageRequestDTO;
 import org.springframework.security.core.Authentication;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
 public interface PurchaseOrderService {
-    Mono<PurchaseOrderDTO> getById(UUID id);
+    Mono<PurchaseOrderDomain> getById(UUID id);
 
-    Mono<PurchaseOrderDTO> createPurchaseOrder(PurchaseOrderCreationDTO categoryCreationDTO, Authentication authentication);
+    Mono<PurchaseOrderDomain> createPurchaseOrder(PurchaseOrderDomain purchaseOrder, Authentication authentication);
 
-    Mono<PurchaseOrderDTO> patchPurchaseOrder(String id, PurchaseOrderPatchDTO categoryCreationDTO);
+    Mono<PurchaseOrderDomain> patchPurchaseOrder(String id, PurchaseOrderDomain purchaseOrder);
 
-    Mono<PageResponseDTO<PurchaseOrderViewDTO>> getPurchaseOrderPage(PageRequestDTO pageRequest);
+    Mono<PageDomain<PurchaseOrderDomain>> getPurchaseOrderPage(PageRequestDTO pageRequest);
 
 }

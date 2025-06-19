@@ -1,8 +1,8 @@
 package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
-import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrder;
-import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderLine;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
 import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
 import com.iron.tec.labs.ecommercejava.exceptions.BadRequest;
 import org.junit.jupiter.api.Test;
@@ -36,9 +36,9 @@ class StockValidatorImplTest {
                 .thenReturn(Flux.fromStream(Stream.of(Product.builder().id(idProduct1).stock(2).build(),
                         Product.builder().id(idProduct2).stock(2).build())));
 
-        PurchaseOrder purchaseOrder = PurchaseOrder.builder()
-                .line(PurchaseOrderLine.builder().idProduct(idProduct1).quantity(1).build())
-                .line(PurchaseOrderLine.builder().idProduct(idProduct2).quantity(5).build())
+        PurchaseOrderDomain purchaseOrder = PurchaseOrderDomain.builder()
+                .line(PurchaseOrderLineDomain.builder().idProduct(idProduct1).quantity(1).build())
+                .line(PurchaseOrderLineDomain.builder().idProduct(idProduct2).quantity(5).build())
                 .build();
 
         StepVerifier.create(stockValidatorImpl.validateStock(purchaseOrder))
@@ -56,9 +56,9 @@ class StockValidatorImplTest {
                 .thenReturn(Flux.fromStream(Stream.of(Product.builder().id(idProduct1).stock(20).build(),
                         Product.builder().id(idProduct2).stock(20).build())));
 
-        PurchaseOrder purchaseOrder = PurchaseOrder.builder()
-                .line(PurchaseOrderLine.builder().idProduct(idProduct1).quantity(1).build())
-                .line(PurchaseOrderLine.builder().idProduct(idProduct2).quantity(5).build())
+        PurchaseOrderDomain purchaseOrder = PurchaseOrderDomain.builder()
+                .line(PurchaseOrderLineDomain.builder().idProduct(idProduct1).quantity(1).build())
+                .line(PurchaseOrderLineDomain.builder().idProduct(idProduct2).quantity(5).build())
                 .build();
 
         StepVerifier.create(stockValidatorImpl.validateStock(purchaseOrder))

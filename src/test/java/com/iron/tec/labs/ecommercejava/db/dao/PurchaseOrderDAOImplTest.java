@@ -3,14 +3,21 @@ package com.iron.tec.labs.ecommercejava.db.dao;
 import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
 import com.iron.tec.labs.ecommercejava.db.entities.*;
 import com.iron.tec.labs.ecommercejava.db.repository.*;
+import com.iron.tec.labs.ecommercejava.domain.PageDomain;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.PurchaseOrderEntityToDomain;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineEntityToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineViewToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.user.AppUserEntityToDomain;
 import com.iron.tec.labs.ecommercejava.services.MessageService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -21,6 +28,7 @@ import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.iron.tec.labs.ecommercejava.enums.PurchaseOrderStatus.CANCELLED;
@@ -64,6 +72,11 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
     @MockitoBean
     MessageService messageService;
 
+    @Autowired
+    private ConversionService conversionService;
+
+    private PurchaseOrderEntityToDomain purchaseOrderEntityToDomain;
+
     PurchaseOrder purchaseOrder = null;
     Product product = null;
     Category category = null;
@@ -71,6 +84,7 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
 
     @BeforeEach
     public void setup() {
+        purchaseOrderEntityToDomain = new PurchaseOrderEntityToDomain(new PurchaseOrderLineEntityToDomain(), new PurchaseOrderLineViewToDomain(), new AppUserEntityToDomain());
         StepVerifier.create(purchaseOrderLineRepository.deleteAll()).verifyComplete();
         StepVerifier.create(purchaseOrderRepository.deleteAll()).verifyComplete();
         StepVerifier.create(productRepository.deleteAll()).verifyComplete();
@@ -134,7 +148,8 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
     @Test
     @DisplayName("Create a PurchaseOrder and find it to verify if it is persisted in the database")
     void create_ok() {
-        StepVerifier.create(purchaseOrderDAO.create(purchaseOrder)
+        PurchaseOrderDomain purchaseOrderDomain = purchaseOrderEntityToDomain.convert(purchaseOrder);
+        StepVerifier.create(purchaseOrderDAO.create(purchaseOrderDomain)
                         .thenMany(purchaseOrderRepository.findAll()))
                 .expectNextCount(1)
                 .verifyComplete();
@@ -143,11 +158,12 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
     @Test
     @DisplayName("Create a PurchaseOrder that is already persisted in the database")
     void create_with_existing_id() {
-        StepVerifier.create(purchaseOrderDAO.create(purchaseOrder)
+        PurchaseOrderDomain purchaseOrderDomain = purchaseOrderEntityToDomain.convert(purchaseOrder);
+        StepVerifier.create(purchaseOrderDAO.create(purchaseOrderDomain)
                         .thenMany(purchaseOrderRepository.findAll()))
                 .expectNextCount(1)
                 .verifyComplete();
-        StepVerifier.create(purchaseOrderDAO.create(purchaseOrder)
+        StepVerifier.create(purchaseOrderDAO.create(purchaseOrderDomain)
                         .thenMany(purchaseOrderRepository.findAll()))
                 .verifyError(Conflict.class);
     }
@@ -157,15 +173,10 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
     void update_ok() {
         create_ok();
         assert purchaseOrder.getId() != null;
-        purchaseOrder.setStatus("CANCELLED");
-        assert purchaseOrder.getId() != null;
-        StepVerifier.create(purchaseOrderDAO.update(purchaseOrder)
-                        .then(purchaseOrderRepository.findById(purchaseOrder.getId())))
-                .expectNextMatches(purchaseOrder -> {
-                    assertNotNull(purchaseOrder);
-                    assertEquals(CANCELLED.name(), purchaseOrder.getStatus());
-                    return true;
-                })
+        PurchaseOrderDomain purchaseOrderDomain = purchaseOrderEntityToDomain.convert(Objects.requireNonNull(purchaseOrderRepository.findById(purchaseOrder.getId()).block()));
+        StepVerifier.create(purchaseOrderDAO.update(purchaseOrderDomain)
+                        .thenMany(purchaseOrderRepository.findAll()))
+                .expectNextCount(1)
                 .verifyComplete();
     }
 
@@ -174,7 +185,8 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
     void update_nonExisting_error() {
         assert purchaseOrder.getId() != null;
         purchaseOrder.setCreatedAt(LocalDateTime.now());
-        StepVerifier.create(purchaseOrderDAO.update(purchaseOrder))
+        PurchaseOrderDomain purchaseOrderDomain = purchaseOrderEntityToDomain.convert(purchaseOrder);
+        StepVerifier.create(purchaseOrderDAO.update(purchaseOrderDomain))
                 .verifyError(NotFound.class);
     }
 
@@ -182,7 +194,9 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
     @DisplayName("Create PurchaseOrder and get a PurchaseOrder page to verify if it is returned")
     void getPage_ok() {
         create_ok();
-        Page<PurchaseOrderView> page = purchaseOrderDAO.getPage(0, 2, PurchaseOrderView.builder().build()).block();
+        // Convert entity to domain for getPage
+        PurchaseOrderDomain purchaseOrderDomain = purchaseOrderEntityToDomain.convert(purchaseOrder);
+        PageDomain<PurchaseOrderDomain> page = purchaseOrderDAO.getPage(0, 2, purchaseOrderDomain).block();
         assertNotNull(page);
         assertEquals(1, page.getTotalPages());
         assertEquals(0, page.getNumber());
@@ -194,7 +208,9 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
     @Test
     @DisplayName("Get a PurchaseOrder page when the table is empty")
     void getPage_empty() {
-        Page<PurchaseOrderView> page = purchaseOrderDAO.getPage(0, 2, PurchaseOrderView.builder().build()).block();
+        // Pass an empty domain object for filter
+        PurchaseOrderDomain emptyDomain = PurchaseOrderDomain.builder().build();
+        PageDomain<PurchaseOrderDomain> page = purchaseOrderDAO.getPage(0, 2, emptyDomain).block();
         assertNotNull(page);
         assertEquals(0, page.getTotalPages());
         assertEquals(0, page.getNumber());

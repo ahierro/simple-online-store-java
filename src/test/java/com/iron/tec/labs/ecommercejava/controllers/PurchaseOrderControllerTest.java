@@ -1,6 +1,10 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
 import com.iron.tec.labs.ecommercejava.config.ConverterConfig;
+import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
+import com.iron.tec.labs.ecommercejava.domain.PageDomain;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
 import com.iron.tec.labs.ecommercejava.dto.*;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
@@ -58,20 +62,23 @@ class PurchaseOrderControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void getPurchaseOrderPage() {
+        AppUserDomain user = AppUserDomain.builder()
+                .id(UUID.fromString("130b1b88-5850-4d25-b81f-786925d09ab7"))
+                .username("admin")
+                .email("admin@gmail.com")
+                .firstName("Alejandro")
+                .lastName("Admin")
+                .build();
         when(purchaseOrderService.getPurchaseOrderPage(any())).thenReturn(
-                Mono.just(new PageResponseDTO<>(
-                        Collections.singletonList(PurchaseOrderViewDTO.builder()
-                                .id("e5ade578-6108-4c68-af78-0ca6c42c85ad")
-                                .idUser("130b1b88-5850-4d25-b81f-786925d09ab7")
-                                .email("admin@gmail.com")
-                                .firstName("Alejandro")
-                                .lastName("Admin")
-                                .username("admin")
-                                .status("PENDING")
-                                .createdAt(LocalDateTime.parse("2023-01-21T21:37:51.647479", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")))
+                Mono.just(new PageDomain<>(
+                        Collections.singletonList(PurchaseOrderDomain.builder()
+                                .id(UUID.fromString("e5ade578-6108-4c68-af78-0ca6c42c85ad"))
+                                .idUser(UUID.fromString("130b1b88-5850-4d25-b81f-786925d09ab7"))
                                 .status("PENDING")
                                 .total(BigDecimal.valueOf(1000))
-                                .build()), PageRequest.of(0, 1), 1)));
+                                .createdAt(LocalDateTime.parse("2023-01-21T21:37:51.647479", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")))
+                                .user(user)
+                                .build()), 1,1,0)));
         testClient.get().uri("/api/purchase-order/page?page=0&size=1")
                 .exchange()
                 .expectStatus()
@@ -83,22 +90,24 @@ class PurchaseOrderControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void getById() {
-        when(purchaseOrderService.getById(any(UUID.class))).thenReturn(Mono.just(PurchaseOrderDTO.builder()
-                .id("e5ade578-6108-4c68-af78-0ca6c42c85ad")
-                .idUser("130b1b88-5850-4d25-b81f-786925d09ab7")
-                .line(PurchaseOrderLineDTO.builder()
-                        .idProduct("f558f20e-aa01-41a3-bba0-45f0177e5344")
+        AppUserDomain user = AppUserDomain.builder()
+                .id(UUID.fromString("130b1b88-5850-4d25-b81f-786925d09ab7"))
+                .username("admin")
+                .email("admin@gmail.com")
+                .firstName("Alejandro")
+                .lastName("Admin")
+                .build();
+        when(purchaseOrderService.getById(any(UUID.class))).thenReturn(Mono.just(PurchaseOrderDomain.builder()
+                .id(UUID.fromString("e5ade578-6108-4c68-af78-0ca6c42c85ad"))
+                .idUser(UUID.fromString("130b1b88-5850-4d25-b81f-786925d09ab7"))
+                .line(PurchaseOrderLineDomain.builder()
+                        .idProduct(UUID.fromString("f558f20e-aa01-41a3-bba0-45f0177e5344"))
                         .quantity(10)
-                        .stock(2)
-                        .price(BigDecimal.valueOf(4))
-                        .categoryName("Motherboards")
-                        .smallImageUrl("https://www.youtube.com/small.jpg")
-                        .productName("Mother ASUS ROG STRIX B550-XE Gaming Wifi AM4")
                         .build())
                 .status("PENDING")
                 .total(BigDecimal.valueOf(1000))
                 .createdAt(LocalDateTime.parse("2023-01-21T21:37:51.647479", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")))
-                .user(UserDTO.builder().username("admin").email("admin@gmail.com").firstName("Alejandro").lastName("Admin").build())
+                .user(user)
                 .build()));
         testClient.get().uri("/api/purchase-order/baffc3a4-5447-48ab-b9c0-7604e448371d")
                 .exchange()
@@ -111,11 +120,11 @@ class PurchaseOrderControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void createPurchaseOrder() {
-        when(purchaseOrderService.createPurchaseOrder(any(), any())).thenReturn(Mono.just(PurchaseOrderDTO.builder()
-                .id("63466fc5-dccd-43c2-a3c7-4028bd9684bb")
-                .idUser(UUID.randomUUID().toString())
-                .line(PurchaseOrderLineDTO.builder()
-                        .idProduct("f558f20e-aa01-41a3-bba0-45f0177e5344")
+        when(purchaseOrderService.createPurchaseOrder(any(), any())).thenReturn(Mono.just(PurchaseOrderDomain.builder()
+                .id(UUID.fromString("63466fc5-dccd-43c2-a3c7-4028bd9684bb"))
+                .idUser(UUID.randomUUID())
+                .line(PurchaseOrderLineDomain.builder()
+                        .idProduct(UUID.fromString("f558f20e-aa01-41a3-bba0-45f0177e5344"))
                         .quantity(10)
                         .build())
                 .status("PENDING")

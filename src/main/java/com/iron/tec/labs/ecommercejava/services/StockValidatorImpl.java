@@ -1,7 +1,7 @@
 package com.iron.tec.labs.ecommercejava.services;
 
-import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrder;
-import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderLine;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
 import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
 import com.iron.tec.labs.ecommercejava.exceptions.BadRequest;
 import lombok.AllArgsConstructor;
@@ -16,9 +16,9 @@ public class StockValidatorImpl implements StockValidator {
     private final ProductRepository productRepository;
 
     @Override
-    public Mono<PurchaseOrder> validateStock(PurchaseOrder purchaseOrder) {
+    public Mono<PurchaseOrderDomain> validateStock(PurchaseOrderDomain purchaseOrder) {
 
-        return productRepository.findByIdIn(purchaseOrder.getLines().stream().map(PurchaseOrderLine::getIdProduct).toList()).collectList()
+        return productRepository.findByIdIn(purchaseOrder.getLines().stream().map(PurchaseOrderLineDomain::getIdProduct).toList()).collectList()
                 .map(products -> products.stream().allMatch(product -> {
                     var line = purchaseOrder.getLines().stream().filter(x -> x.getIdProduct().equals(product.getId())).findFirst().orElse(null);
                     if (line == null) return false;

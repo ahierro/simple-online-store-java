@@ -1,8 +1,13 @@
 package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.db.dao.PurchaseOrderDAO;
-import com.iron.tec.labs.ecommercejava.db.entities.*;
-import com.iron.tec.labs.ecommercejava.dto.*;
+import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
+import com.iron.tec.labs.ecommercejava.domain.PageDomain;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
+import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
+import com.iron.tec.labs.ecommercejava.dto.PageRequestDTO;
+import com.iron.tec.labs.ecommercejava.dto.PurchaseOrderPatchDTO;
 import com.iron.tec.labs.ecommercejava.enums.PurchaseOrderStatus;
 import com.iron.tec.labs.ecommercejava.exceptions.BadRequest;
 import org.junit.jupiter.api.Test;
@@ -12,10 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
-import org.springframework.util.ObjectUtils;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -41,24 +44,15 @@ class PurchaseOrderServiceImplTest {
 
     @InjectMocks
     PurchaseOrderServiceImpl purchaseOrderService;
-    AppUser appUser = AppUser.builder()
+    AppUserDomain appUser = AppUserDomain.builder()
             .id(UUID.randomUUID())
             .username("admin")
-            .password("$2a$10$7EVF8hBxswNOWMPfpIImruKVkUbNcL51KK.TueUqUPjnfdAghhJmC")
             .firstName("John")
             .lastName("Smith")
             .email("admin@gmail.com")
-            .active(true)
-            .locked(false)
-            .authority("ROLE_ADMIN")
             .build();
 
-    Category category = Category.builder()
-            .id(UUID.randomUUID())
-            .name("Motherboards")
-            .description("A motherboard is the main printed circuit board (PCB) in general-purpose computers and other expandable systems.")
-            .build();
-    Product product = Product.builder()
+    ProductDomain product = ProductDomain.builder()
             .id(UUID.randomUUID())
             .name("Laptop")
             .stock(16)
@@ -66,74 +60,44 @@ class PurchaseOrderServiceImplTest {
             .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
             .smallImageUrl("https://github.com/1.jpg")
             .bigImageUrl("https://github.com/2.jpg")
-            .idCategory(category.getId())
+            .idCategory(UUID.randomUUID())
             .build();
-    PurchaseOrder purchaseOrder = PurchaseOrder.builder()
+    PurchaseOrderLineDomain purchaseOrderLine = PurchaseOrderLineDomain.builder()
+            .id(UUID.randomUUID())
+            .idProduct(product.getId())
+            .quantity(10)
+            .build();
+    PurchaseOrderDomain purchaseOrder = PurchaseOrderDomain.builder()
             .id(UUID.randomUUID())
             .idUser(appUser.getId())
-            .line(PurchaseOrderLine.builder().idProduct(product.getId()).quantity(10).build())
+            .line(purchaseOrderLine)
             .status("PENDING")
             .total(BigDecimal.valueOf(1000))
             .build();
 
     @Test
     void createPurchaseOrderTest() {
-
-        PurchaseOrderCreationDTO purchaseOrderCreationDTO = PurchaseOrderCreationDTO.builder()
-                .id(ObjectUtils.nullSafeToString(purchaseOrder.getId()))
-                .line(PurchaseOrderLineCreationDTO.builder()
-                        .idProduct(ObjectUtils.nullSafeToString(product.getId()))
-                        .quantity(purchaseOrder.getLines().get(0).getQuantity())
-                        .build())
-                .total(purchaseOrder.getTotal())
-                .build();
-
         when(stockValidator.validateStock(any())).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        PurchaseOrderDTO purchaseOrderDTO = PurchaseOrderDTO.builder()
-                .id(purchaseOrder.getId().toString())
-                .line(PurchaseOrderLineDTO.builder()
-                        .idProduct(product.getId().toString())
-                        .quantity(purchaseOrder.getLines().get(0).getQuantity())
-                        .build())
-                .total(purchaseOrder.getTotal())
-                .build();
-        when(conversionService.convert(any(PurchaseOrderCreationDTO.class), eq(PurchaseOrder.class)))
-                .thenReturn(purchaseOrder);
-        when(conversionService.convert(any(PurchaseOrder.class), eq(PurchaseOrderDTO.class)))
-                .thenReturn(purchaseOrderDTO);
-        ArgumentCaptor<PurchaseOrder> argumentCaptor = ArgumentCaptor.forClass(PurchaseOrder.class);
+        ArgumentCaptor<PurchaseOrderDomain> argumentCaptor = ArgumentCaptor.forClass(PurchaseOrderDomain.class);
         when(purchaseOrderDAO.create(argumentCaptor.capture())).thenReturn(Mono.just(purchaseOrder));
         when(authentication.getName()).thenReturn(UUID.randomUUID().toString());
-        PurchaseOrderDTO createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrderCreationDTO, authentication).block();
+
+        PurchaseOrderDomain createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrder, authentication).block();
 
         assertNotNull(createdPurchaseOrder);
-        assertNotNull(purchaseOrder.getId());
-        assertEquals(ObjectUtils.nullSafeToString(purchaseOrder.getId()), createdPurchaseOrder.getId());
-        assertNotNull(argumentCaptor.getValue());
+        assertEquals(purchaseOrder.getId(), createdPurchaseOrder.getId());
         assertEquals(purchaseOrder, argumentCaptor.getValue());
-        verify(purchaseOrderDAO).create(any(PurchaseOrder.class));
+        verify(purchaseOrderDAO).create(any(PurchaseOrderDomain.class));
     }
 
     @Test()
     void createPurchaseOrderTestWithoutStock() {
 
-        PurchaseOrderCreationDTO purchaseOrderCreationDTO = PurchaseOrderCreationDTO.builder()
-                .id(ObjectUtils.nullSafeToString(purchaseOrder.getId()))
-                .line(PurchaseOrderLineCreationDTO.builder()
-                        .idProduct(ObjectUtils.nullSafeToString(product.getId()))
-                        .quantity(purchaseOrder.getLines().get(0).getQuantity())
-                        .build())
-                .total(purchaseOrder.getTotal())
-                .build();
-
         when(stockValidator.validateStock(any())).thenAnswer(invocation -> Mono.error(new BadRequest("Stock is not enough")));
-
-        when(conversionService.convert(any(PurchaseOrderCreationDTO.class), eq(PurchaseOrder.class)))
-                .thenReturn(purchaseOrder);
         when(authentication.getName()).thenReturn(UUID.randomUUID().toString());
 
-        StepVerifier.create(purchaseOrderService.createPurchaseOrder(purchaseOrderCreationDTO, authentication))
+        StepVerifier.create(purchaseOrderService.createPurchaseOrder(purchaseOrder, authentication))
                 .verifyErrorMatches(x -> {
                     assertTrue(x instanceof BadRequest);
                     assertEquals("Stock is not enough", x.getMessage());
@@ -145,88 +109,56 @@ class PurchaseOrderServiceImplTest {
     @Test
     void testPatchExisting() {
         UUID id = UUID.randomUUID();
-        PurchaseOrder purchaseOrder = PurchaseOrder.builder()
+        PurchaseOrderLineDomain patchOrderLine = PurchaseOrderLineDomain.builder()
+                .id(UUID.randomUUID())
+                .idProduct(product.getId())
+                .quantity(100)
+                .build();
+        PurchaseOrderDomain patchOrder = PurchaseOrderDomain.builder()
                 .id(UUID.randomUUID())
                 .idUser(appUser.getId())
-                .line(PurchaseOrderLine.builder().idProduct(product.getId()).quantity(100).build())
+                .line(patchOrderLine)
                 .status("PENDING")
                 .total(BigDecimal.valueOf(100000))
                 .build();
-        PurchaseOrderPatchDTO purchaseOrderDTO = new PurchaseOrderPatchDTO(PurchaseOrderStatus.DELIVERED);
-        ArgumentCaptor<PurchaseOrder> argumentCaptor = ArgumentCaptor.forClass(PurchaseOrder.class);
-        when(purchaseOrderDAO.update(argumentCaptor.capture())).thenReturn(Mono.just(PurchaseOrder.builder()
-                .id(UUID.randomUUID())
-                .idUser(appUser.getId())
-                .line(PurchaseOrderLine.builder().idProduct(product.getId()).quantity(100).build())
-                .status("DELIVERED")
-                .total(BigDecimal.valueOf(100000))
-                .build()));
-        when(purchaseOrderDAO.getById(id)).thenReturn(Mono.just(purchaseOrder));
-        purchaseOrderService.patchPurchaseOrder(id.toString(), purchaseOrderDTO).block();
+        PurchaseOrderPatchDTO purchaseOrderDTO = new PurchaseOrderPatchDTO();
+        purchaseOrderDTO.setStatus(PurchaseOrderStatus.DELIVERED);
+        ArgumentCaptor<PurchaseOrderDomain> argumentCaptor = ArgumentCaptor.forClass(PurchaseOrderDomain.class);
+        when(purchaseOrderDAO.update(argumentCaptor.capture())).thenReturn(Mono.just(patchOrder));
+        when(purchaseOrderDAO.getById(id)).thenReturn(Mono.just(patchOrder));
+        purchaseOrderService.patchPurchaseOrder(id.toString(), PurchaseOrderDomain.builder().status(purchaseOrderDTO.getStatus().name()).build()).block();
 
-        assertEquals(purchaseOrder, argumentCaptor.getValue());
-        verify(purchaseOrderDAO, times(1)).update(any(PurchaseOrder.class));
+        assertEquals(patchOrder, argumentCaptor.getValue());
+        verify(purchaseOrderDAO, times(1)).update(any(PurchaseOrderDomain.class));
     }
 
     @Test
     void getPurchaseOrderPage() {
-        when(purchaseOrderDAO.getPage(0, 1, PurchaseOrderView.builder().build())).thenReturn(Mono.just(new PageImpl<>(
-                Arrays.asList(PurchaseOrderView.builder()
-                                .id(UUID.randomUUID())
-                                .idUser(appUser.getId())
-                                .status("PENDING")
-                                .total(BigDecimal.valueOf(100000))
-                                .build(),
-                        PurchaseOrderView.builder()
-                                .id(UUID.randomUUID())
-                                .idUser(appUser.getId())
-                                .status("PENDING")
-                                .total(BigDecimal.valueOf(100000))
-                                .build()), PageRequest.of(0, 1), 2)));
-        when(conversionService.convert(any(PurchaseOrderView.class), eq(PurchaseOrderViewDTO.class)))
-                .thenAnswer(x -> PurchaseOrderViewDTO.builder()
-                        .id(ObjectUtils.nullSafeToString(purchaseOrder.getId()))
-                        .total(purchaseOrder.getTotal())
-                        .build());
+        PageDomain<PurchaseOrderDomain> pageDomain = PageDomain.<PurchaseOrderDomain>builder()
+                .content(Arrays.asList(purchaseOrder, purchaseOrder))
+                .totalPages(2)
+                .totalElements(2)
+                .number(0)
+                .build();
+        when(purchaseOrderDAO.getPage(eq(0), eq(1), any())).thenReturn(Mono.just(pageDomain));
 
-        PageResponseDTO<PurchaseOrderViewDTO> page =
-                purchaseOrderService.getPurchaseOrderPage(PageRequestDTO.builder().page(0).size(1).build()).block();
+        PageRequestDTO pageRequest = PageRequestDTO.builder().page(0).size(1).build();
+        PageDomain<PurchaseOrderDomain> page = purchaseOrderService.getPurchaseOrderPage(pageRequest).block();
 
         assertNotNull(page);
-        assertEquals(2, page.getTotalPages());
-        assertEquals(0, page.getNumber());
-        assertEquals(2, page.getTotalElements());
+        assertEquals(2, page.getTotalPages().intValue());
+        assertEquals(0, page.getNumber().intValue());
+        assertEquals(2, page.getTotalElements().intValue());
         assertNotNull(page.getContent());
         assertEquals(2, page.getContent().size());
     }
 
     @Test
     void testGetById() {
-        when(purchaseOrderDAO.getById(any(UUID.class))).thenReturn(Mono.just(PurchaseOrder.builder()
-                .id(UUID.randomUUID())
-                .idUser(appUser.getId())
-                .line(PurchaseOrderLine.builder()
-                        .id(UUID.randomUUID())
-                        .idPurchaseOrder(UUID.randomUUID())
-                        .idProduct(UUID.randomUUID())
-                        .quantity(100)
-                        .build())
-                .status("PENDING")
-                .total(BigDecimal.valueOf(100000))
-                .build()));
-
-        when(conversionService.convert(any(PurchaseOrder.class), eq(PurchaseOrderDTO.class)))
-                .thenAnswer(x -> PurchaseOrderDTO.builder()
-                        .id(ObjectUtils.nullSafeToString(purchaseOrder.getId()))
-                        .line(PurchaseOrderLineDTO.builder()
-                                .idProduct(ObjectUtils.nullSafeToString(product.getId()))
-                                .quantity(1)
-                                .build())
-                        .total(purchaseOrder.getTotal())
-                        .build());
+        when(purchaseOrderDAO.getById(any(UUID.class))).thenReturn(Mono.just(purchaseOrder));
 
         StepVerifier.create(purchaseOrderService.getById(UUID.randomUUID()))
-                .expectNextCount(1)
+                .expectNext(purchaseOrder)
                 .verifyComplete();
 
     }

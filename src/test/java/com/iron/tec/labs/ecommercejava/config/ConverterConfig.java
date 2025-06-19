@@ -7,6 +7,7 @@ import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.*;
 import com.iron.tec.labs.ecommercejava.mappers.user.*;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.convert.ConversionService;
 
 @TestConfiguration
 public class ConverterConfig {
@@ -140,14 +141,81 @@ public class ConverterConfig {
         return new UpdatePurchaseOrderMapper();
     }
 
-    // Purchase order line converters
+    @Bean
+    public PurchaseOrderDomainToEntity purchaseOrderDomainToEntity(PurchaseOrderLineDomainToEntity conversionService) {
+        return new PurchaseOrderDomainToEntity(conversionService);
+    }
+
+    @Bean
+    public PurchaseOrderEntityToDomain purchaseOrderEntityToDomain(PurchaseOrderLineEntityToDomain purchaseOrderLineEntityToDomain,
+                                                                   PurchaseOrderLineViewToDomain purchaseOrderLineViewToDomain,
+                                                                   AppUserEntityToDomain appUserEntityToDomain) {
+        return new PurchaseOrderEntityToDomain(purchaseOrderLineEntityToDomain, purchaseOrderLineViewToDomain, appUserEntityToDomain);
+    }
+
+    @Bean
+    public PurchaseOrderLineEntityToDomain purchaseOrderLineEntityToDomain() {
+        return new PurchaseOrderLineEntityToDomain();
+    }
+
+    @Bean
+    public PurchaseOrderLineViewToDomain purchaseOrderLineViewToDomain() {
+        return new PurchaseOrderLineViewToDomain();
+    }
+
+    @Bean
+    public AppUserEntityToDomain appUserEntityToDomain() {
+        return new AppUserEntityToDomain();
+    }
+
     @Bean
     public GetPurchaseOrderLineViewMapper getPurchaseOrderLineViewMapper() {
         return new GetPurchaseOrderLineViewMapper();
     }
 
     @Bean
+    public PurchaseOrderLineCreationDTOToDomain purchaseOrderLineCreationDTOToDomain() {
+        return new PurchaseOrderLineCreationDTOToDomain();
+    }
+
+    @Bean
     public SavePurchaseOrderLineMapper savePurchaseOrderLineMapper() {
         return new SavePurchaseOrderLineMapper();
+    }
+
+    @Bean
+    public PurchaseOrderLineDomainToEntity purchaseOrderLineDomainToEntity() {
+        return new PurchaseOrderLineDomainToEntity();
+    }
+
+    @Bean
+    public PurchaseOrderLineDomainToDTO purchaseOrderLineDomainToDTO() {
+        return new PurchaseOrderLineDomainToDTO();
+    }
+
+    @Bean
+    public PurchaseOrderDomainToDTO purchaseOrderDomainToDTO(PurchaseOrderLineDomainToDTO purchaseOrderLineDomainToDTO,
+                                                             AppUserEntityToDTO appUserEntityToDTO) {
+        return new PurchaseOrderDomainToDTO(purchaseOrderLineDomainToDTO, appUserEntityToDTO);
+    }
+
+    @Bean
+    public PurchaseOrderCreationDTOToDomain purchaseOrderCreationDTOToDomain(PurchaseOrderLineCreationDTOToDomain conversionService) {
+        return new PurchaseOrderCreationDTOToDomain(conversionService);
+    }
+
+    @Bean
+    public PurchaseOrderPatchDTOToDomain purchaseOrderPatchDTOToDomain() {
+        return new PurchaseOrderPatchDTOToDomain();
+    }
+
+    @Bean
+    public PurchaseOrderDomainToViewDTO purchaseOrderDomainToViewDTO() {
+        return new PurchaseOrderDomainToViewDTO();
+    }
+
+    @Bean
+    public AppUserEntityToDTO appUserEntityToDTO() {
+        return new AppUserEntityToDTO();
     }
 }

@@ -38,9 +38,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     public Mono<CategoryDomain> getById(UUID id) {
         return this.categoryRepository.findById(id)
                 .mapNotNull(category -> conversionService.convert(category, CategoryDomain.class))
-                .switchIfEmpty(Mono.defer(() -> {
-                    throw new NotFound(messageService.getRequestLocalizedMessage(ERROR_CATEGORY, NOT_FOUND, id.toString()));
-                }));
+                .switchIfEmpty(Mono.error(new NotFound(messageService.getRequestLocalizedMessage(ERROR_CATEGORY, NOT_FOUND, id.toString()))));
     }
 
     @Override

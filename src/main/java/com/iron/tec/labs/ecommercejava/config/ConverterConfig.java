@@ -5,6 +5,7 @@ import com.iron.tec.labs.ecommercejava.mappers.product.*;
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.*;
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.*;
 import com.iron.tec.labs.ecommercejava.mappers.user.*;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.support.DefaultConversionService;
@@ -12,6 +13,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 @Configuration
+@AllArgsConstructor
 public class ConverterConfig implements WebFluxConfigurer {
 
     // Category converters
@@ -32,80 +34,28 @@ public class ConverterConfig implements WebFluxConfigurer {
     // User converters
     private final GetUserMapper getUserMapper;
     private final RegisterUserMapper registerUserMapper;
+    private final AppUserEntityToDomain appUserEntityToDomain;
 
     // Purchase order converters
-    private final GetPurchaseOrderMapper getPurchaseOrderMapper;
-    private final GetPurchaseViewOrderMapper getPurchaseViewOrderMapper;
-    private final SavePurchaseOrderMapper savePurchaseOrderMapper;
-    private final UpdatePurchaseOrderMapper updatePurchaseOrderMapper;
+    private final PurchaseOrderDomainToDTO purchaseOrderDomainToDTO;
+    private final PurchaseOrderCreationDTOToDomain purchaseOrderCreationDTOToDomain;
+    private final PurchaseOrderPatchDTOToDomain purchaseOrderPatchDTOToDomain;
+    private final PurchaseOrderDomainToEntity purchaseOrderDomainToEntity;
+    private final PurchaseOrderEntityToDomain purchaseOrderEntityToDomain;
+    private final PurchaseOrderViewToDomain purchaseOrderViewToDomain;
+    private final PurchaseOrderDomainToView purchaseOrderDomainToView;
+    private final PurchaseOrderDomainToViewDTO purchaseOrderDomainToViewDTO;
 
     // Purchase order line converters
-    private final GetPurchaseOrderLineViewMapper getPurchaseOrderLineViewMapper;
-    private final SavePurchaseOrderLineMapper savePurchaseOrderLineMapper;
-
-    public ConverterConfig(
-            // Category converters
-            CategoryCreationDTOToDomain categoryCreationDTOToDomain,
-            CategoryDomainToDTO categoryDomainToDTO,
-            CategoryDomainToEntity categoryDomainToEntity,
-            CategoryDTOToDomain categoryDTOToDomain,
-            CategoryEntityToDomain categoryEntityToDomain,
-            CategoryUpdateDTOToDomain categoryUpdateDTOToDomain,
-            UpdateCategoryMapper updateCategoryMapper,
-
-            // Product converters
-            GetProductMapper getProductMapper,
-            GetProductViewMapper getProductViewMapper,
-            SaveProductMapper saveProductMapper,
-            UpdateProductMapper updateProductMapper,
-
-            // User converters
-            GetUserMapper getUserMapper,
-            RegisterUserMapper registerUserMapper,
-
-            // Purchase order converters
-            GetPurchaseOrderMapper getPurchaseOrderMapper,
-            GetPurchaseViewOrderMapper getPurchaseViewOrderMapper,
-            SavePurchaseOrderMapper savePurchaseOrderMapper,
-            UpdatePurchaseOrderMapper updatePurchaseOrderMapper,
-
-            // Purchase order line converters
-            GetPurchaseOrderLineViewMapper getPurchaseOrderLineViewMapper,
-            SavePurchaseOrderLineMapper savePurchaseOrderLineMapper) {
-
-        // Category converters
-        this.categoryCreationDTOToDomain = categoryCreationDTOToDomain;
-        this.categoryDomainToDTO = categoryDomainToDTO;
-        this.categoryDomainToEntity = categoryDomainToEntity;
-        this.categoryDTOToDomain = categoryDTOToDomain;
-        this.categoryEntityToDomain = categoryEntityToDomain;
-        this.categoryUpdateDTOToDomain = categoryUpdateDTOToDomain;
-        this.updateCategoryMapper = updateCategoryMapper;
-
-        // Product converters
-        this.getProductMapper = getProductMapper;
-        this.getProductViewMapper = getProductViewMapper;
-        this.saveProductMapper = saveProductMapper;
-        this.updateProductMapper = updateProductMapper;
-
-        // User converters
-        this.getUserMapper = getUserMapper;
-        this.registerUserMapper = registerUserMapper;
-
-        // Purchase order converters
-        this.getPurchaseOrderMapper = getPurchaseOrderMapper;
-        this.getPurchaseViewOrderMapper = getPurchaseViewOrderMapper;
-        this.savePurchaseOrderMapper = savePurchaseOrderMapper;
-        this.updatePurchaseOrderMapper = updatePurchaseOrderMapper;
-
-        // Purchase order line converters
-        this.getPurchaseOrderLineViewMapper = getPurchaseOrderLineViewMapper;
-        this.savePurchaseOrderLineMapper = savePurchaseOrderLineMapper;
-    }
+    private final PurchaseOrderLineDomainToDTO purchaseOrderLineDomainToDTO;
+    private final PurchaseOrderLineCreationDTOToDomain purchaseOrderLineCreationDTOToDomain;
+    private final PurchaseOrderLineDomainToEntity purchaseOrderLineDomainToEntity;
+    private final PurchaseOrderLineEntityToDomain purchaseOrderLineEntityToDomain;
+    private final PurchaseOrderLineViewToDomain purchaseOrderLineViewToDomain;
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        // Register all category converters
+        // Category
         registry.addConverter(categoryCreationDTOToDomain);
         registry.addConverter(categoryDomainToDTO);
         registry.addConverter(categoryDomainToEntity);
@@ -114,24 +64,33 @@ public class ConverterConfig implements WebFluxConfigurer {
         registry.addConverter(categoryUpdateDTOToDomain);
         registry.addConverter(updateCategoryMapper);
 
-        // Register all product converters
+        // Product
         registry.addConverter(getProductMapper);
         registry.addConverter(getProductViewMapper);
         registry.addConverter(saveProductMapper);
         registry.addConverter(updateProductMapper);
 
-        // Register all user converters
+        // User
         registry.addConverter(getUserMapper);
         registry.addConverter(registerUserMapper);
+        registry.addConverter(appUserEntityToDomain);
 
-        // Register all purchase order converters
-        registry.addConverter(getPurchaseOrderMapper);
-        registry.addConverter(getPurchaseViewOrderMapper);
-        registry.addConverter(savePurchaseOrderMapper);
-        registry.addConverter(updatePurchaseOrderMapper);
+        // Purchase orders
+        registry.addConverter(purchaseOrderDomainToDTO);
+        registry.addConverter(purchaseOrderCreationDTOToDomain);
+        registry.addConverter(purchaseOrderPatchDTOToDomain);
+        registry.addConverter(purchaseOrderDomainToEntity);
+        registry.addConverter(purchaseOrderEntityToDomain);
+        registry.addConverter(purchaseOrderViewToDomain);
+        registry.addConverter(purchaseOrderDomainToView);
+        registry.addConverter(purchaseOrderDomainToViewDTO);
 
-        // Register all purchase order line converters
-        registry.addConverter(getPurchaseOrderLineViewMapper);
-        registry.addConverter(savePurchaseOrderLineMapper);
+        // Purchase order lines
+        registry.addConverter(purchaseOrderLineDomainToDTO);
+        registry.addConverter(purchaseOrderLineCreationDTOToDomain);
+        registry.addConverter(purchaseOrderLineDomainToEntity);
+        registry.addConverter(purchaseOrderLineEntityToDomain);
+        registry.addConverter(purchaseOrderLineViewToDomain);
     }
+
 }
