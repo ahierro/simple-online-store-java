@@ -9,19 +9,17 @@ import com.iron.tec.labs.ecommercejava.db.repository.*;
 import com.iron.tec.labs.ecommercejava.db.rowmappers.ColumnConverter;
 import com.iron.tec.labs.ecommercejava.db.rowmappers.ProductRowMapper;
 import com.iron.tec.labs.ecommercejava.services.MessageService;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.convert.R2dbcCustomConversions;
-import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.r2dbc.core.DatabaseClient;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Configuration
 public class DatabaseAccessConfig {
-
+	public static void main(String[] args) {
+		SpringApplication.run(DatabaseAccessConfig.class, args);
+	}
 	@Bean
 	public ProductDAOImpl productDaoImpl(ProductRepository productRepository, MessageService messageService,
 										 CustomProductRepository customProductRepository,

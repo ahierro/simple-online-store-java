@@ -93,8 +93,4 @@ public class ConverterConfig implements WebFluxConfigurer {
         registry.addConverter(purchaseOrderLineViewToDomain);
     }
 
-    @Bean
-    public DefaultConversionService conversionService() {
-        return new DefaultConversionService();
-    }
 }
