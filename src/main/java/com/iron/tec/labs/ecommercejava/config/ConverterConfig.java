@@ -1,10 +1,7 @@
 package com.iron.tec.labs.ecommercejava.config;
 
 import com.iron.tec.labs.ecommercejava.mappers.category.*;
-import com.iron.tec.labs.ecommercejava.mappers.product.GetProductMapper;
-import com.iron.tec.labs.ecommercejava.mappers.product.GetProductViewMapper;
-import com.iron.tec.labs.ecommercejava.mappers.product.SaveProductMapper;
-import com.iron.tec.labs.ecommercejava.mappers.product.UpdateProductMapper;
+import com.iron.tec.labs.ecommercejava.mappers.product.*;
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.*;
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.*;
 import com.iron.tec.labs.ecommercejava.mappers.user.AppUserEntityToDomain;
@@ -28,7 +25,8 @@ public class ConverterConfig implements WebFluxConfigurer {
     private final CategoryEntityToDomain categoryEntityToDomain;
     private final CategoryUpdateDTOToDomain categoryUpdateDTOToDomain;
     private final UpdateCategoryMapper updateCategoryMapper;
-
+    private final ProductDomainToProductView productDomainToProductView;
+    private final ProductViewToProductDomain productViewToProductDomain;
     // Product converters
     private final GetProductMapper getProductMapper;
     private final GetProductViewMapper getProductViewMapper;
@@ -73,6 +71,8 @@ public class ConverterConfig implements WebFluxConfigurer {
         registry.addConverter(getProductViewMapper);
         registry.addConverter(saveProductMapper);
         registry.addConverter(updateProductMapper);
+        registry.addConverter(productDomainToProductView);
+        registry.addConverter(productViewToProductDomain);
 
         // User
         registry.addConverter(getUserMapper);
