@@ -45,7 +45,7 @@ import com.iron.tec.labs.ecommercejava.mappers.user.GetUserMapper;
 import com.iron.tec.labs.ecommercejava.mappers.user.RegisterUserMapper;
 
 @TestConfiguration
-public class ConverterConfig {
+public class ConverterConfigTest {
 
     // Category converters
     @Bean

@@ -23,7 +23,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import com.iron.tec.labs.ecommercejava.config.ConverterConfig;
+import com.iron.tec.labs.ecommercejava.config.ConverterConfigTest;
 import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
 import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
@@ -36,7 +36,7 @@ import reactor.core.publisher.Mono;
 
 @RunWith(SpringRunner.class)
 @WebFluxTest(PurchaseOrderController.class)
-@Import(ConverterConfig.class)
+@Import(ConverterConfigTest.class)
 class PurchaseOrderControllerTest {
     @Autowired
     WebTestClient testClient;

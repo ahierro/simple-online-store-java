@@ -1,6 +1,6 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
-import com.iron.tec.labs.ecommercejava.config.ConverterConfig;
+import com.iron.tec.labs.ecommercejava.config.ConverterConfigTest;
 import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
 import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @WebFluxTest(CategoryController.class)
-@Import(ConverterConfig.class)
+@Import(ConverterConfigTest.class)
 class CategoryControllerTest {
     @Autowired
     WebTestClient testClient;
