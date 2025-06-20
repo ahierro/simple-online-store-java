@@ -1,9 +1,11 @@
 package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.db.dao.PurchaseOrderDAO;
+import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
 import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
+import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import com.iron.tec.labs.ecommercejava.dto.PageRequestDTO;
 import com.iron.tec.labs.ecommercejava.dto.PurchaseOrderPatchDTO;
 import com.iron.tec.labs.ecommercejava.enums.PurchaseOrderStatus;
@@ -42,24 +44,15 @@ class PurchaseOrderServiceImplTest {
 
     @InjectMocks
     PurchaseOrderServiceImpl purchaseOrderService;
-    AppUser appUser = AppUser.builder()
+    AppUserDomain appUser = AppUserDomain.builder()
             .id(UUID.randomUUID())
             .username("admin")
-            .password("$2a$10$7EVF8hBxswNOWMPfpIImruKVkUbNcL51KK.TueUqUPjnfdAghhJmC")
             .firstName("John")
             .lastName("Smith")
             .email("admin@gmail.com")
-            .active(true)
-            .locked(false)
-            .authority("ROLE_ADMIN")
             .build();
 
-    Category category = Category.builder()
-            .id(UUID.randomUUID())
-            .name("Motherboards")
-            .description("A motherboard is the main printed circuit board (PCB) in general-purpose computers and other expandable systems.")
-            .build();
-    Product product = Product.builder()
+    ProductDomain product = ProductDomain.builder()
             .id(UUID.randomUUID())
             .name("Laptop")
             .stock(16)
@@ -67,12 +60,17 @@ class PurchaseOrderServiceImplTest {
             .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
             .smallImageUrl("https://github.com/1.jpg")
             .bigImageUrl("https://github.com/2.jpg")
-            .idCategory(category.getId())
+            .idCategory(UUID.randomUUID())
+            .build();
+    PurchaseOrderLineDomain purchaseOrderLine = PurchaseOrderLineDomain.builder()
+            .id(UUID.randomUUID())
+            .idProduct(product.getId())
+            .quantity(10)
             .build();
     PurchaseOrderDomain purchaseOrder = PurchaseOrderDomain.builder()
             .id(UUID.randomUUID())
             .idUser(appUser.getId())
-            .line(PurchaseOrderLineDomain.builder().idProduct(product.getId()).quantity(10).build())
+            .line(purchaseOrderLine)
             .status("PENDING")
             .total(BigDecimal.valueOf(1000))
             .build();
@@ -111,35 +109,46 @@ class PurchaseOrderServiceImplTest {
     @Test
     void testPatchExisting() {
         UUID id = UUID.randomUUID();
-        PurchaseOrderDomain purchaseOrder = PurchaseOrderDomain.builder()
+        PurchaseOrderLineDomain patchOrderLine = PurchaseOrderLineDomain.builder()
+                .id(UUID.randomUUID())
+                .idProduct(product.getId())
+                .quantity(100)
+                .build();
+        PurchaseOrderDomain patchOrder = PurchaseOrderDomain.builder()
                 .id(UUID.randomUUID())
                 .idUser(appUser.getId())
-                .line(PurchaseOrderLineDomain.builder().idProduct(product.getId()).quantity(100).build())
+                .line(patchOrderLine)
                 .status("PENDING")
                 .total(BigDecimal.valueOf(100000))
                 .build();
-        PurchaseOrderPatchDTO purchaseOrderDTO = new PurchaseOrderPatchDTO(PurchaseOrderStatus.DELIVERED);
+        PurchaseOrderPatchDTO purchaseOrderDTO = new PurchaseOrderPatchDTO();
+        purchaseOrderDTO.setStatus(PurchaseOrderStatus.DELIVERED);
         ArgumentCaptor<PurchaseOrderDomain> argumentCaptor = ArgumentCaptor.forClass(PurchaseOrderDomain.class);
-        when(purchaseOrderDAO.update(argumentCaptor.capture())).thenReturn(Mono.just(purchaseOrder.toBuilder().status("DELIVERED").build()));
-        when(purchaseOrderDAO.getById(id)).thenReturn(Mono.just(purchaseOrder));
+        when(purchaseOrderDAO.update(argumentCaptor.capture())).thenReturn(Mono.just(patchOrder));
+        when(purchaseOrderDAO.getById(id)).thenReturn(Mono.just(patchOrder));
         purchaseOrderService.patchPurchaseOrder(id.toString(), PurchaseOrderDomain.builder().status(purchaseOrderDTO.getStatus().name()).build()).block();
 
-        assertEquals(purchaseOrder, argumentCaptor.getValue());
+        assertEquals(patchOrder, argumentCaptor.getValue());
         verify(purchaseOrderDAO, times(1)).update(any(PurchaseOrderDomain.class));
     }
 
     @Test
     void getPurchaseOrderPage() {
-        when(purchaseOrderDAO.getPage(eq(0), eq(1), any())).thenReturn(Mono.just(new PageDomain<>(
-                Arrays.asList(purchaseOrder, purchaseOrder),2,2,0)));
+        PageDomain<PurchaseOrderDomain> pageDomain = PageDomain.<PurchaseOrderDomain>builder()
+                .content(Arrays.asList(purchaseOrder, purchaseOrder))
+                .totalPages(2)
+                .totalElements(2)
+                .number(0)
+                .build();
+        when(purchaseOrderDAO.getPage(eq(0), eq(1), any())).thenReturn(Mono.just(pageDomain));
 
-        PageDomain<PurchaseOrderDomain> page =
-                purchaseOrderService.getPurchaseOrderPage(PageRequestDTO.builder().page(0).size(1).build()).block();
+        PageRequestDTO pageRequest = PageRequestDTO.builder().page(0).size(1).build();
+        PageDomain<PurchaseOrderDomain> page = purchaseOrderService.getPurchaseOrderPage(pageRequest).block();
 
         assertNotNull(page);
-        assertEquals(2, page.getTotalPages());
-        assertEquals(0, page.getNumber());
-        assertEquals(2, page.getTotalElements());
+        assertEquals(2, page.getTotalPages().intValue());
+        assertEquals(0, page.getNumber().intValue());
+        assertEquals(2, page.getTotalElements().intValue());
         assertNotNull(page.getContent());
         assertEquals(2, page.getContent().size());
     }
