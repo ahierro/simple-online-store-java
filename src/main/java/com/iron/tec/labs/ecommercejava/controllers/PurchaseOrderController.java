@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.core.Authentication;
@@ -55,7 +56,7 @@ public class PurchaseOrderController {
                                 page.getContent().stream()
                                         .map(po -> conversionService.convert(po, PurchaseOrderViewDTO.class))
                                         .toList(),
-                                pageRequest,
+                                PageRequest.of(page.getNumber(), pageRequest.getSize()),
                                 page.getTotalElements()
                         )))
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("PurchaseOrders obtained")));
