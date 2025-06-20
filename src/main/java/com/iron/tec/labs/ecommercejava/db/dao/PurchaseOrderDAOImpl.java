@@ -45,17 +45,23 @@ public class PurchaseOrderDAOImpl implements PurchaseOrderDAO {
 
     @Override
     public Mono<PurchaseOrderDomain> getById(UUID id) {
-        return this.purchaseOrderRepository.findById(id).switchIfEmpty(Mono.defer(() -> {
-                    throw new NotFound(messageService.getRequestLocalizedMessage(ERROR_PURCHASE_ORDER, NOT_FOUND, id.toString()));
-                }))
-                .zipWith(purchaseOrderLineViewRepository.getPurchaseOrderLineByIdPurchaseOrder(id).collectList(),
-                        (purchaseOrder, purchaseOrderLines) -> {
-                            purchaseOrder.setViewLines(purchaseOrderLines);
-                            return purchaseOrder;
-                        }).flatMap(purchaseOrder -> appUserRepository.findById(purchaseOrder.getIdUser()).map(user -> {
-                            purchaseOrder.setUser(user);
-                            return purchaseOrder;
-                })).map(po -> conversionService.convert(po, PurchaseOrderDomain.class));
+        return this.purchaseOrderRepository.findById(id)
+                .flatMap(purchaseOrder ->
+                        purchaseOrderLineViewRepository.getPurchaseOrderLineByIdPurchaseOrder(id).collectList()
+                                .map(purchaseOrderLines -> {
+                                    purchaseOrder.setViewLines(purchaseOrderLines);
+                                    return purchaseOrder;
+                                })
+                )
+                .flatMap(purchaseOrder ->
+                        appUserRepository.findById(purchaseOrder.getIdUser())
+                                .map(user -> {
+                                    purchaseOrder.setUser(user);
+                                    return purchaseOrder;
+                                })
+                )
+                .map(po -> conversionService.convert(po, PurchaseOrderDomain.class))
+                .switchIfEmpty(Mono.error(new NotFound(messageService.getRequestLocalizedMessage(ERROR_PURCHASE_ORDER, NOT_FOUND, id.toString()))));
     }
 
     @Override
