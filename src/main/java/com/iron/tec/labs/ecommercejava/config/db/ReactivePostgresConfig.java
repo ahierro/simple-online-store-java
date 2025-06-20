@@ -15,21 +15,23 @@ import org.springframework.data.r2dbc.convert.R2dbcCustomConversions;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.lang.NonNull;
 
 @Configuration
 @AllArgsConstructor
 public class ReactivePostgresConfig extends AbstractR2dbcConfiguration {
 
     private final ObjectMapper objectMapper;
+    private final ConnectionFactory connectionFactory;
 
     @Override
-    public ConnectionFactory connectionFactory() {
-        return null;
+    public @NonNull ConnectionFactory connectionFactory() {
+        return connectionFactory;
     }
 
     @Bean
     @Override
-    public R2dbcCustomConversions r2dbcCustomConversions() {
+    public @NonNull R2dbcCustomConversions r2dbcCustomConversions() {
         List<Converter<?, ?>> converters = new ArrayList<>();
         converters.add(new JsonToMapConverter(objectMapper));
         converters.add(new MapToJsonConverter(objectMapper));

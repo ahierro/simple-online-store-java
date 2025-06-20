@@ -1,5 +1,6 @@
 package com.iron.tec.labs.ecommercejava.config.logging;
 
+import org.springframework.lang.NonNull;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.ServerWebExchangeDecorator;
 
@@ -14,12 +15,12 @@ public class CustomBodyExchange extends ServerWebExchangeDecorator {
     }
 
     @Override
-    public RequestBodyLogger getRequest() {
+    public @NonNull RequestBodyLogger getRequest() {
         return requestBodyLogger;
     }
 
     @Override
-    public ResponseBodyLogger getResponse() {
+    public @NonNull ResponseBodyLogger getResponse() {
         return responseBodyLogger;
     }
 }

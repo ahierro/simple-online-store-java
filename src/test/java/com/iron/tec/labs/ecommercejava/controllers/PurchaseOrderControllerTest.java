@@ -1,5 +1,28 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.UUID;
+
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.reactive.server.WebTestClient;
+
 import com.iron.tec.labs.ecommercejava.config.ConverterConfig;
 import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
 import com.iron.tec.labs.ecommercejava.domain.PageDomain;
@@ -8,32 +31,8 @@ import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.PurchaseOrderService;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.reactive.server.WebTestClient;
+
 import reactor.core.publisher.Mono;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.UUID;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @WebFluxTest(PurchaseOrderController.class)
@@ -141,8 +140,7 @@ class PurchaseOrderControllerTest {
     @Test
     @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void createExistingPurchaseOrder() {
-        Authentication authentication =
-                new UsernamePasswordAuthenticationToken("test", "test", Collections.emptyList());
+
         when(purchaseOrderService.createPurchaseOrder(any(), any())).thenThrow(Conflict.class);
 
         testClient.post().uri("/api/purchase-order")

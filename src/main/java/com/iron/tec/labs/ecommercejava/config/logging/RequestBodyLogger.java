@@ -1,11 +1,13 @@
 package com.iron.tec.labs.ecommercejava.config.logging;
 
+import java.nio.charset.StandardCharsets;
+
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
-import reactor.core.publisher.Flux;
+import org.springframework.lang.NonNull;
 
-import java.nio.charset.StandardCharsets;
+import reactor.core.publisher.Flux;
 
 public class RequestBodyLogger extends ServerHttpRequestDecorator {
     private final StringBuilder body = new StringBuilder();
@@ -15,12 +17,14 @@ public class RequestBodyLogger extends ServerHttpRequestDecorator {
     }
 
     @Override
-    public Flux<DataBuffer> getBody() {
+    public @NonNull Flux<DataBuffer> getBody() {
         return super.getBody().doOnNext(this::capture);
     }
 
     private void capture(DataBuffer buffer) {
-        this.body.append(StandardCharsets.UTF_8.decode(buffer.toByteBuffer()));
+        try (var it = buffer.readableByteBuffers()) {
+            it.forEachRemaining(bb -> this.body.append(StandardCharsets.UTF_8.decode(bb)));
+        }
     }
 
     public String getFullBody() {

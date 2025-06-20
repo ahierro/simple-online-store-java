@@ -1,24 +1,24 @@
 package com.iron.tec.labs.ecommercejava.services;
 
+import java.util.UUID;
+
+import org.apache.commons.lang3.BooleanUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+
 import com.iron.tec.labs.ecommercejava.db.dao.ProductDAO;
 import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import com.iron.tec.labs.ecommercejava.exceptions.NotAuthorized;
-import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.BooleanUtils;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import reactor.core.publisher.Mono;
 
 @Service
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductDAO productDAO;
-    private final ConversionService conversionService;
 
     @Override
     public Mono<ProductDomain> getById(UUID id) {

@@ -3,6 +3,7 @@ package com.iron.tec.labs.ecommercejava.config.logging;
 import com.iron.tec.labs.ecommercejava.util.LoggingUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -21,7 +22,7 @@ public class RequestIdLoggerFilter implements WebFilter {
             .collect(Collectors.toSet());
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+    public @NonNull Mono<Void> filter(@NonNull ServerWebExchange exchange, @NonNull WebFilterChain chain) {
         CustomBodyExchange bodyExchange = new CustomBodyExchange(exchange);
         String requestId = exchange.getLogPrefix();
 

@@ -1,8 +1,35 @@
 package com.iron.tec.labs.ecommercejava.db.dao;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+
 import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
-import com.iron.tec.labs.ecommercejava.db.entities.*;
-import com.iron.tec.labs.ecommercejava.db.repository.*;
+import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
+import com.iron.tec.labs.ecommercejava.db.entities.Category;
+import com.iron.tec.labs.ecommercejava.db.entities.Product;
+import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrder;
+import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderLine;
+import com.iron.tec.labs.ecommercejava.db.repository.CategoryRepository;
+import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
+import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderLineRepository;
+import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderRepository;
+import com.iron.tec.labs.ecommercejava.db.repository.UserRepository;
 import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
@@ -11,25 +38,8 @@ import com.iron.tec.labs.ecommercejava.mappers.purchase.order.PurchaseOrderEntit
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineEntityToDomain;
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineViewToDomain;
 import com.iron.tec.labs.ecommercejava.mappers.user.AppUserEntityToDomain;
-import com.iron.tec.labs.ecommercejava.services.MessageService;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
+
 import reactor.test.StepVerifier;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.MethodName.class)
@@ -64,12 +74,6 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
 
     @Autowired
     private UserRepository userRepository;
-
-    @MockitoBean
-    MessageService messageService;
-
-    @Autowired
-    private ConversionService conversionService;
 
     private PurchaseOrderEntityToDomain purchaseOrderEntityToDomain;
 

@@ -13,6 +13,7 @@ import com.iron.tec.labs.ecommercejava.mappers.user.RegisterUserMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.lang.NonNull;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 @Configuration
@@ -57,7 +58,7 @@ public class ConverterConfig implements WebFluxConfigurer {
     private final PurchaseOrderLineViewToDomain purchaseOrderLineViewToDomain;
 
     @Override
-    public void addFormatters(FormatterRegistry registry) {
+    public void addFormatters(@NonNull FormatterRegistry registry) {
         // Category
         registry.addConverter(categoryCreationDTOToDomain);
         registry.addConverter(categoryDomainToDTO);

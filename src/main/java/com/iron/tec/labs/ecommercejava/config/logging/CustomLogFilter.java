@@ -5,13 +5,14 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
+import org.springframework.lang.NonNull;
 
 @Slf4j
 //@Component
 public class CustomLogFilter implements WebFilter {
 
     @Override
-    public Mono<Void> filter(ServerWebExchange serverWebExchange, WebFilterChain webFilterChain) {
+    public @NonNull Mono<Void> filter(@NonNull ServerWebExchange serverWebExchange, @NonNull WebFilterChain webFilterChain) {
         CustomBodyExchange bodyExchange = new CustomBodyExchange(serverWebExchange);
         return webFilterChain.filter(bodyExchange)
                 .doOnSuccess(se -> {

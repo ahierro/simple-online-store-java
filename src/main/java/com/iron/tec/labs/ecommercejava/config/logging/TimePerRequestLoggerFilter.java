@@ -1,10 +1,12 @@
 package com.iron.tec.labs.ecommercejava.config.logging;
 
-import lombok.extern.log4j.Log4j2;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
+
+import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -12,7 +14,7 @@ import reactor.core.publisher.Mono;
 public class TimePerRequestLoggerFilter implements WebFilter {
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+    public @NonNull Mono<Void> filter(@NonNull ServerWebExchange exchange, @NonNull WebFilterChain chain) {
         long startTime = System.currentTimeMillis();
 
         return chain.filter(exchange).doFinally(signalType -> {

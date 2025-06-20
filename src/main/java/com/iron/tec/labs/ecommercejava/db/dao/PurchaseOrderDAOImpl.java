@@ -1,5 +1,20 @@
 package com.iron.tec.labs.ecommercejava.db.dao;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.TransientDataAccessResourceException;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
+
+import static com.iron.tec.labs.ecommercejava.constants.Constants.ALREADY_EXISTS;
+import static com.iron.tec.labs.ecommercejava.constants.Constants.ERROR_PURCHASE_ORDER;
+import static com.iron.tec.labs.ecommercejava.constants.Constants.NOT_FOUND;
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrder;
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderView;
 import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderLineViewRepository;
@@ -11,22 +26,10 @@ import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.MessageService;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.TransientDataAccessResourceException;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 import reactor.core.publisher.Mono;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import static com.iron.tec.labs.ecommercejava.constants.Constants.*;
 
 @Repository
 @AllArgsConstructor
@@ -77,6 +80,7 @@ public class PurchaseOrderDAOImpl implements PurchaseOrderDAO {
     @Override
     public Mono<PurchaseOrderDomain> create(PurchaseOrderDomain product) {
         PurchaseOrder entity = conversionService.convert(product, PurchaseOrder.class);
+        if (entity == null) throw new RuntimeException("Entity cannot be null");
         return purchaseOrderRepository.save(entity).doOnError(DataIntegrityViolationException.class, e -> {
             throw new Conflict(messageService.getRequestLocalizedMessage(ERROR_PURCHASE_ORDER,
                     ALREADY_EXISTS, ObjectUtils.nullSafeToString(product.getId())));
@@ -86,7 +90,7 @@ public class PurchaseOrderDAOImpl implements PurchaseOrderDAO {
     @Override
     public Mono<PurchaseOrderDomain> update(PurchaseOrderDomain product) {
         PurchaseOrder entity = conversionService.convert(product, PurchaseOrder.class);
-        assert entity != null;
+        if (entity == null) throw new RuntimeException("Entity cannot be null");
         entity.setUpdatedAt(LocalDateTime.now());
         return purchaseOrderRepository.save(entity).doOnError(TransientDataAccessResourceException.class, e -> {
             throw new NotFound(messageService.getRequestLocalizedMessage(ERROR_PURCHASE_ORDER, NOT_FOUND,

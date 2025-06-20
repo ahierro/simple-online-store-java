@@ -1,15 +1,48 @@
 package com.iron.tec.labs.ecommercejava.config;
 
-import com.iron.tec.labs.ecommercejava.mappers.category.*;
-import com.iron.tec.labs.ecommercejava.mappers.product.*;
-import com.iron.tec.labs.ecommercejava.mappers.purchase.order.*;
-import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.*;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+
+import com.iron.tec.labs.ecommercejava.mappers.category.CategoryCreationDTOToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.category.CategoryDTOToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.category.CategoryDomainToDTO;
+import com.iron.tec.labs.ecommercejava.mappers.category.CategoryDomainToEntity;
+import com.iron.tec.labs.ecommercejava.mappers.category.CategoryEntityToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.category.CategoryUpdateDTOToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.category.UpdateCategoryMapper;
+import com.iron.tec.labs.ecommercejava.mappers.product.GetProductMapper;
+import com.iron.tec.labs.ecommercejava.mappers.product.GetProductViewMapper;
+import com.iron.tec.labs.ecommercejava.mappers.product.ProductCreationDTOToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.product.ProductDTOToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.product.ProductDomainToDTO;
+import com.iron.tec.labs.ecommercejava.mappers.product.ProductDomainToEntity;
+import com.iron.tec.labs.ecommercejava.mappers.product.ProductDomainToProductView;
+import com.iron.tec.labs.ecommercejava.mappers.product.ProductEntityToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.product.ProductUpdateDTOToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.product.ProductViewToProductDomain;
+import com.iron.tec.labs.ecommercejava.mappers.product.SaveProductMapper;
+import com.iron.tec.labs.ecommercejava.mappers.product.UpdateProductMapper;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.GetPurchaseOrderMapper;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.GetPurchaseViewOrderMapper;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.PurchaseOrderCreationDTOToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.PurchaseOrderDomainToDTO;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.PurchaseOrderDomainToEntity;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.PurchaseOrderDomainToViewDTO;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.PurchaseOrderEntityToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.PurchaseOrderPatchDTOToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.SavePurchaseOrderMapper;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.UpdatePurchaseOrderMapper;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.GetPurchaseOrderLineViewMapper;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineCreationDTOToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineDomainToDTO;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineDomainToEntity;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineEntityToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineViewToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.SavePurchaseOrderLineMapper;
 import com.iron.tec.labs.ecommercejava.mappers.user.AppUserEntityToDTO;
 import com.iron.tec.labs.ecommercejava.mappers.user.AppUserEntityToDomain;
 import com.iron.tec.labs.ecommercejava.mappers.user.GetUserMapper;
 import com.iron.tec.labs.ecommercejava.mappers.user.RegisterUserMapper;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 
 @TestConfiguration
 public class ConverterConfig {

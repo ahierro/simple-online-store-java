@@ -1,23 +1,23 @@
 package com.iron.tec.labs.ecommercejava.services;
 
+import java.util.UUID;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+
 import com.iron.tec.labs.ecommercejava.db.dao.PurchaseOrderDAO;
 import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.dto.PageRequestDTO;
 import com.iron.tec.labs.ecommercejava.enums.PurchaseOrderStatus;
-import lombok.AllArgsConstructor;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import reactor.core.publisher.Mono;
 
 @Service
 @AllArgsConstructor
 public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     private final PurchaseOrderDAO purchaseOrderDAO;
-    private final ConversionService conversionService;
     private final StockValidator stockValidator;
 
     @Override
@@ -25,6 +25,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         return purchaseOrderDAO.getById(id);
     }
 
+    @Override
     public Mono<PurchaseOrderDomain> createPurchaseOrder(PurchaseOrderDomain purchaseOrder, Authentication authentication) {
         purchaseOrder.setStatus(PurchaseOrderStatus.PENDING.name());
         purchaseOrder.setIdUser(UUID.fromString(authentication.getName()));

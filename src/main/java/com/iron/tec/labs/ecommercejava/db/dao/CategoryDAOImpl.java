@@ -1,14 +1,8 @@
 package com.iron.tec.labs.ecommercejava.db.dao;
 
-import com.iron.tec.labs.ecommercejava.db.entities.Category;
-import com.iron.tec.labs.ecommercejava.db.repository.CategoryRepository;
-import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
-import com.iron.tec.labs.ecommercejava.domain.PageDomain;
-import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
-import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
-import com.iron.tec.labs.ecommercejava.services.MessageService;
-import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.springframework.core.convert.ConversionService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.TransientDataAccessResourceException;
@@ -18,12 +12,22 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+
+import static com.iron.tec.labs.ecommercejava.constants.Constants.ALREADY_EXISTS;
+import static com.iron.tec.labs.ecommercejava.constants.Constants.CONFLICT;
+import static com.iron.tec.labs.ecommercejava.constants.Constants.ERROR_CATEGORY;
+import static com.iron.tec.labs.ecommercejava.constants.Constants.NOT_FOUND;
+import com.iron.tec.labs.ecommercejava.db.entities.Category;
+import com.iron.tec.labs.ecommercejava.db.repository.CategoryRepository;
+import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
+import com.iron.tec.labs.ecommercejava.domain.PageDomain;
+import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
+import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
+import com.iron.tec.labs.ecommercejava.services.MessageService;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import static com.iron.tec.labs.ecommercejava.constants.Constants.*;
 
 @Repository
 @AllArgsConstructor
@@ -60,7 +64,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     @Override
     public Mono<CategoryDomain> create(CategoryDomain category) {
         Category entity = conversionService.convert(category, Category.class);
-        assert entity != null;
+        if (entity == null) throw new RuntimeException("Entity cannot be null");
         return categoryRepository.save(entity)
                 .mapNotNull(savedCategory -> conversionService.convert(savedCategory, CategoryDomain.class))
                 .doOnError(DataIntegrityViolationException.class, e -> {
@@ -72,7 +76,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     @Override
     public Mono<CategoryDomain> update(CategoryDomain category) {
         Category entity = conversionService.convert(category, Category.class);
-        assert entity != null;
+        if (entity == null) throw new RuntimeException("Entity cannot be null");
         entity.setUpdatedAt(LocalDateTime.now());
         return categoryRepository.save(entity)
                 .mapNotNull(savedCategory -> conversionService.convert(savedCategory, CategoryDomain.class))
