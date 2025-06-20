@@ -4,7 +4,7 @@ import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrder;
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderLine;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
-import org.springframework.core.convert.ConversionService;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineDomainToEntity;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -14,9 +14,9 @@ import java.util.List;
 
 @Component
 public class PurchaseOrderDomainToEntity implements Converter<PurchaseOrderDomain, PurchaseOrder> {
-    private final ConversionService conversionService;
+    private final PurchaseOrderLineDomainToEntity conversionService;
 
-    public PurchaseOrderDomainToEntity(ConversionService conversionService) {
+    public PurchaseOrderDomainToEntity(PurchaseOrderLineDomainToEntity conversionService) {
         this.conversionService = conversionService;
     }
 
@@ -26,7 +26,7 @@ public class PurchaseOrderDomainToEntity implements Converter<PurchaseOrderDomai
         if (source.getLines() != null) {
             lines = new ArrayList<>();
             for (PurchaseOrderLineDomain domain : source.getLines()) {
-                PurchaseOrderLine line = conversionService.convert(domain, PurchaseOrderLine.class);
+                PurchaseOrderLine line = conversionService.convert(domain);
                 if (line != null) {
                     lines.add(line);
                 }

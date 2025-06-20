@@ -7,6 +7,7 @@ import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.*;
 import com.iron.tec.labs.ecommercejava.mappers.user.*;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.convert.ConversionService;
 
 @TestConfiguration
 public class ConverterConfig {
@@ -140,6 +141,11 @@ public class ConverterConfig {
         return new UpdatePurchaseOrderMapper();
     }
 
+    @Bean
+    public PurchaseOrderDomainToEntity purchaseOrderDomainToEntity(PurchaseOrderLineDomainToEntity conversionService) {
+        return new PurchaseOrderDomainToEntity(conversionService);
+    }
+
     // Purchase order line converters
     @Bean
     public GetPurchaseOrderLineViewMapper getPurchaseOrderLineViewMapper() {
@@ -149,5 +155,10 @@ public class ConverterConfig {
     @Bean
     public SavePurchaseOrderLineMapper savePurchaseOrderLineMapper() {
         return new SavePurchaseOrderLineMapper();
+    }
+
+    @Bean
+    public PurchaseOrderLineDomainToEntity purchaseOrderLineDomainToEntity() {
+        return new PurchaseOrderLineDomainToEntity();
     }
 }
