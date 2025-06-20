@@ -146,6 +146,11 @@ public class ConverterConfig {
         return new PurchaseOrderDomainToEntity(conversionService);
     }
 
+    @Bean
+    public PurchaseOrderEntityToDomain purchaseOrderEntityToDomain(ConversionService conversionService) {
+        return new PurchaseOrderEntityToDomain(conversionService);
+    }
+
     // Purchase order line converters
     @Bean
     public GetPurchaseOrderLineViewMapper getPurchaseOrderLineViewMapper() {

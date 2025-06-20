@@ -9,6 +9,7 @@ import com.iron.tec.labs.ecommercejava.db.repository.*;
 import com.iron.tec.labs.ecommercejava.db.rowmappers.ColumnConverter;
 import com.iron.tec.labs.ecommercejava.db.rowmappers.ProductRowMapper;
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.PurchaseOrderDomainToEntity;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.PurchaseOrderEntityToDomain;
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineDomainToEntity;
 import com.iron.tec.labs.ecommercejava.services.MessageService;
 import org.springframework.boot.SpringApplication;
@@ -63,10 +64,15 @@ public class DatabaseAccessConfig {
 		return new ObjectMapper();
     }
 
-	@Bean
-	public PurchaseOrderDomainToEntity purchaseOrderDomainToEntity(PurchaseOrderLineDomainToEntity conversionService) {
-		return new PurchaseOrderDomainToEntity(conversionService);
-	}
+        @Bean
+        public PurchaseOrderDomainToEntity purchaseOrderDomainToEntity(PurchaseOrderLineDomainToEntity conversionService) {
+                return new PurchaseOrderDomainToEntity(conversionService);
+        }
+
+        @Bean
+        public PurchaseOrderEntityToDomain purchaseOrderEntityToDomain(ConversionService conversionService) {
+                return new PurchaseOrderEntityToDomain(conversionService);
+        }
 
 	@Bean
 	public PurchaseOrderLineDomainToEntity purchaseOrderLineDomainToEntity() {
