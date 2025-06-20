@@ -4,10 +4,12 @@ import com.iron.tec.labs.ecommercejava.mappers.category.*;
 import com.iron.tec.labs.ecommercejava.mappers.product.*;
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.*;
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.*;
-import com.iron.tec.labs.ecommercejava.mappers.user.*;
+import com.iron.tec.labs.ecommercejava.mappers.user.AppUserEntityToDTO;
+import com.iron.tec.labs.ecommercejava.mappers.user.AppUserEntityToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.user.GetUserMapper;
+import com.iron.tec.labs.ecommercejava.mappers.user.RegisterUserMapper;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.convert.ConversionService;
 
 @TestConfiguration
 public class ConverterConfig {

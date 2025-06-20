@@ -1,14 +1,17 @@
 package com.iron.tec.labs.ecommercejava.config;
 
 import com.iron.tec.labs.ecommercejava.mappers.category.*;
-import com.iron.tec.labs.ecommercejava.mappers.product.*;
+import com.iron.tec.labs.ecommercejava.mappers.product.GetProductMapper;
+import com.iron.tec.labs.ecommercejava.mappers.product.GetProductViewMapper;
+import com.iron.tec.labs.ecommercejava.mappers.product.SaveProductMapper;
+import com.iron.tec.labs.ecommercejava.mappers.product.UpdateProductMapper;
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.*;
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.*;
-import com.iron.tec.labs.ecommercejava.mappers.user.*;
+import com.iron.tec.labs.ecommercejava.mappers.user.AppUserEntityToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.user.GetUserMapper;
+import com.iron.tec.labs.ecommercejava.mappers.user.RegisterUserMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 

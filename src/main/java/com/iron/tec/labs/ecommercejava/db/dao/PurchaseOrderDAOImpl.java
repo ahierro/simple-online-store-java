@@ -1,7 +1,6 @@
 package com.iron.tec.labs.ecommercejava.db.dao;
 
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrder;
-import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderLine;
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderView;
 import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderLineViewRepository;
 import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderRepository;

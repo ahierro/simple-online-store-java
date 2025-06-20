@@ -1,10 +1,6 @@
 package com.iron.tec.labs.ecommercejava.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Singular;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

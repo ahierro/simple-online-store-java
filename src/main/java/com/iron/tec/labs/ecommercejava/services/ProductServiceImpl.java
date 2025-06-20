@@ -1,11 +1,8 @@
 package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.db.dao.ProductDAO;
-import com.iron.tec.labs.ecommercejava.db.entities.Product;
-import com.iron.tec.labs.ecommercejava.db.entities.ProductView;
 import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
-import com.iron.tec.labs.ecommercejava.dto.*;
 import com.iron.tec.labs.ecommercejava.exceptions.NotAuthorized;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.BooleanUtils;

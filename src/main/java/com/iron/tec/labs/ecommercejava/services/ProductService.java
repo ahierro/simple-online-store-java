@@ -1,7 +1,7 @@
 package com.iron.tec.labs.ecommercejava.services;
 
-import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import com.iron.tec.labs.ecommercejava.domain.PageDomain;
+import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import reactor.core.publisher.Mono;
