@@ -1,6 +1,7 @@
 package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.db.dao.ProductDAO;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,6 +38,7 @@ class ProductServiceImplTest {
     ProductServiceImpl productService;
 
     @Test
+    @DisplayName("Should create a product successfully")
     void createProductTest() {
         UUID id = UUID.randomUUID();
         com.iron.tec.labs.ecommercejava.domain.ProductDomain productDomain = com.iron.tec.labs.ecommercejava.domain.ProductDomain.builder()
@@ -57,6 +59,7 @@ class ProductServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should delete a product successfully")
     void testDelete() {
         String id = UUID.randomUUID().toString();
 
@@ -68,6 +71,7 @@ class ProductServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should update an existing product successfully")
     void testUpdateExisting() {
         UUID id = UUID.randomUUID();
         com.iron.tec.labs.ecommercejava.domain.ProductDomain productDomain = com.iron.tec.labs.ecommercejava.domain.ProductDomain.builder()
@@ -85,6 +89,7 @@ class ProductServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should return a paginated list of products")
     void getProductPage() {
         com.iron.tec.labs.ecommercejava.domain.ProductDomain filter = com.iron.tec.labs.ecommercejava.domain.ProductDomain.builder().build();
         when(productDAO.getProductViewPage(eq(0), eq(1), eq(filter), isNull())).thenReturn(Mono.just(
@@ -119,6 +124,7 @@ class ProductServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should return a product by its ID")
     void testGetById() {
         UUID id = UUID.randomUUID();
         com.iron.tec.labs.ecommercejava.domain.ProductDomain productDomain = com.iron.tec.labs.ecommercejava.domain.ProductDomain.builder()

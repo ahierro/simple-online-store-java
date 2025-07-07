@@ -2,6 +2,7 @@ package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.config.mail.config.MailConfig;
 import jakarta.mail.internet.MimeMessage;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,8 +29,8 @@ class EmailServiceImplTest {
     @InjectMocks
     EmailServiceImpl emailService;
 
-    //test for sendEmail
     @Test
+    @DisplayName("Should send email successfully")
     void sendEmailTest() {
         when(emailSender.createMimeMessage()).thenReturn(message);
         when(mailConfig.getUsername()).thenReturn("user@gmail.com");
@@ -39,6 +40,7 @@ class EmailServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should return false when email sending fails")
     void sendEmailTestFailed() {
         when(emailSender.createMimeMessage()).thenReturn(message);
         when(mailConfig.getUsername()).thenReturn("user@gmail.com");
@@ -49,6 +51,7 @@ class EmailServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should send email in parallel and return result")
     void sendEmailInParallel() {
         var result = emailService.sendEmailInParallel("test@gmail.com", "Email Confirmation",
                 "Confirm on the following link");

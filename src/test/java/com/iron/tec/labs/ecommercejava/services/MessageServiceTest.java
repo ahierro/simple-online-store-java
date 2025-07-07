@@ -1,5 +1,6 @@
 package com.iron.tec.labs.ecommercejava.services;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +24,7 @@ class MessageServiceTest {
     MessageServiceImpl messageService;
 
     @Test
+    @DisplayName("Should get localized message without arguments")
     void getRequestLocalizedMessage() {
 
         when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class))).thenReturn("message");
@@ -34,6 +36,7 @@ class MessageServiceTest {
         assertEquals("message",result);
     }
     @Test
+    @DisplayName("Should get localized message with arguments")
     void getRequestLocalizedMessageWithArg() {
         when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class))).thenReturn("message");
         String result = messageService.getRequestLocalizedMessage("prefix","key","arg");

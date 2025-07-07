@@ -5,6 +5,7 @@ import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
 import com.iron.tec.labs.ecommercejava.exceptions.BadRequest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +28,7 @@ class StockValidatorImplTest {
     StockValidatorImpl stockValidatorImpl;
 
     @Test
+    @DisplayName("Should throw BadRequest when stock is not available")
     void validateStockThrowsException() {
         UUID idProduct1 = UUID.randomUUID();
         UUID idProduct2 = UUID.randomUUID();
@@ -47,6 +49,7 @@ class StockValidatorImplTest {
     }
 
     @Test
+    @DisplayName("Should validate stock successfully when available")
     void validateStockOk() {
         UUID idProduct1 = UUID.randomUUID();
         UUID idProduct2 = UUID.randomUUID();

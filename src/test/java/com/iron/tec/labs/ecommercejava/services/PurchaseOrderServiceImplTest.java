@@ -6,6 +6,7 @@ import com.iron.tec.labs.ecommercejava.dto.PageRequestDTO;
 import com.iron.tec.labs.ecommercejava.dto.PurchaseOrderPatchDTO;
 import com.iron.tec.labs.ecommercejava.enums.PurchaseOrderStatus;
 import com.iron.tec.labs.ecommercejava.exceptions.BadRequest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -28,10 +29,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PurchaseOrderServiceImplTest {
+
     @Mock
     PurchaseOrderDAO purchaseOrderDAO;
-    @Mock
-    ConversionService conversionService;
     @Mock
     Authentication authentication;
     @Mock
@@ -71,6 +71,7 @@ class PurchaseOrderServiceImplTest {
             .build();
 
     @Test
+    @DisplayName("Should create a purchase order successfully")
     void createPurchaseOrderTest() {
         when(stockValidator.validateStock(any())).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
@@ -86,15 +87,16 @@ class PurchaseOrderServiceImplTest {
         verify(purchaseOrderDAO).create(any(PurchaseOrderDomain.class));
     }
 
-    @Test()
-    void createPurchaseOrderTestWithoutStock() {
+    @Test
+    @DisplayName("Should throw BadRequest when stock is insufficient")
+    void createPurchaseOrderInsufficientStockTest() {
 
         when(stockValidator.validateStock(any())).thenAnswer(invocation -> Mono.error(new BadRequest("Stock is not enough")));
         when(authentication.getName()).thenReturn(UUID.randomUUID().toString());
 
         StepVerifier.create(purchaseOrderService.createPurchaseOrder(purchaseOrder, authentication))
                 .verifyErrorMatches(x -> {
-                    assertTrue(x instanceof BadRequest);
+                    assertInstanceOf(BadRequest.class, x);
                     assertEquals("Stock is not enough", x.getMessage());
                     return true;
                 });
@@ -102,7 +104,8 @@ class PurchaseOrderServiceImplTest {
     }
 
     @Test
-    void testPatchExisting() {
+    @DisplayName("Should update purchase order status successfully")
+    void updatePurchaseOrderStatusTest() {
         UUID id = UUID.randomUUID();
         PurchaseOrderLineDomain patchOrderLine = PurchaseOrderLineDomain.builder()
                 .id(UUID.randomUUID())
@@ -128,7 +131,8 @@ class PurchaseOrderServiceImplTest {
     }
 
     @Test
-    void getPurchaseOrderPage() {
+    @DisplayName("Should return a page of purchase orders")
+    void getPurchaseOrderPageTest() {
         PageDomain<PurchaseOrderDomain> pageDomain = PageDomain.<PurchaseOrderDomain>builder()
                 .content(Arrays.asList(purchaseOrder, purchaseOrder))
                 .totalPages(2)
@@ -149,6 +153,7 @@ class PurchaseOrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should return a purchase order by its ID")
     void testGetById() {
         when(purchaseOrderDAO.getById(any(UUID.class))).thenReturn(Mono.just(purchaseOrder));
 

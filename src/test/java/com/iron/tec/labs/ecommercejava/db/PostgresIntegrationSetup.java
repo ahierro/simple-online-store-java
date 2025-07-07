@@ -14,7 +14,9 @@ public class PostgresIntegrationSetup {
     public static void init(PostgreSQLContainer<?> postgresqlContainer) {
         postgresqlContainer.withInitScript("db/changelog/changelog.sql");
     }
-
+    public static void initWithScripts(PostgreSQLContainer<?> postgresqlContainer,String path) {
+        postgresqlContainer.withInitScripts("db/changelog/changelog.sql",path);
+    }
     public static void overrideProperties(PostgreSQLContainer<?> postgresqlContainer, DynamicPropertyRegistry registry) {
         registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://" + postgresqlContainer.getHost() + ":"
                 + postgresqlContainer.getFirstMappedPort() + "/" + postgresqlContainer.getDatabaseName());

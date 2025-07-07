@@ -4,6 +4,7 @@ import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
 import com.iron.tec.labs.ecommercejava.db.repository.UserRepository;
 import com.iron.tec.labs.ecommercejava.dto.RegisterUserDTO;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,14 +31,13 @@ class UserServiceImplTest {
     PasswordEncoder passwordEncoder;
     @Mock
     EmailService emailService;
-
     @Mock
     MessageService messageService;
-
     @InjectMocks
     UserServiceImpl userServiceImpl;
 
     @Test
+    @DisplayName("Should create a user successfully")
     void createUserTest() {
         when(userRepository.save(any(AppUser.class))).thenReturn(Mono.just(AppUser.builder()
                 .id(UUID.randomUUID())
@@ -66,6 +66,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should confirm user successfully")
     void confirmUserTest() {
         when(userRepository.findByIdAndActive(any(UUID.class), anyBoolean())).thenReturn(Mono.just(AppUser.builder()
                 .id(UUID.randomUUID())
@@ -95,6 +96,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should throw NotFound when confirming a non-existent user")
     void confirmUserTestFail() {
         when(userRepository.findByIdAndActive(any(UUID.class), anyBoolean())).thenReturn(Mono.empty());
 

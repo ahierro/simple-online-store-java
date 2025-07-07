@@ -1,6 +1,7 @@
 package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,6 +32,7 @@ class JWTGeneratorServiceImplTest {
     String jwtExample = "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoiYWxlamFuZHJvaGllcnJvIiwiZXhwIjoxNjczMDI5MzQ3LCJpYXQiOjE2NzMwMjU3NDcsInNjb3BlIjoiQURNSU4ifQ.szxvGqnDu2UekZqiIgbNyXhpnufYUWGrxcWNEcPtsCl4JL3-0Q6GA64iZkweeDk0bBPETlR7dWp5lbfx6jTA5ftH6A55ioNWtP5c5Zxxna0kAF-iV7zFMkWBdcUnfyS92Et6YimtfUm3uq5YW_-xQk1qRZVf2f41F8UdTFXjMKvL5OdfnWmhKHas2h1iW0DgBNBM45mrHeEcAxg64if4fRfdHWA-Xtow6hAPL7WdpDS64vmPzmZhpxi_32dLsmZuQPimCIlGKuv5sic5VzBaH8Jkp8h4PLeZDHrh9CBD4fCTauuyiRRPaunQGTzyyt2pbmJUisAJ4Nlv08sPAXt-Lg";
 
     @Test
+    @DisplayName("Should generate JWT token correctly")
     void testGenerateToken() {
         Authentication authentication = mock(Authentication.class);
         Jwt jwt = mock(Jwt.class);

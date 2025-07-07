@@ -1,19 +1,16 @@
-package com.iron.tec.labs.ecommercejava.controllers;
+package com.iron.tec.labs.ecommercejava.config.security;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 
 import static com.iron.tec.labs.ecommercejava.constants.Constants.*;
+import static com.iron.tec.labs.ecommercejava.constants.Constants.API;
+import static com.iron.tec.labs.ecommercejava.constants.Constants.SCOPE_ROLE_ADMIN;
 
-@SpringBootApplication
-public class ControllersConfig {
-    @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+public class HttpConfigSetter {
+    public static ServerHttpSecurity setHttpConfig(ServerHttpSecurity http) {;
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
@@ -33,7 +30,6 @@ public class ControllersConfig {
                         .pathMatchers(HttpMethod.GET, "/api/purchase-order/**").hasAuthority(SCOPE_ROLE_ADMIN)
                         .anyExchange().authenticated())
                 .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
-                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
-                .build();
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable);
     }
 }

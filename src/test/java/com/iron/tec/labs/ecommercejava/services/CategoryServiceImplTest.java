@@ -3,6 +3,7 @@ package com.iron.tec.labs.ecommercejava.services;
 import com.iron.tec.labs.ecommercejava.db.dao.CategoryDAO;
 import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
 import com.iron.tec.labs.ecommercejava.domain.PageDomain;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -30,6 +31,7 @@ class CategoryServiceImplTest {
     CategoryServiceImpl categoryService;
 
     @Test
+    @DisplayName("Should create a category successfully")
     void createCategoryTest() {
         UUID id = UUID.randomUUID();
         CategoryDomain category = CategoryDomain.builder()
@@ -51,6 +53,7 @@ class CategoryServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should delete a category successfully")
     void testDelete() {
         String id = UUID.randomUUID().toString();
 
@@ -62,6 +65,7 @@ class CategoryServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should update an existing category successfully")
     void testUpdateExisting() {
         UUID id = UUID.randomUUID();
         CategoryDomain category = CategoryDomain.builder()
@@ -80,6 +84,7 @@ class CategoryServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should return a page of categories")
     void getCategoryPage() {
         when(categoryDAO.getPage(0, 1))
                 .thenReturn(Mono.just(new PageDomain<>(
@@ -106,6 +111,7 @@ class CategoryServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should return a category by ID")
     void testGetById() {
         when(categoryDAO.getById(any(UUID.class))).thenReturn(Mono.just(CategoryDomain.builder()
                 .id(UUID.randomUUID())

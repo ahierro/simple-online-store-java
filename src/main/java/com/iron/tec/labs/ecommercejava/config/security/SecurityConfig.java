@@ -37,26 +37,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
-        return http
-                .cors(Customizer.withDefaults())
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec
-                        .pathMatchers(HttpMethod.POST, "/api/login").permitAll()
-                        .pathMatchers(HttpMethod.POST, "/api/signup").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/api/confirm").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/webjars/swagger-ui/**").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/api/product/**").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/api/category/**").permitAll()
-                        .pathMatchers(HttpMethod.POST, "/api/purchase-order/**").hasAuthority(SCOPE_ROLE_USER)
-                        .pathMatchers(HttpMethod.POST, API).hasAuthority(SCOPE_ROLE_ADMIN)
-                        .pathMatchers(HttpMethod.PUT, API).hasAuthority(SCOPE_ROLE_ADMIN)
-                        .pathMatchers(HttpMethod.DELETE, API).hasAuthority(SCOPE_ROLE_ADMIN)
-                        .pathMatchers(HttpMethod.GET, "/api/purchase-order/**").hasAuthority(SCOPE_ROLE_ADMIN)
-                        .anyExchange().authenticated() )
-                .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
-                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+        return HttpConfigSetter.setHttpConfig(http)
                 .oauth2ResourceServer(oAuth2ResourceServerSpec -> oAuth2ResourceServerSpec.jwt(Customizer.withDefaults()))
                 .build();
     }
