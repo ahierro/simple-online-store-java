@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -29,28 +31,28 @@ public class AuthController {
     private final ReactiveAuthenticationManager authenticationManager;
 
     @Operation(summary = "Login with user and password and returns JWT token", responses = {
-            @ApiResponse(responseCode = "200",description = "Successful Operation", content = @Content),
+            @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content),
             @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content)})
     @PostMapping("/api/login")
-    public Mono<String> login(@RequestBody LoginRequest userLogin) {
+    public Mono<String> login(@RequestBody @Valid LoginRequest userLogin) {
         return authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(userLogin.username(), userLogin.password()))
                 .map(jwtGeneratorService::generateToken);
     }
 
     @Operation(summary = "E-mail confirmation endpoint that activates user", responses = {
-            @ApiResponse(responseCode = "200",description = "Successful Operation", content = @Content),
+            @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content),
             @ApiResponse(responseCode = "404", description = "Not found", content = @Content)})
     @GetMapping("/api/confirm")
-    public Mono<String> confirm(String token) {
+    public Mono<String> confirm(@NotEmpty String token) {
         return userService.confirm(token);
     }
 
     @Operation(summary = "Sign up and sends e-mail with confirmation link", responses = {
-            @ApiResponse(responseCode = "200",description = "Successful Operation", content = @Content),
+            @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content),
             @ApiResponse(responseCode = "409", description = "User already exists", content = @Content)})
     @PostMapping("/api/signup")
-    public Mono<Void> signup(@RequestBody RegisterUserDTO user) {
+    public Mono<Void> signup(@RequestBody @Valid RegisterUserDTO user) {
         return userService.create(user);
     }
 }

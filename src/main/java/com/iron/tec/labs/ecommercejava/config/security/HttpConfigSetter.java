@@ -29,6 +29,7 @@ public class HttpConfigSetter {
                         .pathMatchers(HttpMethod.GET, "/api/purchase-order/**").permitAll()
                         .anyExchange().authenticated())
                 .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
-                .formLogin(ServerHttpSecurity.FormLoginSpec::disable);
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+                .oauth2ResourceServer(oAuth2ResourceServerSpec -> oAuth2ResourceServerSpec.jwt(Customizer.withDefaults()));
     }
 }

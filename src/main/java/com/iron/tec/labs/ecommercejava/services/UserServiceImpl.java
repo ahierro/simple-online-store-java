@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static com.iron.tec.labs.ecommercejava.constants.Constants.*;
@@ -55,6 +56,7 @@ public class UserServiceImpl implements UserService {
                         NOT_FOUND))))
                 .flatMap(user -> {
                     user.setActive(true);
+                    user.setUpdatedAt(LocalDateTime.now());
                     return userRepository.save(user);
                 }).map(user -> "User "+user.getUsername()+" confirmed!");
     }

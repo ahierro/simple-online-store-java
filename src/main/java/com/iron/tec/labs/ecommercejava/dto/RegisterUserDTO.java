@@ -1,5 +1,6 @@
 package com.iron.tec.labs.ecommercejava.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class RegisterUserDTO {
     private String password;
     @NotEmpty
     @Length(min = 6,max = 50)
+    @Email
     private String email;
 
     @NotEmpty
