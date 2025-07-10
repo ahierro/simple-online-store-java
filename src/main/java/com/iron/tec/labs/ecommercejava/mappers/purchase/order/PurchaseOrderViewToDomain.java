@@ -1,6 +1,7 @@
 package com.iron.tec.labs.ecommercejava.mappers.purchase.order;
 
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderView;
+import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
@@ -16,7 +17,13 @@ public class PurchaseOrderViewToDomain implements Converter<PurchaseOrderView, P
                 .total(source.getTotal())
                 .status(source.getStatus())
                 .createdAt(source.getCreatedAt())
-                .user(null)
+                .user(AppUserDomain.builder()
+                        .id(source.getIdUser())
+                        .username(source.getUsername())
+                        .email(source.getEmail())
+                        .firstName(source.getFirstName())
+                        .lastName(source.getLastName())
+                        .build())
                 .build();
     }
 }

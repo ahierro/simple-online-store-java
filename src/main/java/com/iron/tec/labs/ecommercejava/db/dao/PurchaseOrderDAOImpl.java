@@ -1,8 +1,10 @@
 package com.iron.tec.labs.ecommercejava.db.dao;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
+import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.TransientDataAccessResourceException;
 import org.springframework.data.domain.Example;

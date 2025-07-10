@@ -21,17 +21,11 @@ public class ConverterConfig implements WebFluxConfigurer {
     private final CategoryCreationDTOToDomain categoryCreationDTOToDomain;
     private final CategoryDomainToDTO categoryDomainToDTO;
     private final CategoryDomainToEntity categoryDomainToEntity;
-    private final CategoryDTOToDomain categoryDTOToDomain;
     private final CategoryEntityToDomain categoryEntityToDomain;
     private final CategoryUpdateDTOToDomain categoryUpdateDTOToDomain;
-    private final UpdateCategoryMapper updateCategoryMapper;
     private final ProductDomainToProductView productDomainToProductView;
     private final ProductViewToProductDomain productViewToProductDomain;
     // Product converters
-    private final GetProductMapper getProductMapper;
-    private final GetProductViewMapper getProductViewMapper;
-    private final SaveProductMapper saveProductMapper;
-    private final UpdateProductMapper updateProductMapper;
 
     // User converters
     private final GetUserMapper getUserMapper;
@@ -61,16 +55,10 @@ public class ConverterConfig implements WebFluxConfigurer {
         registry.addConverter(categoryCreationDTOToDomain);
         registry.addConverter(categoryDomainToDTO);
         registry.addConverter(categoryDomainToEntity);
-        registry.addConverter(categoryDTOToDomain);
         registry.addConverter(categoryEntityToDomain);
         registry.addConverter(categoryUpdateDTOToDomain);
-        registry.addConverter(updateCategoryMapper);
 
         // Product
-        registry.addConverter(getProductMapper);
-        registry.addConverter(getProductViewMapper);
-        registry.addConverter(saveProductMapper);
-        registry.addConverter(updateProductMapper);
         registry.addConverter(productDomainToProductView);
         registry.addConverter(productViewToProductDomain);
 
