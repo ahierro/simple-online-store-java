@@ -64,7 +64,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Mono<ProductDomain> findById(UUID id) {
         return this.customProductRepository.findById(id)
-            .map(product -> conversionService.convert(product, ProductDomain.class))
+            .mapNotNull(product -> conversionService.convert(product, ProductDomain.class))
             .switchIfEmpty(Mono.error(new NotFound(messageService.getRequestLocalizedMessage("error.product", "not_found", id.toString()))));
     }
 
@@ -75,7 +75,7 @@ public class ProductDAOImpl implements ProductDAO {
             return Mono.error(new IllegalArgumentException("Conversion to Product entity failed"));
         }
         return productRepository.save(entity)
-            .map(savedProduct -> conversionService.convert(savedProduct, ProductDomain.class))
+            .mapNotNull(savedProduct -> conversionService.convert(savedProduct, ProductDomain.class))
             .doOnError(DataIntegrityViolationException.class, e -> {
                 throw new Conflict(messageService.getRequestLocalizedMessage("error.product", "already_exists", String.valueOf(productDomain.getId())));
             });
@@ -89,7 +89,7 @@ public class ProductDAOImpl implements ProductDAO {
         }
         entity.setUpdatedAt(java.time.LocalDateTime.now());
         return productRepository.save(entity)
-            .map(savedProduct -> conversionService.convert(savedProduct, ProductDomain.class))
+            .mapNotNull(savedProduct -> conversionService.convert(savedProduct, ProductDomain.class))
             .doOnError(TransientDataAccessResourceException.class, e -> {
                 throw new NotFound(messageService.getRequestLocalizedMessage("error.product", "not_found", String.valueOf(productDomain.getId())));
             });

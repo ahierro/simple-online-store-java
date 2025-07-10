@@ -1,5 +1,5 @@
 ### Project Purpose
-This project was build to be part of my personal portfolio. It is just a sample code that is not intended to be used in production.
+This project was build to be part of my personal portfolio. It is just a sample code not intended to be used in production.
 This Spring Boot application provides a REST API for an oversimplified ecommerce website without integration with payment or delivery methods.
 It includes CRUD operations for Product, Category, User, PurchaseOrder and PurchaseOrderLine entities. It also includes a simple authentication mechanism using JWT.
 

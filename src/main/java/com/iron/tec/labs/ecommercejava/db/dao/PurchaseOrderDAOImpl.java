@@ -60,7 +60,7 @@ public class PurchaseOrderDAOImpl implements PurchaseOrderDAO {
                                     return purchaseOrder;
                                 })
                 )
-                .map(po -> conversionService.convert(po, PurchaseOrderDomain.class))
+                .mapNotNull(po -> conversionService.convert(po, PurchaseOrderDomain.class))
                 .switchIfEmpty(Mono.error(new NotFound(messageService.getRequestLocalizedMessage(ERROR_PURCHASE_ORDER, NOT_FOUND, id.toString()))));
     }
 

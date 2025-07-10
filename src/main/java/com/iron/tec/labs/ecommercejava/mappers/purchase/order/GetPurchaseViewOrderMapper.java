@@ -12,7 +12,7 @@ public class GetPurchaseViewOrderMapper implements Converter<PurchaseOrderView, 
     @Override
     public PurchaseOrderViewDTO convert(@NonNull PurchaseOrderView source) {
         return PurchaseOrderViewDTO.builder()
-                .id(source.getId().toString())
+                .id(String.valueOf(source.getId()))
                 .username(source.getUsername())
                 .total(source.getTotal())
                 .status(source.getStatus())

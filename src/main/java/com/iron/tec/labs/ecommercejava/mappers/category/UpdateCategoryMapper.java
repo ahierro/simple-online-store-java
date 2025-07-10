@@ -13,13 +13,11 @@ public class UpdateCategoryMapper implements Converter<CategoryUpdateDTO, Catego
 
     @Override
     public Category convert(@NonNull CategoryUpdateDTO source) {
-        Category category = Category.builder()
+        return Category.builder()
                 .name(source.getName())
                 .description(source.getDescription())
                 .deleted(source.getDeleted() != null ? source.getDeleted() : false)
                 .createdAt(LocalDateTime.now())
                 .build();
-
-        return category;
     }
 }

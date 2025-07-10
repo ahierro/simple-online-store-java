@@ -75,7 +75,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public Mono<ProductDTO> getProduct(@PathVariable UUID id) {
         return productService.getById(id)
-                .map(product -> conversionService.convert(product, ProductDTO.class));
+                .mapNotNull(product -> conversionService.convert(product, ProductDTO.class));
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") },
@@ -123,7 +123,7 @@ public class ProductController {
     public Mono<ResponseEntity<Void>> deleteProduct(@PathVariable("id") String id) {
         return productService.deleteProduct(id)
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Product deleted")))
-                .map(x -> ok().build());
+                .then(Mono.fromCallable(() -> ok().build()));
     }
 
 }

@@ -94,7 +94,7 @@ public class PurchaseOrderController {
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("PurchaseOrder created")))
                 .map(purchaseOrderDTO -> ResponseEntity.created(
                         URI.create(serverHttpRequest.getPath().toString().concat("/")
-                                .concat(purchaseOrderCreationDTO.getId().toString()))).build());
+                                .concat(purchaseOrderCreationDTO.getId()))).build());
     }
 
     @Operation(security = { @SecurityRequirement(name = "bearer-key") },

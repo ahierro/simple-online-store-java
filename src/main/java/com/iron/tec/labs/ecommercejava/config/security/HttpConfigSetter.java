@@ -6,11 +6,9 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 
 import static com.iron.tec.labs.ecommercejava.constants.Constants.*;
-import static com.iron.tec.labs.ecommercejava.constants.Constants.API;
-import static com.iron.tec.labs.ecommercejava.constants.Constants.SCOPE_ROLE_ADMIN;
 
 public class HttpConfigSetter {
-    public static ServerHttpSecurity setHttpConfig(ServerHttpSecurity http) {;
+    public static ServerHttpSecurity setHttpConfig(ServerHttpSecurity http) {
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)

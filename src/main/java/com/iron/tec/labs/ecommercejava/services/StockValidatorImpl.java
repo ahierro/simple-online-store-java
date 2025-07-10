@@ -23,11 +23,12 @@ public class StockValidatorImpl implements StockValidator {
                     var line = purchaseOrder.getLines().stream().filter(x -> x.getIdProduct().equals(product.getId())).findFirst().orElse(null);
                     if (line == null) return false;
                     return product.getStock() >= line.getQuantity();
-                })).map(valid -> {
-                    if(BooleanUtils.isTrue(valid)){
-                        return purchaseOrder;
+                })).handle((valid, sink) -> {
+                    if(BooleanUtils.isTrue(valid)) {
+                        sink.next(purchaseOrder);
+                        return;
                     }
-                    throw new BadRequest("Stock not available");
+                    sink.error(new BadRequest("Stock not available"));
                 });
     }
 }

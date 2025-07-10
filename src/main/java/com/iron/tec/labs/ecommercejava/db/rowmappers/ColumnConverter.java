@@ -45,7 +45,7 @@ public class ColumnConverter {
     }
 
     /**
-     * Convert a value from the {@link Row} to a type - throws an exception, it it's impossible.
+     * Convert a value from the {@link Row} to a type - throws an exception, it's impossible.
      *
      * @param row        which contains the column values.
      * @param target     class.
