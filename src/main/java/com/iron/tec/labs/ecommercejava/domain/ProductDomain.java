@@ -22,6 +22,9 @@ public class ProductDomain {
     private String smallImageUrl;
     private String bigImageUrl;
     private UUID idCategory;
+    private String categoryName;
+    private String categoryDescription;
+    private LocalDateTime categoryCreatedAt;
     private Boolean deleted;
     private LocalDateTime createdAt;
 }

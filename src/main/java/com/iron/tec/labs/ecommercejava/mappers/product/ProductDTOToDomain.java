@@ -24,6 +24,9 @@ public class ProductDTOToDomain implements Converter<ProductDTO, ProductDomain> 
                 .deleted(source.getDeleted())
                 .idCategory((source.getCategory() != null && source.getCategory().getId() != null)
                         ? UUID.fromString(source.getCategory().getId()) : null)
+                .categoryName(source.getCategory() != null ? source.getCategory().getName() : null)
+                .categoryDescription(source.getCategory() != null ? source.getCategory().getDescription() : null)
+                .categoryCreatedAt(source.getCategory() != null ? source.getCategory().getCreatedAt() : null)
                 .build();
     }
 }

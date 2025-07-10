@@ -37,7 +37,9 @@ public class ProductRowMapper implements BiFunction<Row, RowMetadata, ProductDTO
                 .category(CategoryDTO.builder()
                         .id(converter.fromRow(row, "id_category", String.class))
                         .name(converter.fromRow(row, "category_name", String.class))
-                        .description(converter.fromRow(row, "category_description", String.class)).build())
+                        .description(converter.fromRow(row, "category_description", String.class))
+                        .createdAt(converter.fromRow(row, "category_created_at", java.time.LocalDateTime.class))
+                        .build())
                 .build();
     }
 }

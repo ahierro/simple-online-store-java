@@ -28,6 +28,7 @@ public class CustomProductRepositoryImpl implements CustomProductRepository{
                                p.small_image_url as small_image_url,
                                c.name as category_name,
                                c.description as category_description,
+                               c.created_at as category_created_at,
                                p.id_category as id_category,
                                p.created_at as created_at,
                                p.updated_at as updated_at,
