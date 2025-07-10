@@ -13,7 +13,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.Authentication;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -31,8 +30,6 @@ class PurchaseOrderServiceImplTest {
 
     @Mock
     PurchaseOrderDAO purchaseOrderDAO;
-    @Mock
-    Authentication authentication;
     @Mock
     StockValidator stockValidator;
 
@@ -76,7 +73,6 @@ class PurchaseOrderServiceImplTest {
 
         ArgumentCaptor<PurchaseOrderDomain> argumentCaptor = ArgumentCaptor.forClass(PurchaseOrderDomain.class);
         when(purchaseOrderDAO.create(argumentCaptor.capture())).thenReturn(Mono.just(purchaseOrder));
-        when(authentication.getName()).thenReturn(UUID.randomUUID().toString());
 
         PurchaseOrderDomain createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrder).block();
 
@@ -91,7 +87,6 @@ class PurchaseOrderServiceImplTest {
     void createPurchaseOrderInsufficientStockTest() {
 
         when(stockValidator.validateStock(any())).thenAnswer(invocation -> Mono.error(new BadRequest("Stock is not enough")));
-        when(authentication.getName()).thenReturn(UUID.randomUUID().toString());
 
         StepVerifier.create(purchaseOrderService.createPurchaseOrder(purchaseOrder))
                 .verifyErrorMatches(x -> {

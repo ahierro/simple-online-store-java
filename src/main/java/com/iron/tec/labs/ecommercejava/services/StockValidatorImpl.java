@@ -26,8 +26,9 @@ public class StockValidatorImpl implements StockValidator {
                 })).handle((valid, sink) -> {
                     if(BooleanUtils.isTrue(valid)) {
                         sink.next(purchaseOrder);
+                    }else{
+                        sink.error(new BadRequest("Stock not available"));
                     }
-                    sink.error(new BadRequest("Stock not available"));
                 });
     }
 }
