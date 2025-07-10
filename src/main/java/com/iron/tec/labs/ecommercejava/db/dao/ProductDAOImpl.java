@@ -39,9 +39,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Mono<PageDomain<ProductDomain>> getProductViewPage(int page, int size, ProductDomain productDomainExample, Sort.Direction sortByPrice) {
         ProductView productViewExample = conversionService.convert(productDomainExample, ProductView.class);
-        if (productViewExample == null) {
-            return Mono.error(new IllegalArgumentException("Conversion to ProductView failed"));
-        }
+        if (productViewExample == null) throw new RuntimeException("Entity cannot be null");
         ExampleMatcher matcher = ExampleMatcher.matchingAll()
                 .withMatcher("productDescription", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
         Example<ProductView> example = Example.of(productViewExample, matcher);
@@ -71,9 +69,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Mono<ProductDomain> create(ProductDomain productDomain) {
         Product entity = conversionService.convert(productDomain, Product.class);
-        if (entity == null) {
-            return Mono.error(new IllegalArgumentException("Conversion to Product entity failed"));
-        }
+        if (entity == null) throw new RuntimeException("Entity cannot be null");
         return productRepository.save(entity)
             .mapNotNull(savedProduct -> conversionService.convert(savedProduct, ProductDomain.class))
             .doOnError(DataIntegrityViolationException.class, e -> {
@@ -85,9 +81,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public Mono<ProductDomain> update(ProductDomain productDomain) {
         Product entity = conversionService.convert(productDomain, Product.class);
-        if (entity == null) {
-            return Mono.error(new IllegalArgumentException("Conversion to Product entity failed"));
-        }
+        if (entity == null) throw new RuntimeException("Entity cannot be null");
         entity.setUpdatedAt(java.time.LocalDateTime.now());
         return productRepository.save(entity)
             .mapNotNull(savedProduct -> conversionService.convert(savedProduct, ProductDomain.class))
