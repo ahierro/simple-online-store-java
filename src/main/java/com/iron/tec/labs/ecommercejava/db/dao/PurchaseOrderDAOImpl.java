@@ -12,9 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import static com.iron.tec.labs.ecommercejava.constants.Constants.ALREADY_EXISTS;
-import static com.iron.tec.labs.ecommercejava.constants.Constants.ERROR_PURCHASE_ORDER;
-import static com.iron.tec.labs.ecommercejava.constants.Constants.NOT_FOUND;
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrder;
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderView;
 import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderLineViewRepository;
@@ -30,6 +27,8 @@ import com.iron.tec.labs.ecommercejava.services.MessageService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
+
+import static com.iron.tec.labs.ecommercejava.constants.Constants.*;
 
 @Repository
 @AllArgsConstructor
@@ -84,12 +83,17 @@ public class PurchaseOrderDAOImpl implements PurchaseOrderDAO {
     }
 
     @Override
-    public Mono<PurchaseOrderDomain> create(PurchaseOrderDomain product) {
-        PurchaseOrder entity = conversionService.convert(product, PurchaseOrder.class);
+    public Mono<PurchaseOrderDomain> create(PurchaseOrderDomain purchaseOrderDomain) {
+        PurchaseOrder entity = conversionService.convert(purchaseOrderDomain, PurchaseOrder.class);
         if (entity == null) throw new RuntimeException("Entity cannot be null");
         return purchaseOrderRepository.save(entity).doOnError(DataIntegrityViolationException.class, e -> {
+            log.error("Error creating purchase order", e);
+            if(e.getMessage().contains("po_id_product_fk")) {
+                throw new NotFound(messageService.getRequestLocalizedMessage(ERROR_PRODUCT,
+                        NOT_FOUND));
+            }
             throw new Conflict(messageService.getRequestLocalizedMessage(ERROR_PURCHASE_ORDER,
-                    ALREADY_EXISTS, ObjectUtils.nullSafeToString(product.getId())));
+                    ALREADY_EXISTS, ObjectUtils.nullSafeToString(purchaseOrderDomain.getId())));
         }).map(saved -> conversionService.convert(saved, PurchaseOrderDomain.class));
     }
 

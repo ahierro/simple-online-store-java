@@ -13,7 +13,6 @@ public class PurchaseOrderLineCreationDTOToDomain implements Converter<PurchaseO
     @Override
     public PurchaseOrderLineDomain convert(@NonNull PurchaseOrderLineCreationDTO source) {
         return PurchaseOrderLineDomain.builder()
-                .id(UUID.randomUUID())
                 .idProduct(source.getIdProduct() != null ? UUID.fromString(source.getIdProduct()) : null)
                 .quantity(source.getQuantity())
                 .build();
