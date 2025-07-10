@@ -22,7 +22,8 @@ public class ProductDTOToDomain implements Converter<ProductDTO, ProductDomain> 
                 .bigImageUrl(source.getBigImageUrl())
                 .createdAt(source.getCreatedAt())
                 .deleted(source.getDeleted())
-                // category mapping can be handled separately if needed
+                .idCategory((source.getCategory() != null && source.getCategory().getId() != null)
+                        ? UUID.fromString(source.getCategory().getId()) : null)
                 .build();
     }
 }

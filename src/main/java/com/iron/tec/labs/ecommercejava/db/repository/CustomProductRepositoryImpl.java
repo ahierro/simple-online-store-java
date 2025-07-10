@@ -29,6 +29,8 @@ public class CustomProductRepositoryImpl implements CustomProductRepository{
                                c.name as category_name,
                                c.description as category_description,
                                p.id_category as id_category,
+                               p.created_at as created_at,
+                               p.updated_at as updated_at,
                                p.deleted as deleted
                         FROM product p INNER JOIN category c on c.id = p.id_category
                        where p.id = :id

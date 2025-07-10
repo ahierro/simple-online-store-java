@@ -6,6 +6,8 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class ProductUpdateDTOToDomain implements Converter<ProductUpdateDTO, ProductDomain> {
     @Override
@@ -18,7 +20,7 @@ public class ProductUpdateDTOToDomain implements Converter<ProductUpdateDTO, Pro
         productDomain.setSmallImageUrl(source.getSmallImageUrl());
         productDomain.setBigImageUrl(source.getBigImageUrl());
         productDomain.setDeleted(source.getDeleted() != null ? source.getDeleted() : false);
-        // category mapping can be handled separately if needed
+        productDomain.setIdCategory(UUID.fromString(source.getCategoryId()));
         return productDomain;
     }
 }

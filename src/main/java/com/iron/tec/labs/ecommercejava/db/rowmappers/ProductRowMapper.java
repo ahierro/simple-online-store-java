@@ -33,6 +33,7 @@ public class ProductRowMapper implements BiFunction<Row, RowMetadata, ProductDTO
                 .smallImageUrl(converter.fromRow(row, "small_image_url", String.class))
                 .bigImageUrl(converter.fromRow(row, "big_image_url", String.class))
                 .deleted(converter.fromRow(row, "deleted", Boolean.class))
+                .createdAt(converter.fromRow(row, "created_at", java.time.LocalDateTime.class))
                 .category(CategoryDTO.builder()
                         .id(converter.fromRow(row, "id_category", String.class))
                         .name(converter.fromRow(row, "category_name", String.class))

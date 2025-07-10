@@ -77,6 +77,7 @@ public class ProductDAOImpl implements ProductDAO {
         return productRepository.save(entity)
             .mapNotNull(savedProduct -> conversionService.convert(savedProduct, ProductDomain.class))
             .doOnError(DataIntegrityViolationException.class, e -> {
+                log.error("Data integrity violation while creating product", e);
                 throw new Conflict(messageService.getRequestLocalizedMessage("error.product", "already_exists", String.valueOf(productDomain.getId())));
             });
     }

@@ -23,7 +23,7 @@ public class ProductCreationDTOToDomain implements Converter<ProductCreationDTO,
         productDomain.setSmallImageUrl(source.getSmallImageUrl());
         productDomain.setBigImageUrl(source.getBigImageUrl());
         productDomain.setDeleted(source.getDeleted() != null ? source.getDeleted() : false);
-        // category mapping can be handled separately if needed
+        productDomain.setIdCategory(UUID.fromString(source.getCategoryId()));
         return productDomain;
     }
 }

@@ -5,7 +5,9 @@ import com.iron.tec.labs.ecommercejava.dto.CategoryDTO;
 import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ProductDomainToDTO implements Converter<ProductDomain, ProductDTO> {
     @Override
     public ProductDTO convert(@NonNull ProductDomain source) {
