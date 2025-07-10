@@ -78,7 +78,7 @@ class PurchaseOrderServiceImplTest {
         when(purchaseOrderDAO.create(argumentCaptor.capture())).thenReturn(Mono.just(purchaseOrder));
         when(authentication.getName()).thenReturn(UUID.randomUUID().toString());
 
-        PurchaseOrderDomain createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrder, authentication).block();
+        PurchaseOrderDomain createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrder).block();
 
         assertNotNull(createdPurchaseOrder);
         assertEquals(purchaseOrder.getId(), createdPurchaseOrder.getId());
@@ -93,7 +93,7 @@ class PurchaseOrderServiceImplTest {
         when(stockValidator.validateStock(any())).thenAnswer(invocation -> Mono.error(new BadRequest("Stock is not enough")));
         when(authentication.getName()).thenReturn(UUID.randomUUID().toString());
 
-        StepVerifier.create(purchaseOrderService.createPurchaseOrder(purchaseOrder, authentication))
+        StepVerifier.create(purchaseOrderService.createPurchaseOrder(purchaseOrder))
                 .verifyErrorMatches(x -> {
                     assertInstanceOf(BadRequest.class, x);
                     assertEquals("Stock is not enough", x.getMessage());

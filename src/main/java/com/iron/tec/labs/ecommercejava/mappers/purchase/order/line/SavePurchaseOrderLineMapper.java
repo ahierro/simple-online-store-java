@@ -15,6 +15,9 @@ public class SavePurchaseOrderLineMapper implements Converter<PurchaseOrderLineC
     public PurchaseOrderLine convert(@NonNull PurchaseOrderLineCreationDTO source) {
         return PurchaseOrderLine.builder()
                 .id(UUID.randomUUID())
+                .idProduct(UUID.fromString(source.getIdProduct()))
+                .idPurchaseOrder(UUID.randomUUID())
+                .quantity(source.getQuantity())
                 .build();
     }
 }

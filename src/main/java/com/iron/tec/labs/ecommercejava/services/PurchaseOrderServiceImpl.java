@@ -26,9 +26,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     }
 
     @Override
-    public Mono<PurchaseOrderDomain> createPurchaseOrder(PurchaseOrderDomain purchaseOrder, Authentication authentication) {
-        purchaseOrder.setStatus(PurchaseOrderStatus.PENDING.name());
-        purchaseOrder.setIdUser(UUID.fromString(authentication.getName()));
+    public Mono<PurchaseOrderDomain> createPurchaseOrder(PurchaseOrderDomain purchaseOrder) {
         return stockValidator.validateStock(purchaseOrder)
                 .flatMap(purchaseOrderDAO::create);
     }

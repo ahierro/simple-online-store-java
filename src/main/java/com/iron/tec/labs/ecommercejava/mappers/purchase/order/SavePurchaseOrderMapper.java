@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.iron.tec.labs.ecommercejava.enums.PurchaseOrderStatus.PENDING;
+//TODO is this mapper needed?
 @Component
 public class SavePurchaseOrderMapper implements Converter<PurchaseOrderCreationDTO, PurchaseOrder> {
 
@@ -28,7 +30,7 @@ public class SavePurchaseOrderMapper implements Converter<PurchaseOrderCreationD
         PurchaseOrder.PurchaseOrderBuilder<?, ?> builder = PurchaseOrder.builder()
                 .id(source.getId() != null ? UUID.fromString(source.getId()) : null)
                 .total(source.getTotal())
-                .status("CREATED")
+                .status(PENDING.name())
                 .createdAt(LocalDateTime.now());
 
         if (source.getLines() != null && !source.getLines().isEmpty()) {
@@ -36,6 +38,7 @@ public class SavePurchaseOrderMapper implements Converter<PurchaseOrderCreationD
             for (PurchaseOrderLineCreationDTO lineDTO : source.getLines()) {
                 PurchaseOrderLine line = lineMapper.convert(lineDTO);
                 if (line != null) {
+                    line.setIdPurchaseOrder(UUID.fromString(source.getId()));
                     lines.add(line);
                 }
             }

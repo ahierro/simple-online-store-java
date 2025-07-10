@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.iron.tec.labs.ecommercejava.enums.PurchaseOrderStatus.PENDING;
+
 @Component
 public class PurchaseOrderCreationDTOToDomain implements Converter<PurchaseOrderCreationDTO, PurchaseOrderDomain> {
     private final PurchaseOrderLineCreationDTOToDomain conversionService;
@@ -29,6 +31,7 @@ public class PurchaseOrderCreationDTOToDomain implements Converter<PurchaseOrder
             for (PurchaseOrderLineCreationDTO lineDTO : source.getLines()) {
                 PurchaseOrderLineDomain line = conversionService.convert(lineDTO);
                 if (line != null) {
+                    line.setIdPurchaseOrder(UUID.fromString(source.getId()));
                     lines.add(line);
                 }
             }
@@ -37,7 +40,7 @@ public class PurchaseOrderCreationDTOToDomain implements Converter<PurchaseOrder
                 .id(source.getId() != null ? UUID.fromString(source.getId()) : null)
                 .lines(lines)
                 .total(source.getTotal())
-                .status("CREATED")
+                .status(PENDING.name())
                 .createdAt(LocalDateTime.now())
                 .build();
     }

@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface PurchaseOrderService {
     Mono<PurchaseOrderDomain> getById(UUID id);
 
-    Mono<PurchaseOrderDomain> createPurchaseOrder(PurchaseOrderDomain purchaseOrder, Authentication authentication);
+    Mono<PurchaseOrderDomain> createPurchaseOrder(PurchaseOrderDomain purchaseOrder);
 
     Mono<PurchaseOrderDomain> patchPurchaseOrder(String id, PurchaseOrderDomain purchaseOrder);
 

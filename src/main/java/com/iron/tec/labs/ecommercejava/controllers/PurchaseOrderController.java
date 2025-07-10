@@ -1,5 +1,7 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
+import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
+import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.dto.*;
 import com.iron.tec.labs.ecommercejava.services.PurchaseOrderService;
@@ -38,16 +40,16 @@ public class PurchaseOrderController {
     private final PurchaseOrderService purchaseOrderService;
     private final ConversionService conversionService;
 
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") },
-            parameters = { @Parameter(in = ParameterIn.QUERY, name = "page", description = "Page"),
-                    @Parameter(in = ParameterIn.QUERY, name = "size", description = "Size") },
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")},
+            parameters = {@Parameter(in = ParameterIn.QUERY, name = "page", description = "Page"),
+                    @Parameter(in = ParameterIn.QUERY, name = "size", description = "Size")},
             summary = "Get page of purchase orders", responses = {
-            @ApiResponse(responseCode = "200",description = "Successful Operation",
+            @ApiResponse(responseCode = "200", description = "Successful Operation",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PurchaseOrderPage.class)))})
     @GetMapping("/page")
     public Mono<PageResponseDTO<PurchaseOrderViewDTO>> getPurchaseOrdersPaged(@Valid PageRequestDTO pageRequest,
-                                                                          Authentication authentication) {
+                                                                              Authentication authentication) {
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before purchaseOrders obtained")))
                 .then(purchaseOrderService.getPurchaseOrderPage(pageRequest)
@@ -61,9 +63,9 @@ public class PurchaseOrderController {
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("PurchaseOrders obtained")));
     }
 
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") },
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")},
             summary = "Get Purchase Order Detail", responses = {
-            @ApiResponse(responseCode = "200",description = "Successful Operation",
+            @ApiResponse(responseCode = "200", description = "Successful Operation",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PurchaseOrderDTO.class))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)})
@@ -77,29 +79,32 @@ public class PurchaseOrderController {
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("PurchaseOrders obtained")));
     }
 
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") },
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")},
             summary = "Create Purchase Order", responses = {
-            @ApiResponse(responseCode = "201",description = "Successful Operation", content = @Content),
+            @ApiResponse(responseCode = "201", description = "Successful Operation", content = @Content),
             @ApiResponse(responseCode = "409", description = "Resource already exists", content = @Content),
             @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content)})
     @PostMapping()
     public Mono<ResponseEntity<Void>> createPurchaseOrder(@RequestBody @Valid PurchaseOrderCreationDTO purchaseOrderCreationDTO,
-                                                     ServerHttpRequest serverHttpRequest,
+                                                          ServerHttpRequest serverHttpRequest,
                                                           Authentication authentication) {
         PurchaseOrderDomain domain = conversionService.convert(purchaseOrderCreationDTO, PurchaseOrderDomain.class);
+        if (domain != null && authentication != null) {
+            domain.setIdUser(UUID.fromString(authentication.getName()));
+        }
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before creating purchaseOrder")))
-                .then(purchaseOrderService.createPurchaseOrder(domain,authentication))
+                .then(purchaseOrderService.createPurchaseOrder(domain))
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("PurchaseOrder created")))
                 .map(purchaseOrderDTO -> ResponseEntity.created(
                         URI.create(serverHttpRequest.getPath().toString().concat("/")
                                 .concat(purchaseOrderCreationDTO.getId()))).build());
     }
 
-    @Operation(security = { @SecurityRequirement(name = "bearer-key") },
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")},
             summary = "Patch Category", responses = {
-            @ApiResponse(responseCode = "200",description = "Successful Operation", content = @Content),
+            @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content),
             @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)})
