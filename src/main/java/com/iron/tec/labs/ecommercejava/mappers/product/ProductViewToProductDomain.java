@@ -19,6 +19,9 @@ public class ProductViewToProductDomain implements Converter<ProductView, Produc
                 .smallImageUrl(source.getSmallImageUrl())
                 .bigImageUrl(source.getBigImageUrl())
                 .idCategory(source.getIdCategory())
+                .categoryName(source.getCategoryName())
+                .categoryDescription(source.getCategoryDescription())
+                .categoryCreatedAt(source.getCategoryCreatedAt())
                 .deleted(source.getDeleted())
                 .createdAt(source.getProductCreatedAt())
                 .build();
