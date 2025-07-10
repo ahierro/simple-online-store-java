@@ -1,11 +1,11 @@
 package com.iron.tec.labs.ecommercejava.config;
 
-import com.iron.tec.labs.ecommercejava.config.security.HttpConfigSetter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+
+import com.iron.tec.labs.ecommercejava.config.security.HttpConfigSetter;
 
 @SpringBootApplication
 public class ControllersConfig {
