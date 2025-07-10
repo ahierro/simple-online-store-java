@@ -13,6 +13,11 @@ public class PurchaseOrderLineDomainToDTO implements Converter<PurchaseOrderLine
         return PurchaseOrderLineDTO.builder()
                 .idProduct(source.getIdProduct() != null ? source.getIdProduct().toString() : null)
                 .quantity(source.getQuantity())
+                .productName(source.getProductName())
+                .stock(source.getStock())
+                .price(source.getPrice())
+                .smallImageUrl(source.getSmallImageUrl())
+                .categoryName(source.getCategoryName())
                 .build();
     }
 }

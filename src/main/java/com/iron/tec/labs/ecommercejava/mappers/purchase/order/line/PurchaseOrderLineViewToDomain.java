@@ -15,6 +15,12 @@ public class PurchaseOrderLineViewToDomain implements Converter<PurchaseOrderLin
                 .idPurchaseOrder(source.getIdPurchaseOrder())
                 .idProduct(source.getIdProduct())
                 .quantity(source.getQuantity())
+                .productName(source.getProductName())
+                .stock(source.getStock())
+                .price(source.getPrice())
+                .bigImageUrl(source.getBigImageUrl())
+                .smallImageUrl(source.getSmallImageUrl())
+                .categoryName(source.getCategoryName())
                 .build();
     }
 }
