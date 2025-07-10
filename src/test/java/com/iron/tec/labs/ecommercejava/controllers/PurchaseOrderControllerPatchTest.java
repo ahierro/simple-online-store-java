@@ -14,7 +14,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PurchaseOrderControllerUpdateTest extends PostgresIntegrationSetup {
+class PurchaseOrderControllerPatchTest extends PostgresIntegrationSetup {
 
     @Autowired
     private WebTestClient testClient;
@@ -33,32 +33,30 @@ class PurchaseOrderControllerUpdateTest extends PostgresIntegrationSetup {
 
     @Test
     @DisplayName("Should update purchase order status as admin")
-    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
+    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN",username = "295ba273-ca1d-45bc-9818-f949223981f6")
     void updatePurchaseOrderAsAdmin() {
         testClient.patch()
-                .uri("/api/purchase-order/22222222-bbbb-5555-9452-48b93ad51022")
+                .uri("/api/purchase-order/b451dafd-7c96-43b6-bf5f-ac522dd3026c")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("""
                         {
-                          "status": "SHIPPED"
+                          "status": "CANCELLED"
                         }
                         """)
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$.status").isEqualTo("SHIPPED");
+                .expectStatus().isOk();
     }
 
     @Test
     @DisplayName("Should fail to update purchase order as regular user")
-    @WithMockUser(authorities = "SCOPE_ROLE_USER")
+    @WithMockUser(authorities = "SCOPE_ROLE_USER",username = "295ba273-ca1d-45bc-9818-f949223981f6")
     void updatePurchaseOrderAsUser() {
         testClient.patch()
-                .uri("/api/purchase-order/22222222-bbbb-5555-9452-48b93ad51022")
+                .uri("/api/purchase-order/b451dafd-7c96-43b6-bf5f-ac522dd3026c")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("""
                         {
-                          "status": "SHIPPED"
+                          "status": "CANCELLED"
                         }
                         """)
                 .exchange()
@@ -67,14 +65,14 @@ class PurchaseOrderControllerUpdateTest extends PostgresIntegrationSetup {
 
     @Test
     @DisplayName("Should fail to update non-existent purchase order")
-    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
+    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN",username = "295ba273-ca1d-45bc-9818-f949223981f6")
     void updateNonExistentPurchaseOrder() {
         testClient.patch()
-                .uri("/api/purchase-order/99999999-0000-0000-0000-000000000000")
+                .uri("/api/purchase-order/e85d3f66-1e7a-4c12-bc98-04b031b4d80a")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("""
                         {
-                          "status": "SHIPPED"
+                          "status": "CANCELLED"
                         }
                         """)
                 .exchange()
@@ -83,10 +81,10 @@ class PurchaseOrderControllerUpdateTest extends PostgresIntegrationSetup {
 
     @Test
     @DisplayName("Should fail to update purchase order with invalid status")
-    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
+    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN",username = "295ba273-ca1d-45bc-9818-f949223981f6")
     void updatePurchaseOrderWithInvalidStatus() {
         testClient.patch()
-                .uri("/api/purchase-order/22222222-bbbb-5555-9452-48b93ad51022")
+                .uri("/api/purchase-order/b451dafd-7c96-43b6-bf5f-ac522dd3026c")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("""
                         {

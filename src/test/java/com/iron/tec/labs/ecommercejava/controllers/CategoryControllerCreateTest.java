@@ -91,5 +91,4 @@ class CategoryControllerCreateTest extends PostgresIntegrationSetup {
 
     }
 
-
 }

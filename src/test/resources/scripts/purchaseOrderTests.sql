@@ -18,7 +18,7 @@ VALUES ('295ba273-ca1d-45bc-9818-f949223981f6', 'test@example.com', 'user',
 
 -- Create test purchase orders
 INSERT INTO public.purchase_order (ID, id_user, status, total, created_at)
-VALUES ('b451dafd-7c96-43b6-bf5f-ac522dd3026c', '295ba273-ca1d-45bc-9818-f949223981f6', 'CREATED', 149.98,
+VALUES ('b451dafd-7c96-43b6-bf5f-ac522dd3026c', '295ba273-ca1d-45bc-9818-f949223981f6', 'PENDING', 149.98,
         CURRENT_TIMESTAMP);
 
 -- Create purchase order lines

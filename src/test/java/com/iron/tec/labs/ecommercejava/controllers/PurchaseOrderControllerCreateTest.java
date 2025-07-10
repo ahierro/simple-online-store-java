@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -120,5 +121,28 @@ class PurchaseOrderControllerCreateTest extends PostgresIntegrationSetup {
                         """)
                 .exchange()
                 .expectStatus().isUnauthorized();
+    }
+
+    @Test
+    @DisplayName("Should return conflict when creating a purchase order with existing ID")
+    @WithMockUser(authorities = "SCOPE_ROLE_USER", username = "295ba273-ca1d-45bc-9818-f949223981f6")
+    void createDuplicatePurchaseOrder() {
+        testClient.post()
+                .uri("/api/purchase-order")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue("""
+                        {
+                          "id": "b451dafd-7c96-43b6-bf5f-ac522dd3026c",
+                          "lines": [
+                            {
+                              "idProduct": "4ebeb473-435b-428c-aa4a-914ae472bc45",
+                              "quantity": 1
+                            }
+                          ],
+                          "total": 89.99
+                        }
+                        """)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.CONFLICT); // Conflict
     }
 }

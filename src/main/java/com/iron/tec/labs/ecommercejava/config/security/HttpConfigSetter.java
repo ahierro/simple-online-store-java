@@ -22,10 +22,11 @@ public class HttpConfigSetter {
                         .pathMatchers(HttpMethod.GET, "/api/product/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/api/category/**").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/purchase-order/**").hasAuthority(SCOPE_ROLE_USER)
+                        .pathMatchers(HttpMethod.PATCH, "/api/purchase-order/**").hasAuthority(SCOPE_ROLE_ADMIN)
                         .pathMatchers(HttpMethod.POST, API).hasAuthority(SCOPE_ROLE_ADMIN)
                         .pathMatchers(HttpMethod.PUT, API).hasAuthority(SCOPE_ROLE_ADMIN)
                         .pathMatchers(HttpMethod.DELETE, API).hasAuthority(SCOPE_ROLE_ADMIN)
-                        .pathMatchers(HttpMethod.GET, "/api/purchase-order/**").hasAuthority(SCOPE_ROLE_ADMIN)
+                        .pathMatchers(HttpMethod.GET, "/api/purchase-order/**").permitAll()
                         .anyExchange().authenticated())
                 .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable);
