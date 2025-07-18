@@ -1,5 +1,5 @@
 [![Actions Status](https://github.com/ahierro/simple-online-store-java/actions/workflows/maven.yml/badge.svg)](https://github.com/ahierro/simple-online-store-java/actions)
-
+[![codecov](https://codecov.io/github/ahierro/simple-online-store-java/graph/badge.svg?token=011U7VD234)](https://codecov.io/github/ahierro/simple-online-store-java)
 ### Project Purpose
 This project was build to be part of my personal portfolio. It is just a sample code not intended to be used in production.
 This Spring Boot application provides a REST API for an oversimplified ecommerce website without integration with payment or delivery methods.
