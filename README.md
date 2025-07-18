@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/{user}/{repo}/workflows/{action}/badge.svg)](https://github.com/{user}/{repo}/actions)
+[![Actions Status](https://github.com/ahierro/simple-online-store-java/actions/workflows/maven.yml/badge.svg)](https://github.com/ahierro/simple-online-store-java/actions)
 
 ### Project Purpose
 This project was build to be part of my personal portfolio. It is just a sample code not intended to be used in production.
