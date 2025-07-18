@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/{user}/{repo}/workflows/{action}/badge.svg)](https://github.com/{user}/{repo}/actions)
+
 ### Project Purpose
 This project was build to be part of my personal portfolio. It is just a sample code not intended to be used in production.
 This Spring Boot application provides a REST API for an oversimplified ecommerce website without integration with payment or delivery methods.
