@@ -1,10 +1,14 @@
 # This config was automatically generated from your source code
 # Stacks detected: cicd:github-actions:.github/workflows,deps:java:.
 version: 2.1
+executors:
+  docker-executor:
+    docker:
+      - image: cimg/openjdk:21.0
+      - image: docker:20-dind
 jobs:
   test-java:
-    docker:
-      - image: cimg/openjdk:17.0
+    executor: docker-executor
     steps:
       - checkout
       - run:
