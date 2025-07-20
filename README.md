@@ -60,3 +60,7 @@ simple-online-store-java.postman_collection.json
 ```shell
 docker run -d --add-host host.docker.internal:host-gateway --name ecommerce-java -p 8080:8080 ecommerce-java:0.0.2-SNAPSHOT
 ``` 
+### Test Coverage Report
+```shell
+mvn clean test jacoco:report
+``` 
