@@ -63,4 +63,7 @@ docker run -d --add-host host.docker.internal:host-gateway --name ecommerce-java
 ### Test Coverage Report
 ```shell
 mvn clean test jacoco:report
-``` 
+```
+
+### License
+This project is licensed under the [MIT License](LICENSE).
