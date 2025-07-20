@@ -1,16 +1,22 @@
 package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
-import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
-@AllArgsConstructor
 @Log4j2
 public class UserNotificationServiceImpl implements UserNotificationService {
     private final EmailService emailService;
+    private final String baseUrl;
+
+    public UserNotificationServiceImpl(EmailService emailService,
+                                      @Value("${app.base-url}") String baseUrl) {
+        this.emailService = emailService;
+        this.baseUrl = baseUrl;
+    }
 
     @Override
     public Mono<Void> sendWelcomeEmail(AppUserDomain user) {
@@ -37,8 +43,9 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     private String buildWelcomeEmailContent(AppUserDomain user) {
         return String.format(
                 "Welcome to EcommerceJava %s! Please confirm your e-mail by clicking on the following link: " +
-                "<a href=\"http://localhost:8080/api/confirm?token=%s\">Confirm Mail!</a>",
+                "<a href=\"%s/api/confirm?token=%s\">Confirm Mail!</a>",
                 user.getFirstName(),
+                baseUrl,
                 user.getId()
         );
     }

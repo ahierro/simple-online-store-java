@@ -1,11 +1,11 @@
 package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.test.StepVerifier;
@@ -25,8 +25,14 @@ class UserNotificationServiceImplTest {
     @Mock
     private EmailService emailService;
 
-    @InjectMocks
     private UserNotificationServiceImpl userNotificationService;
+
+    private static final String BASE_URL = "http://localhost:8080";
+
+    @BeforeEach
+    void setUp() {
+        userNotificationService = new UserNotificationServiceImpl(emailService, BASE_URL);
+    }
 
     @Test
     @DisplayName("Should send welcome email successfully")
