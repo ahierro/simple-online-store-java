@@ -12,11 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Flux;
-import reactor.test.StepVerifier;
 
+import java.util.Arrays;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
 class StockValidatorImplTest {
@@ -34,17 +32,22 @@ class StockValidatorImplTest {
         UUID idProduct2 = UUID.randomUUID();
 
         Mockito.when(productRepository.findByIdIn(Mockito.anyList()))
-                .thenReturn(Flux.fromStream(Stream.of(Product.builder().id(idProduct1).stock(2).build(),
-                        Product.builder().id(idProduct2).stock(2).build())));
+                .thenReturn(Arrays.asList(
+                        Product.builder().id(idProduct1).stock(2).build(),
+                        Product.builder().id(idProduct2).stock(2).build()
+                ));
 
         PurchaseOrderDomain purchaseOrder = PurchaseOrderDomain.builder()
                 .line(PurchaseOrderLineDomain.builder().idProduct(idProduct1).quantity(1).build())
                 .line(PurchaseOrderLineDomain.builder().idProduct(idProduct2).quantity(5).build())
                 .build();
 
-        StepVerifier.create(stockValidatorImpl.validateStock(purchaseOrder))
-                .verifyErrorMatches(throwable -> throwable instanceof BadRequest
-                        && throwable.getMessage().equals("Stock not available"));
+        try {
+            stockValidatorImpl.validateStock(purchaseOrder);
+            org.junit.jupiter.api.Assertions.fail("Expected BadRequest exception was not thrown");
+        } catch (BadRequest e) {
+            org.junit.jupiter.api.Assertions.assertEquals("Stock not available", e.getMessage());
+        }
 
     }
 
@@ -55,17 +58,18 @@ class StockValidatorImplTest {
         UUID idProduct2 = UUID.randomUUID();
 
         Mockito.when(productRepository.findByIdIn(Mockito.anyList()))
-                .thenReturn(Flux.fromStream(Stream.of(Product.builder().id(idProduct1).stock(20).build(),
-                        Product.builder().id(idProduct2).stock(20).build())));
+                .thenReturn(Arrays.asList(
+                        Product.builder().id(idProduct1).stock(20).build(),
+                        Product.builder().id(idProduct2).stock(20).build()
+                ));
 
         PurchaseOrderDomain purchaseOrder = PurchaseOrderDomain.builder()
                 .line(PurchaseOrderLineDomain.builder().idProduct(idProduct1).quantity(1).build())
                 .line(PurchaseOrderLineDomain.builder().idProduct(idProduct2).quantity(5).build())
                 .build();
 
-        StepVerifier.create(stockValidatorImpl.validateStock(purchaseOrder))
-                .expectNextCount(1)
-                .verifyComplete();
+        PurchaseOrderDomain result = stockValidatorImpl.validateStock(purchaseOrder);
+        org.junit.jupiter.api.Assertions.assertNotNull(result);
 
     }
 }

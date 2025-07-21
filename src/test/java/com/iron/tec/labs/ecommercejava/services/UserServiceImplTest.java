@@ -10,8 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -75,16 +73,15 @@ class UserServiceImplTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        when(userBusinessService.prepareUserForCreation(registerUserDTO)).thenReturn(Mono.just(preparedUser));
-        when(userDAO.create(preparedUser)).thenReturn(Mono.just(createdUser));
-        when(userNotificationService.sendWelcomeEmail(createdUser)).thenReturn(Mono.empty());
+        when(userBusinessService.prepareUserForCreation(registerUserDTO)).thenReturn(preparedUser);
+        when(userDAO.create(preparedUser)).thenReturn(createdUser);
+        doNothing().when(userNotificationService).sendWelcomeEmail(createdUser);
 
-        StepVerifier.create(userService.create(registerUserDTO))
-                .verifyComplete();
+        userService.create(registerUserDTO);
 
         verify(userBusinessService).prepareUserForCreation(registerUserDTO);
         verify(userDAO).create(preparedUser);
-        // Note: Email sending is fire-and-forget, so we can't verify it in the same way
+        // Note: Email sending is async, so we can't verify it synchronously
     }
 
     @Test
@@ -107,19 +104,15 @@ class UserServiceImplTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        when(userBusinessService.activateUser(userId)).thenReturn(Mono.just(activatedUser));
-        when(userNotificationService.sendUserConfirmationEmail(activatedUser)).thenReturn(Mono.empty());
+        when(userBusinessService.activateUser(userId)).thenReturn(activatedUser);
+        doNothing().when(userNotificationService).sendUserConfirmationEmail(activatedUser);
 
-        StepVerifier.create(userService.confirm(token))
-                .expectNextMatches(result -> {
-                    assertNotNull(result);
-                    assertEquals("User testuser confirmed!", result);
-                    return true;
-                })
-                .verifyComplete();
+        String result = userService.confirm(token);
 
+        assertNotNull(result);
+        assertEquals("User testuser confirmed!", result);
         verify(userBusinessService).activateUser(userId);
-        // Note: Email sending is fire-and-forget, so we can't verify it in the same way
+        // Note: Email sending is async, so we can't verify it synchronously
     }
 
     @Test
@@ -128,10 +121,13 @@ class UserServiceImplTest {
         UUID userId = UUID.randomUUID();
         String token = userId.toString();
 
-        when(userBusinessService.activateUser(userId)).thenReturn(Mono.error(new NotFound("User not found")));
+        when(userBusinessService.activateUser(userId)).thenThrow(new NotFound("User not found"));
 
-        StepVerifier.create(userService.confirm(token))
-                .verifyError(NotFound.class);
+        try {
+            userService.confirm(token);
+        } catch (NotFound e) {
+            assertEquals("User not found", e.getMessage());
+        }
 
         verify(userBusinessService).activateUser(userId);
         verify(userNotificationService, never()).sendUserConfirmationEmail(any());
@@ -150,10 +146,13 @@ class UserServiceImplTest {
                 .build();
 
         when(userBusinessService.prepareUserForCreation(registerUserDTO))
-                .thenReturn(Mono.error(new RuntimeException("Business logic error")));
+                .thenThrow(new RuntimeException("Business logic error"));
 
-        StepVerifier.create(userService.create(registerUserDTO))
-                .verifyError(RuntimeException.class);
+        try {
+            userService.create(registerUserDTO);
+        } catch (RuntimeException e) {
+            assertEquals("Business logic error", e.getMessage());
+        }
 
         verify(userBusinessService).prepareUserForCreation(registerUserDTO);
         verify(userDAO, never()).create(any());
@@ -185,11 +184,14 @@ class UserServiceImplTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        when(userBusinessService.prepareUserForCreation(registerUserDTO)).thenReturn(Mono.just(preparedUser));
-        when(userDAO.create(preparedUser)).thenReturn(Mono.error(new RuntimeException("Database error")));
+        when(userBusinessService.prepareUserForCreation(registerUserDTO)).thenReturn(preparedUser);
+        when(userDAO.create(preparedUser)).thenThrow(new RuntimeException("Database error"));
 
-        StepVerifier.create(userService.create(registerUserDTO))
-                .verifyError(RuntimeException.class);
+        try {
+            userService.create(registerUserDTO);
+        } catch (RuntimeException e) {
+            assertEquals("Database error", e.getMessage());
+        }
 
         verify(userBusinessService).prepareUserForCreation(registerUserDTO);
         verify(userDAO).create(preparedUser);

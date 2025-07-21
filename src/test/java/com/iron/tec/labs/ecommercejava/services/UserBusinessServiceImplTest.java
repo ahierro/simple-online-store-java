@@ -11,8 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +18,6 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,21 +46,18 @@ class UserBusinessServiceImplTest {
 
         when(passwordEncoder.encode("plainPassword")).thenReturn("encodedPassword");
 
-        StepVerifier.create(userBusinessService.prepareUserForCreation(registerUserDTO))
-                .expectNextMatches(user -> {
-                    assertNotNull(user.getId());
-                    assertEquals("testuser", user.getUsername());
-                    assertEquals("encodedPassword", user.getPassword());
-                    assertEquals("test@example.com", user.getEmail());
-                    assertEquals("John", user.getFirstName());
-                    assertEquals("Doe", user.getLastName());
-                    assertFalse(user.isActive());
-                    assertFalse(user.isLocked());
-                    assertEquals(List.of("ROLE_USER"), user.getAuthorities());
-                    assertNotNull(user.getCreatedAt());
-                    return true;
-                })
-                .verifyComplete();
+        AppUserDomain user = userBusinessService.prepareUserForCreation(registerUserDTO);
+        
+        assertNotNull(user.getId());
+        assertEquals("testuser", user.getUsername());
+        assertEquals("encodedPassword", user.getPassword());
+        assertEquals("test@example.com", user.getEmail());
+        assertEquals("John", user.getFirstName());
+        assertEquals("Doe", user.getLastName());
+        assertFalse(user.isActive());
+        assertFalse(user.isLocked());
+        assertEquals(List.of("ROLE_USER"), user.getAuthorities());
+        assertNotNull(user.getCreatedAt());
 
         verify(passwordEncoder).encode("plainPassword");
     }
@@ -82,14 +76,11 @@ class UserBusinessServiceImplTest {
 
         when(passwordEncoder.encode("adminPassword")).thenReturn("encodedAdminPassword");
 
-        StepVerifier.create(userBusinessService.prepareUserForCreation(registerUserDTO))
-                .expectNextMatches(user -> {
-                    assertEquals("adminuser", user.getUsername());
-                    assertEquals("encodedAdminPassword", user.getPassword());
-                    assertEquals(List.of("ROLE_ADMIN"), user.getAuthorities());
-                    return true;
-                })
-                .verifyComplete();
+        AppUserDomain user = userBusinessService.prepareUserForCreation(registerUserDTO);
+        
+        assertEquals("adminuser", user.getUsername());
+        assertEquals("encodedAdminPassword", user.getPassword());
+        assertEquals(List.of("ROLE_ADMIN"), user.getAuthorities());
 
         verify(passwordEncoder).encode("adminPassword");
     }
@@ -123,17 +114,14 @@ class UserBusinessServiceImplTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        when(userDAO.findByIdAndActive(userId, false)).thenReturn(Mono.just(inactiveUser));
-        when(userDAO.update(any(AppUserDomain.class))).thenReturn(Mono.just(activatedUser));
+        when(userDAO.findByIdAndActive(userId, false)).thenReturn(inactiveUser);
+        when(userDAO.update(any(AppUserDomain.class))).thenReturn(activatedUser);
 
-        StepVerifier.create(userBusinessService.activateUser(userId))
-                .expectNextMatches(user -> {
-                    assertEquals(userId, user.getId());
-                    assertTrue(user.isActive());
-                    assertNotNull(user.getUpdatedAt());
-                    return true;
-                })
-                .verifyComplete();
+        AppUserDomain user = userBusinessService.activateUser(userId);
+        
+        assertEquals(userId, user.getId());
+        assertTrue(user.isActive());
+        assertNotNull(user.getUpdatedAt());
 
         verify(userDAO).findByIdAndActive(userId, false);
         verify(userDAO).update(any(AppUserDomain.class));
@@ -144,10 +132,14 @@ class UserBusinessServiceImplTest {
     void activateUser_userNotFound() {
         UUID userId = UUID.randomUUID();
 
-        when(userDAO.findByIdAndActive(userId, false)).thenReturn(Mono.error(new NotFound("User not found")));
+        when(userDAO.findByIdAndActive(userId, false)).thenThrow(new NotFound("User not found"));
 
-        StepVerifier.create(userBusinessService.activateUser(userId))
-                .verifyError(NotFound.class);
+        try {
+            userBusinessService.activateUser(userId);
+            fail("Expected NotFound exception was not thrown");
+        } catch (NotFound e) {
+            // Expected exception
+        }
 
         verify(userDAO).findByIdAndActive(userId, false);
         verify(userDAO, never()).update(any(AppUserDomain.class));
@@ -158,10 +150,14 @@ class UserBusinessServiceImplTest {
     void activateUser_alreadyActive() {
         UUID userId = UUID.randomUUID();
 
-        when(userDAO.findByIdAndActive(userId, false)).thenReturn(Mono.error(new NotFound("User not found")));
+        when(userDAO.findByIdAndActive(userId, false)).thenThrow(new NotFound("User not found"));
 
-        StepVerifier.create(userBusinessService.activateUser(userId))
-                .verifyError(NotFound.class);
+        try {
+            userBusinessService.activateUser(userId);
+            fail("Expected NotFound exception was not thrown");
+        } catch (NotFound e) {
+            // Expected exception
+        }
 
         verify(userDAO).findByIdAndActive(userId, false);
         verify(userDAO, never()).update(any(AppUserDomain.class));

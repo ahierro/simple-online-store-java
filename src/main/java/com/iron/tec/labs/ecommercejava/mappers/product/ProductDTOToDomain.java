@@ -21,6 +21,7 @@ public class ProductDTOToDomain implements Converter<ProductDTO, ProductDomain> 
                 .smallImageUrl(source.getSmallImageUrl())
                 .bigImageUrl(source.getBigImageUrl())
                 .createdAt(source.getCreatedAt())
+                .updatedAt(source.getUpdatedAt())
                 .deleted(source.getDeleted())
                 .idCategory((source.getCategory() != null && source.getCategory().getId() != null)
                         ? UUID.fromString(source.getCategory().getId()) : null)

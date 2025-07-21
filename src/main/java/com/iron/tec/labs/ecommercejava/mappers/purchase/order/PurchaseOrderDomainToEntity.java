@@ -32,7 +32,7 @@ public class PurchaseOrderDomainToEntity implements Converter<PurchaseOrderDomai
                 }
             }
         }
-        return PurchaseOrder.builder()
+        PurchaseOrder purchaseOrder = PurchaseOrder.builder()
                 .id(source.getId())
                 .idUser(source.getIdUser())
                 .lines(lines)
@@ -40,5 +40,8 @@ public class PurchaseOrderDomainToEntity implements Converter<PurchaseOrderDomai
                 .status(source.getStatus())
                 .createdAt(source.getCreatedAt())
                 .build();
+        purchaseOrder.getLines()
+                .forEach(line -> line.setPurchaseOrder(purchaseOrder));
+        return purchaseOrder;
     }
 }

@@ -12,13 +12,13 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
 
 @RestController
 @AllArgsConstructor
@@ -28,23 +28,23 @@ public class AuthController {
 
     private final UserService userService;
     private final JWTGeneratorService jwtGeneratorService;
-    private final ReactiveAuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     @Operation(summary = "Login with user and password and returns JWT token", responses = {
             @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content),
             @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content)})
     @PostMapping("/api/login")
-    public Mono<String> login(@RequestBody @Valid LoginRequest userLogin) {
-        return authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(userLogin.username(), userLogin.password()))
-                .map(jwtGeneratorService::generateToken);
+    public String login(@RequestBody @Valid LoginRequest userLogin) {
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(userLogin.username(), userLogin.password()));
+        return jwtGeneratorService.generateToken(authentication);
     }
 
     @Operation(summary = "E-mail confirmation endpoint that activates user", responses = {
             @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content),
             @ApiResponse(responseCode = "404", description = "Not found", content = @Content)})
     @GetMapping("/api/confirm")
-    public Mono<String> confirm(@NotEmpty String token) {
+    public String confirm(@NotEmpty String token) {
         return userService.confirm(token);
     }
 
@@ -52,7 +52,7 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content),
             @ApiResponse(responseCode = "409", description = "User already exists", content = @Content)})
     @PostMapping("/api/signup")
-    public Mono<Void> signup(@RequestBody @Valid RegisterUserDTO user) {
-        return userService.create(user);
+    public void signup(@RequestBody @Valid RegisterUserDTO user) {
+        userService.create(user);
     }
 }

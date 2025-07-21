@@ -12,7 +12,6 @@ public class PurchaseOrderLineDomainToEntity implements Converter<PurchaseOrderL
     public PurchaseOrderLine convert(@NonNull PurchaseOrderLineDomain source) {
         return PurchaseOrderLine.builder()
                 .id(source.getId())
-                .idPurchaseOrder(source.getIdPurchaseOrder())
                 .idProduct(source.getIdProduct())
                 .quantity(source.getQuantity())
                 .build();

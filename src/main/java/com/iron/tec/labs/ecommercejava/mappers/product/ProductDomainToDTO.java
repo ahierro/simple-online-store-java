@@ -27,6 +27,7 @@ public class ProductDomainToDTO implements Converter<ProductDomain, ProductDTO> 
                         .build())
                 .deleted(source.getDeleted() != null ? source.getDeleted() : false)
                 .createdAt(source.getCreatedAt())
+                .updatedAt(source.getUpdatedAt())
                 .build();
     }
 }

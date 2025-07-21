@@ -31,17 +31,23 @@ public class PurchaseOrderCreationDTOToDomain implements Converter<PurchaseOrder
             for (PurchaseOrderLineCreationDTO lineDTO : source.getLines()) {
                 PurchaseOrderLineDomain line = conversionService.convert(lineDTO);
                 if (line != null) {
-                    line.setIdPurchaseOrder(UUID.fromString(source.getId()));
+                    line.setPurchaseOrder(PurchaseOrderDomain.builder()
+                            .id(UUID.fromString(source.getId())).build());
                     lines.add(line);
                 }
             }
         }
-        return PurchaseOrderDomain.builder()
+        PurchaseOrderDomain purchaseOrderDomain = PurchaseOrderDomain.builder()
                 .id(source.getId() != null ? UUID.fromString(source.getId()) : null)
                 .lines(lines)
                 .total(source.getTotal())
                 .status(PENDING.name())
                 .createdAt(LocalDateTime.now())
                 .build();
+
+        purchaseOrderDomain.getLines()
+                .forEach(line -> line.setPurchaseOrder(purchaseOrderDomain));
+
+        return purchaseOrderDomain;
     }
 }

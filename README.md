@@ -43,9 +43,9 @@ LOG_ECOMMERCE=DEBUG
 # Schema Initialization
 INITIALIZE_SCHEMA=false
 
-# JWT Authentication Keys
-RSA_PRIVATE_KEY=classpath:certs/private.pem
-RSA_PUBLIC_KEY=classpath:certs/public.pem
+# JWT Authentication
+JWT_SECRET_KEY=497e5789-db2c-41e7-8071-682721231b18
+JWT_SECRET_EXPIRATION_IN_MILLISECONDS=1200000
 
 # Internationalization
 MESSAGES_BASENAME=i18n/messages
@@ -84,8 +84,8 @@ APP_BASE_URL=http://localhost:8080
 - `INITIALIZE_SCHEMA`: Whether to initialize database schema on startup (true/false)
 
 **JWT Authentication:**
-- `RSA_PRIVATE_KEY`: Path to RSA private key file for JWT signing
-- `RSA_PUBLIC_KEY`: Path to RSA public key file for JWT verification
+- `JWT_SECRET_KEY`: JWT secret key used for signing tokens
+- `JWT_SECRET_EXPIRATION_IN_MILLISECONDS`: Expiration time for JWT tokens in milliseconds (default is 20 minutes)
 
 **Internationalization:**
 - `MESSAGES_BASENAME`: Base name for message resource bundles
@@ -107,18 +107,6 @@ APP_BASE_URL=http://localhost:8080
 - `APP_BASE_URL`: Base URL of the application for generating links
 
 Note: The `.env` file is ignored by Git to keep sensitive information out of version control.
-
-### Generate public and private keys for JWT tokens
-Use the provided shell script to generate the necessary keys:
-```shell
-# Make the script executable
-chmod +x generate-jwt-keys.sh
-
-# Run the script
-./generate-jwt-keys.sh
-```
-
-This will create the required public and private keys in the `src/main/resources/certs` directory.
 
 ### Local PostgreSQL instance can be started with Docker using the following command
 ```shell
@@ -174,7 +162,6 @@ src/
 │   │       ├── services/                       # Business logic services
 │   │       └── utils/                          # Utility classes
 │   └── resources/
-│       ├── certs/                              # JWT certificates
 │       ├── db/                                 # Database migration scripts
 │       └── i18n/                               # Internationalization files
 └── test/                                       # Test files

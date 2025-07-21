@@ -27,4 +27,5 @@ public class ProductDomain {
     private LocalDateTime categoryCreatedAt;
     private Boolean deleted;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

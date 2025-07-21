@@ -5,9 +5,7 @@ import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 
 import java.util.UUID;
 
-public interface PurchaseOrderDAO {
-    PurchaseOrderDomain getById(UUID id);
-    PageDomain<PurchaseOrderDomain> getPage(int page, int size, PurchaseOrderDomain purchaseOrderExample);
+public interface PurchaseOrderDAOTransactionHandler {
     PurchaseOrderDomain create(PurchaseOrderDomain product);
     PurchaseOrderDomain update(PurchaseOrderDomain product);
 }

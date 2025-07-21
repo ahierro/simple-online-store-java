@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,10 +20,10 @@ public class UserBusinessServiceImpl implements UserBusinessService {
     private final UserDAO userDAO;
 
     @Override
-    public Mono<AppUserDomain> prepareUserForCreation(RegisterUserDTO registerUserDTO) {
+    public AppUserDomain prepareUserForCreation(RegisterUserDTO registerUserDTO) {
         log.info("Preparing user for creation: {}", registerUserDTO.getUsername());
         
-        AppUserDomain userDomain = AppUserDomain.builder()
+        return AppUserDomain.builder()
                 .id(UUID.randomUUID())
                 .username(registerUserDTO.getUsername())
                 .password(passwordEncoder.encode(registerUserDTO.getPassword()))
@@ -36,19 +35,15 @@ public class UserBusinessServiceImpl implements UserBusinessService {
                 .authorities(List.of(registerUserDTO.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER"))
                 .createdAt(LocalDateTime.now())
                 .build();
-                
-        return Mono.just(userDomain);
     }
 
     @Override
-    public Mono<AppUserDomain> activateUser(UUID userId) {
+    public AppUserDomain activateUser(UUID userId) {
         log.info("Activating user with ID: {}", userId);
         
-        return userDAO.findByIdAndActive(userId, false)
-                .flatMap(user -> {
-                    user.setActive(true);
-                    user.setUpdatedAt(LocalDateTime.now());
-                    return userDAO.update(user);
-                });
+        AppUserDomain user = userDAO.findByIdAndActive(userId, false);
+        user.setActive(true);
+        user.setUpdatedAt(LocalDateTime.now());
+        return userDAO.update(user);
     }
 }

@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PurchaseOrderLineEntityToDomain implements Converter<PurchaseOrderLine, PurchaseOrderLineDomain> {
+
     @Override
     public PurchaseOrderLineDomain convert(@NonNull PurchaseOrderLine source) {
         return PurchaseOrderLineDomain.builder()
                 .id(source.getId())
-                .idPurchaseOrder(source.getIdPurchaseOrder())
                 .idProduct(source.getIdProduct())
                 .quantity(source.getQuantity())
                 .build();

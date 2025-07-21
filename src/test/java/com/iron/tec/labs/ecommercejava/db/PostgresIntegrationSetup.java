@@ -18,10 +18,11 @@ public class PostgresIntegrationSetup {
         postgresqlContainer.withInitScripts("db/changelog/changelog.sql",path);
     }
     public static void overrideProperties(PostgreSQLContainer<?> postgresqlContainer, DynamicPropertyRegistry registry) {
-        registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://" + postgresqlContainer.getHost() + ":"
+        registry.add("spring.datasource.url", () -> "jdbc:postgresql://" + postgresqlContainer.getHost() + ":"
                 + postgresqlContainer.getFirstMappedPort() + "/" + postgresqlContainer.getDatabaseName());
-        registry.add("spring.r2dbc.username", () -> "test");
-        registry.add("spring.r2dbc.password", () -> "test");
+        registry.add("spring.datasource.username", () -> "test");
+        registry.add("spring.datasource.password", () -> "test");
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "validate");
     }
 
 }

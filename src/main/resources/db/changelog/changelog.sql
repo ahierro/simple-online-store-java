@@ -173,3 +173,45 @@ FROM purchase_order_line po INNER JOIN product p ON po.id_product = p.id INNER J
 -- preconditions onFail:HALT onError:HALT
 -- comment: Initial Admin User Creation
 INSERT INTO public.users (id, username, password, email, first_name, last_name, active, locked, authorities, created_at) VALUES ('130b1b88-5850-4d25-b81f-786925d09ab7', 'admin', '$2a$10$7EVF8hBxswNOWMPfpIImruKVkUbNcL51KK.TueUqUPjnfdAghhJmC', 'admin@gmail.com', 'Alejandro', 'Admin', true, false, '["ROLE_ADMIN"]', '2023-01-06 18:47:26.046147');
+
+-- changeset alejandro:1672328951183-1
+-- preconditions onFail:HALT onError:HALT
+-- comment: Alter product_view to include updated_at field
+DROP VIEW IF EXISTS "product_view";
+CREATE VIEW "product_view" AS
+SELECT p.id as id,
+       p.name as product_name,
+       p.price as price,
+       p.stock as stock,
+       p.description as product_description,
+       p.big_image_url as big_image_url,
+       p.small_image_url as small_image_url,
+       c.name as category_name,
+       c.description as category_description,
+       p.id_category as id_category,
+       p.created_at as product_created_at,
+       p.updated_at as product_updated_at,
+       c.created_at as category_created_at,
+       c.updated_at as category_updated_at,
+       p.deleted as deleted
+FROM product p INNER JOIN category c on c.id = p.id_category;
+--rollback DROP VIEW IF EXISTS "product_view";
+
+-- changeset alejandro:1672328951184-1
+-- preconditions onFail:HALT onError:HALT
+-- comment: Alter purchase_order_view to include updated_at field
+DROP VIEW IF EXISTS "purchase_order_view";
+CREATE VIEW "purchase_order_view" AS
+SELECT
+    po.id as id,
+    po.id_user as id_user,
+    po.total as total,
+    po.status as status,
+    po.created_at as created_at,
+    po.updated_at as updated_at,
+    u.email as email,
+    u.username as username,
+    u.first_name as first_name,
+    u.last_name as last_name
+FROM purchase_order po INNER JOIN "users" u on u.id = po.id_user;
+--rollback DROP VIEW IF EXISTS "purchase_order_view";

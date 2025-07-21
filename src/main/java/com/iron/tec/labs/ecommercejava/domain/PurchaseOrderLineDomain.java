@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class PurchaseOrderLineDomain {
     private UUID id;
-    private UUID idPurchaseOrder;
+    private PurchaseOrderDomain purchaseOrder;
     private UUID idProduct;
     private String productName;
     private Integer stock;

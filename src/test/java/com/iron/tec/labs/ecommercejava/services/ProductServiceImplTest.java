@@ -9,8 +9,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.Authentication;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -50,8 +48,8 @@ class ProductServiceImplTest {
                 .smallImageUrl("https://github.com/1.jpg")
                 .bigImageUrl("https://github.com/2.jpg")
                 .build();
-        when(productDAO.create(any(com.iron.tec.labs.ecommercejava.domain.ProductDomain.class))).thenReturn(Mono.just(productDomain));
-        com.iron.tec.labs.ecommercejava.domain.ProductDomain createdProduct = productService.createProduct(productDomain).block();
+        when(productDAO.create(any(com.iron.tec.labs.ecommercejava.domain.ProductDomain.class))).thenReturn(productDomain);
+        com.iron.tec.labs.ecommercejava.domain.ProductDomain createdProduct = productService.createProduct(productDomain);
         assertNotNull(createdProduct);
         assertNotNull(productDomain.getId());
         assertEquals(productDomain.getId(), createdProduct.getId());
@@ -63,9 +61,9 @@ class ProductServiceImplTest {
     void testDelete() {
         String id = UUID.randomUUID().toString();
 
-        when(productDAO.delete(id)).thenReturn(Mono.empty());
+        doNothing().when(productDAO).delete(id);
 
-        productService.deleteProduct(id).block();
+        productService.deleteProduct(id);
 
         verify(productDAO).delete(id);
     }
@@ -83,8 +81,9 @@ class ProductServiceImplTest {
                 .smallImageUrl("https://github.com/1.jpg")
                 .bigImageUrl("https://github.com/2.jpg")
                 .build();
-        when(productDAO.update(any(com.iron.tec.labs.ecommercejava.domain.ProductDomain.class))).thenReturn(Mono.empty());
-        productService.updateProduct(productDomain).block();
+        when(productDAO.update(any(com.iron.tec.labs.ecommercejava.domain.ProductDomain.class))).thenReturn(productDomain);
+        com.iron.tec.labs.ecommercejava.domain.ProductDomain updatedProduct = productService.updateProduct(productDomain);
+        assertEquals(productDomain, updatedProduct);
         verify(productDAO, times(1)).update(any(com.iron.tec.labs.ecommercejava.domain.ProductDomain.class));
     }
 
@@ -92,7 +91,7 @@ class ProductServiceImplTest {
     @DisplayName("Should return a paginated list of products")
     void getProductPage() {
         com.iron.tec.labs.ecommercejava.domain.ProductDomain filter = com.iron.tec.labs.ecommercejava.domain.ProductDomain.builder().build();
-        when(productDAO.getProductViewPage(eq(0), eq(1), eq(filter), isNull())).thenReturn(Mono.just(
+        when(productDAO.getProductViewPage(eq(0), eq(1), eq(filter), isNull())).thenReturn(
                 new com.iron.tec.labs.ecommercejava.domain.PageDomain<>(
                         Arrays.asList(
                                 com.iron.tec.labs.ecommercejava.domain.ProductDomain.builder()
@@ -113,8 +112,8 @@ class ProductServiceImplTest {
                                         .smallImageUrl("https://github.com/1.jpg")
                                         .bigImageUrl("https://github.com/2.jpg")
                                         .build()
-                        ), 2, 2, 0)));
-        com.iron.tec.labs.ecommercejava.domain.PageDomain<com.iron.tec.labs.ecommercejava.domain.ProductDomain> page = productService.getProductPage(0, 1, filter, null, null).block();
+                        ), 2, 2, 0));
+        com.iron.tec.labs.ecommercejava.domain.PageDomain<com.iron.tec.labs.ecommercejava.domain.ProductDomain> page = productService.getProductPage(0, 1, filter, null, null);
         assertNotNull(page);
         assertEquals(2, page.getTotalPages());
         assertEquals(0, page.getNumber());
@@ -136,9 +135,11 @@ class ProductServiceImplTest {
                 .smallImageUrl("https://github.com/1.jpg")
                 .bigImageUrl("https://github.com/2.jpg")
                 .build();
-        when(productDAO.findById(any(UUID.class))).thenReturn(Mono.just(productDomain));
-        StepVerifier.create(productService.getById(id))
-                .expectNextCount(1)
-                .verifyComplete();
+        when(productDAO.findById(any(UUID.class))).thenReturn(productDomain);
+        com.iron.tec.labs.ecommercejava.domain.ProductDomain result = productService.getById(id);
+        assertNotNull(result);
+        assertEquals(productDomain.getId(), result.getId());
+        assertEquals(productDomain.getName(), result.getName());
+        verify(productDAO).findById(id);
     }
 }

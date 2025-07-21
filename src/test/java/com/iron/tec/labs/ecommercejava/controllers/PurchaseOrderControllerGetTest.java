@@ -4,19 +4,25 @@ import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@AutoConfigureMockMvc
 class PurchaseOrderControllerGetTest extends PostgresIntegrationSetup {
 
     @Autowired
-    private WebTestClient testClient;
+    private MockMvc mockMvc;
 
     @Container
     protected static PostgreSQLContainer<?> postgresqlContainer = createContainer();
@@ -33,69 +39,56 @@ class PurchaseOrderControllerGetTest extends PostgresIntegrationSetup {
     @Test
     @DisplayName("Should return purchase order by id for user role")
     @WithMockUser(authorities = "SCOPE_ROLE_USER",username = "295ba273-ca1d-45bc-9818-f949223981f6")
-    void getByIdUser() {
-        testClient.get().uri("/api/purchase-order/b451dafd-7c96-43b6-bf5f-ac522dd3026c")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.id").isEqualTo("b451dafd-7c96-43b6-bf5f-ac522dd3026c")
-                .jsonPath("$.total").isEqualTo(149.98)
-                .jsonPath("$.status").isEqualTo("PENDING")
-                .jsonPath("$.lines.length()").isEqualTo(2);
+    void getByIdUser() throws Exception {
+        mockMvc.perform(get("/api/purchase-order/b451dafd-7c96-43b6-bf5f-ac522dd3026c"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("b451dafd-7c96-43b6-bf5f-ac522dd3026c"))
+                .andExpect(jsonPath("$.total").value(149.98))
+                .andExpect(jsonPath("$.status").value("PENDING"))
+                .andExpect(jsonPath("$.lines.length()").value(2));
     }
 
     @Test
     @DisplayName("Should return purchase order by id for admin role")
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN",username = "295ba273-ca1d-45bc-9818-f949223981f6")
-    void getByIdAdmin() {
-        testClient.get().uri("/api/purchase-order/b451dafd-7c96-43b6-bf5f-ac522dd3026c")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.id").isEqualTo("b451dafd-7c96-43b6-bf5f-ac522dd3026c")
-                .jsonPath("$.total").isEqualTo(149.98)
-                .jsonPath("$.status").isEqualTo("PENDING")
-                .jsonPath("$.lines.length()").isEqualTo(2);
+    void getByIdAdmin() throws Exception {
+        mockMvc.perform(get("/api/purchase-order/b451dafd-7c96-43b6-bf5f-ac522dd3026c"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("b451dafd-7c96-43b6-bf5f-ac522dd3026c"))
+                .andExpect(jsonPath("$.total").value(149.98))
+                .andExpect(jsonPath("$.status").value("PENDING"))
+                .andExpect(jsonPath("$.lines.length()").value(2));
     }
 
     @Test
     @DisplayName("Should return not found for non-existent purchase order id")
     @WithMockUser(authorities = "SCOPE_ROLE_USER")
-    void getByIdNotFound() {
-        testClient.get().uri("/api/purchase-order/95bf51e4-cf92-4936-9b7c-d1e990bca6ba")
-                .exchange()
-                .expectStatus().isNotFound();
+    void getByIdNotFound() throws Exception {
+        mockMvc.perform(get("/api/purchase-order/95bf51e4-cf92-4936-9b7c-d1e990bca6ba"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     @DisplayName("Should return paged purchase orders for user role")
     @WithMockUser(authorities = "SCOPE_ROLE_USER",username = "295ba273-ca1d-45bc-9818-f949223981f6")
-    void getPurchaseOrderPageUser() {
-        testClient.get().uri("/api/purchase-order/page?page=0&size=10")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .jsonPath("$.content[0].id").isEqualTo("b451dafd-7c96-43b6-bf5f-ac522dd3026c")
-                .jsonPath("$.content[0].total").isEqualTo(149.98)
-                .jsonPath("$.content[0].status").isEqualTo("PENDING")
-                .jsonPath("$.totalElements").isEqualTo(1);
+    void getPurchaseOrderPageUser() throws Exception {
+        mockMvc.perform(get("/api/purchase-order/page?page=0&size=10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].id").value("b451dafd-7c96-43b6-bf5f-ac522dd3026c"))
+                .andExpect(jsonPath("$.content[0].total").value(149.98))
+                .andExpect(jsonPath("$.content[0].status").value("PENDING"))
+                .andExpect(jsonPath("$.totalElements").value(1));
     }
 
     @Test
     @DisplayName("Should return paged purchase orders for admin role")
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN",username = "295ba273-ca1d-45bc-9818-f949223981f6")
-    void getPurchaseOrderPageAdmin() {
-        testClient.get().uri("/api/purchase-order/page?page=0&size=10")
-                .exchange()
-                .expectStatus()
-                .is2xxSuccessful()
-                .expectBody()
-                .jsonPath("$.content[0].id").isEqualTo("b451dafd-7c96-43b6-bf5f-ac522dd3026c")
-                .jsonPath("$.content[0].total").isEqualTo(149.98)
-                .jsonPath("$.content[0].status").isEqualTo("PENDING")
-                .jsonPath("$.totalElements").isEqualTo(1);
+    void getPurchaseOrderPageAdmin() throws Exception {
+        mockMvc.perform(get("/api/purchase-order/page?page=0&size=10"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.content[0].id").value("b451dafd-7c96-43b6-bf5f-ac522dd3026c"))
+                .andExpect(jsonPath("$.content[0].total").value(149.98))
+                .andExpect(jsonPath("$.content[0].status").value("PENDING"))
+                .andExpect(jsonPath("$.totalElements").value(1));
     }
 }
