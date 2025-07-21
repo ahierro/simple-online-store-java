@@ -1,23 +1,27 @@
 package com.iron.tec.labs.ecommercejava.mappers.purchase.order.line;
 
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
+import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
 import com.iron.tec.labs.ecommercejava.dto.PurchaseOrderLineDTO;
+import com.iron.tec.labs.ecommercejava.mappers.product.ProductDomainToDTO;
+import lombok.AllArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class PurchaseOrderLineDomainToDTO implements Converter<PurchaseOrderLineDomain, PurchaseOrderLineDTO> {
+    
+    private final ProductDomainToDTO productDomainToDTO;
+    
     @Override
     public PurchaseOrderLineDTO convert(@NonNull PurchaseOrderLineDomain source) {
+        ProductDTO productDTO = source.getProduct() != null ? productDomainToDTO.convert(source.getProduct()) : null;
+        
         return PurchaseOrderLineDTO.builder()
-                .idProduct(source.getIdProduct() != null ? source.getIdProduct().toString() : null)
                 .quantity(source.getQuantity())
-                .productName(source.getProductName())
-                .stock(source.getStock())
-                .price(source.getPrice())
-                .smallImageUrl(source.getSmallImageUrl())
-                .categoryName(source.getCategoryName())
+                .product(productDTO)
                 .build();
     }
 }

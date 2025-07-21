@@ -1,5 +1,6 @@
 package com.iron.tec.labs.ecommercejava.mappers.purchase.order.line;
 
+import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
 import com.iron.tec.labs.ecommercejava.dto.PurchaseOrderLineCreationDTO;
 import org.springframework.core.convert.converter.Converter;
@@ -13,7 +14,8 @@ public class PurchaseOrderLineCreationDTOToDomain implements Converter<PurchaseO
     @Override
     public PurchaseOrderLineDomain convert(@NonNull PurchaseOrderLineCreationDTO source) {
         return PurchaseOrderLineDomain.builder()
-                .idProduct(source.getIdProduct() != null ? UUID.fromString(source.getIdProduct()) : null)
+                .product(source.getIdProduct() != null ? 
+                    ProductDomain.builder().id(UUID.fromString(source.getIdProduct())).build() : null)
                 .quantity(source.getQuantity())
                 .build();
     }

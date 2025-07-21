@@ -17,7 +17,6 @@ public class ProductDTO {
     private String smallImageUrl;
     private String bigImageUrl;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private CategoryDTO category;
-    private Boolean deleted;
-
 }

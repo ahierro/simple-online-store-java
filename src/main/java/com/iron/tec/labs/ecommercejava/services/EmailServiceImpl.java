@@ -6,24 +6,20 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import reactor.core.Disposable;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 @Service
 @AllArgsConstructor
 @Log4j2
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSender emailSender;
-
     private final MailConfig mailConfig;
 
     @Override
-    public Disposable sendEmailInParallel(String to, String subject, String body) {
-        return Mono.fromCallable(() -> sendMailSync(to, subject, body))
-                .publishOn(Schedulers.parallel())
-                .subscribe();
+    @Async
+    public void sendEmailInParallel(String to, String subject, String body) {
+        sendMailSync(to, subject, body);
     }
 
     @Override

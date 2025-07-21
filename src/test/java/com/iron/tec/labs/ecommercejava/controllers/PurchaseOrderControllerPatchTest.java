@@ -4,20 +4,25 @@ import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@AutoConfigureMockMvc
 class PurchaseOrderControllerPatchTest extends PostgresIntegrationSetup {
 
     @Autowired
-    private WebTestClient testClient;
+    private MockMvc mockMvc;
 
     @Container
     protected static PostgreSQLContainer<?> postgresqlContainer = createContainer();
@@ -34,64 +39,56 @@ class PurchaseOrderControllerPatchTest extends PostgresIntegrationSetup {
     @Test
     @DisplayName("Should update purchase order status as admin")
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN",username = "295ba273-ca1d-45bc-9818-f949223981f6")
-    void updatePurchaseOrderAsAdmin() {
-        testClient.patch()
-                .uri("/api/purchase-order/b451dafd-7c96-43b6-bf5f-ac522dd3026c")
+    void updatePurchaseOrderAsAdmin() throws Exception {
+        mockMvc.perform(patch("/api/purchase-order/b451dafd-7c96-43b6-bf5f-ac522dd3026c")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("""
+                .content("""
                         {
                           "status": "CANCELLED"
                         }
-                        """)
-                .exchange()
-                .expectStatus().isOk();
+                        """))
+                .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("Should fail to update purchase order as regular user")
     @WithMockUser(authorities = "SCOPE_ROLE_USER",username = "295ba273-ca1d-45bc-9818-f949223981f6")
-    void updatePurchaseOrderAsUser() {
-        testClient.patch()
-                .uri("/api/purchase-order/b451dafd-7c96-43b6-bf5f-ac522dd3026c")
+    void updatePurchaseOrderAsUser() throws Exception {
+        mockMvc.perform(patch("/api/purchase-order/b451dafd-7c96-43b6-bf5f-ac522dd3026c")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("""
+                .content("""
                         {
                           "status": "CANCELLED"
                         }
-                        """)
-                .exchange()
-                .expectStatus().isForbidden();
+                        """))
+                .andExpect(status().isForbidden());
     }
 
     @Test
     @DisplayName("Should fail to update non-existent purchase order")
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN",username = "295ba273-ca1d-45bc-9818-f949223981f6")
-    void updateNonExistentPurchaseOrder() {
-        testClient.patch()
-                .uri("/api/purchase-order/e85d3f66-1e7a-4c12-bc98-04b031b4d80a")
+    void updateNonExistentPurchaseOrder() throws Exception {
+        mockMvc.perform(patch("/api/purchase-order/e85d3f66-1e7a-4c12-bc98-04b031b4d80a")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("""
+                .content("""
                         {
                           "status": "CANCELLED"
                         }
-                        """)
-                .exchange()
-                .expectStatus().isNotFound();
+                        """))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     @DisplayName("Should fail to update purchase order with invalid status")
     @WithMockUser(authorities = "SCOPE_ROLE_ADMIN",username = "295ba273-ca1d-45bc-9818-f949223981f6")
-    void updatePurchaseOrderWithInvalidStatus() {
-        testClient.patch()
-                .uri("/api/purchase-order/b451dafd-7c96-43b6-bf5f-ac522dd3026c")
+    void updatePurchaseOrderWithInvalidStatus() throws Exception {
+        mockMvc.perform(patch("/api/purchase-order/b451dafd-7c96-43b6-bf5f-ac522dd3026c")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("""
+                .content("""
                         {
                           "status": "INVALID_STATUS"
                         }
-                        """)
-                .exchange()
-                .expectStatus().isBadRequest();
+                        """))
+                .andExpect(status().isBadRequest());
     }
 }

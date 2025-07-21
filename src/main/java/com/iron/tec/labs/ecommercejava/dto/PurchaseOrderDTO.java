@@ -12,13 +12,10 @@ import java.util.Set;
 @Builder
 public class PurchaseOrderDTO {
     private String id;
-    private String idUser;
     @Singular
     private Set<PurchaseOrderLineDTO> lines;
     private BigDecimal total;
     private String status;
     private LocalDateTime createdAt;
-
     private UserDTO user;
-
 }

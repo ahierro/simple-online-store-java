@@ -1,36 +1,36 @@
 package com.iron.tec.labs.ecommercejava.db.entities;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.domain.Persistable;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.UUID;
 
-@Table("PURCHASE_ORDER_LINE")
-@Data
+@Entity
+@Table(name = "PURCHASE_ORDER_LINE")
+@Getter
+@Setter
 @SuperBuilder
 @NoArgsConstructor
-public class PurchaseOrderLine implements Persistable<UUID> {
+public class PurchaseOrderLine {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_purchase_order", nullable = false, foreignKey = @ForeignKey(name="po_id_purchase_order_fk"))
     @NotNull
-    private UUID idPurchaseOrder;
+    private PurchaseOrder purchaseOrder;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_product", nullable = false, foreignKey = @ForeignKey(name="po_id_product_fk"))
     @NotNull
-    private UUID idProduct;
+    private Product product;
+    
     @NotNull
     private Integer quantity;
-
-    @Transient
-    private ProductView product;
-
-    @Override
-    public boolean isNew() {
-        return id == null;
-    }
 }

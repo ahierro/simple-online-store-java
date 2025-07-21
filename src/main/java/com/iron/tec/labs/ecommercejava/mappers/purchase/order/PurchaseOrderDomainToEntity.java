@@ -1,5 +1,6 @@
 package com.iron.tec.labs.ecommercejava.mappers.purchase.order;
 
+import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrder;
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderLine;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
@@ -32,13 +33,16 @@ public class PurchaseOrderDomainToEntity implements Converter<PurchaseOrderDomai
                 }
             }
         }
-        return PurchaseOrder.builder()
+        PurchaseOrder purchaseOrder = PurchaseOrder.builder()
                 .id(source.getId())
-                .idUser(source.getIdUser())
+                .user(conversionService.getEntityManager().getReference(AppUser.class, source.getUser().getId()))
                 .lines(lines)
                 .total(source.getTotal())
                 .status(source.getStatus())
                 .createdAt(source.getCreatedAt())
                 .build();
+        purchaseOrder.getLines()
+                .forEach(line -> line.setPurchaseOrder(purchaseOrder));
+        return purchaseOrder;
     }
 }

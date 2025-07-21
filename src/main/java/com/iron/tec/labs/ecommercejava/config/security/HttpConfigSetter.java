@@ -2,34 +2,36 @@ package com.iron.tec.labs.ecommercejava.config.security;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 import static com.iron.tec.labs.ecommercejava.constants.Constants.*;
 
 public class HttpConfigSetter {
-    public static ServerHttpSecurity setHttpConfig(ServerHttpSecurity http) {
+    public static HttpSecurity setHttpConfig(HttpSecurity http) throws Exception {
         return http
                 .cors(Customizer.withDefaults())
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec
-                        .pathMatchers(HttpMethod.POST, "/api/login").permitAll()
-                        .pathMatchers(HttpMethod.POST, "/api/signup").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/api/confirm").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/webjars/swagger-ui/**").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/api/product/**").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/api/category/**").permitAll()
-                        .pathMatchers(HttpMethod.POST, "/api/purchase-order/**").hasAuthority(SCOPE_ROLE_USER)
-                        .pathMatchers(HttpMethod.PATCH, "/api/purchase-order/**").hasAuthority(SCOPE_ROLE_ADMIN)
-                        .pathMatchers(HttpMethod.POST, API).hasAuthority(SCOPE_ROLE_ADMIN)
-                        .pathMatchers(HttpMethod.PUT, API).hasAuthority(SCOPE_ROLE_ADMIN)
-                        .pathMatchers(HttpMethod.DELETE, API).hasAuthority(SCOPE_ROLE_ADMIN)
-                        .pathMatchers(HttpMethod.GET, "/api/purchase-order/**").permitAll()
-                        .anyExchange().authenticated())
-                .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
-                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
-                .oauth2ResourceServer(oAuth2ResourceServerSpec -> oAuth2ResourceServerSpec.jwt(Customizer.withDefaults()));
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/signup").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/confirm").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/webjars/swagger-ui/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/product/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/category/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/purchase-order/**").hasAuthority(SCOPE_ROLE_USER)
+                        .requestMatchers(HttpMethod.PATCH, "/api/purchase-order/**").hasAuthority(SCOPE_ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.POST, API).hasAuthority(SCOPE_ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.PUT, API).hasAuthority(SCOPE_ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.DELETE, API).hasAuthority(SCOPE_ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/purchase-order/**").permitAll()
+                        .anyRequest().authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .formLogin(AbstractHttpConfigurer::disable)
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
     }
 }

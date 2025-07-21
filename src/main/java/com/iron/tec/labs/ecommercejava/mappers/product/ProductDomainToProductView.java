@@ -18,11 +18,11 @@ public class ProductDomainToProductView implements Converter<ProductDomain, Prod
                 .price(source.getPrice())
                 .smallImageUrl(source.getSmallImageUrl())
                 .bigImageUrl(source.getBigImageUrl())
-                .idCategory(source.getIdCategory())
-                .categoryName(null)
-                .categoryDescription(null)
+                .idCategory(source.getCategory() != null ? source.getCategory().getId() : null)
+                .categoryName(source.getCategory() != null ? source.getCategory().getName() : null)
+                .categoryDescription(source.getCategory() != null ? source.getCategory().getDescription() : null)
                 .productCreatedAt(source.getCreatedAt())
-                .deleted(source.getDeleted() != null ? source.getDeleted() : false)
+                .categoryCreatedAt(source.getCategory() != null ? source.getCategory().getCreatedAt() : null)
                 .build();
     }
 }

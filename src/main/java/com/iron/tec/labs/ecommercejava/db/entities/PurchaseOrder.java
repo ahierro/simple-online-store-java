@@ -1,36 +1,33 @@
 package com.iron.tec.labs.ecommercejava.db.entities;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.Singular;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
-@Table("PURCHASE_ORDER")
-@Data
+@Entity
+@Table(name = "PURCHASE_ORDER")
+@Getter
+@Setter
 @SuperBuilder
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class PurchaseOrder extends AuditableEntity {
 
     @NotNull
-    private UUID idUser;
-
-    @Transient
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user", nullable = false)
     private AppUser user;
 
     @Transient
     @Singular
     private List<PurchaseOrderLineView> viewLines;
-    @Transient
+    
+    @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL)
     @Singular
     private List<PurchaseOrderLine> lines;
 

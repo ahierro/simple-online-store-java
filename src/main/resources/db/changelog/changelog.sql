@@ -35,7 +35,6 @@ CREATE TABLE "category"
     "description"     TEXT           NOT NULL,
     "created_at"      TIMESTAMP WITHOUT TIME ZONE,
     "updated_at" TIMESTAMP WITHOUT TIME ZONE,
-    "deleted" boolean NOT NULL DEFAULT false,
     CONSTRAINT "category_pkey" PRIMARY KEY ("id")
 );
 --rollback drop table category;
@@ -55,7 +54,6 @@ CREATE TABLE "product"
     "big_image_url"   VARCHAR(255)   NOT NULL,
     "created_at"      TIMESTAMP WITHOUT TIME ZONE,
     "id_category"     UUID NOT NULL,
-    "deleted" boolean NOT NULL DEFAULT false,
     "updated_at" TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT "product_pkey" PRIMARY KEY ("id")
 );
@@ -116,6 +114,7 @@ SELECT
     po.total as total,
     po.status as status,
     po.created_at as created_at,
+    po.updated_at as updated_at,
     u.email as email,
     u.username as username,
     u.first_name as first_name,
@@ -139,8 +138,9 @@ SELECT p.id as id,
        c.description as category_description,
        p.id_category as id_category,
        p.created_at as product_created_at,
+       p.updated_at as product_updated_at,
        c.created_at as category_created_at,
-       p.deleted as deleted
+       c.updated_at as category_updated_at
 FROM product p INNER JOIN category c on c.id = p.id_category;
 --rollback drop view product_view;
 
@@ -164,8 +164,7 @@ SELECT
     c.description as category_description,
     p.id_category as id_category,
     p.created_at as product_created_at,
-    c.created_at as category_created_at,
-    p.deleted as deleted
+    c.created_at as category_created_at
 FROM purchase_order_line po INNER JOIN product p ON po.id_product = p.id INNER JOIN category c on c.id = p.id_category;
 --rollback drop view purchase_order_line_view;
 

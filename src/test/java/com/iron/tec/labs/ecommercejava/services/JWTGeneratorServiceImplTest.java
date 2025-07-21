@@ -1,5 +1,6 @@
 package com.iron.tec.labs.ecommercejava.services;
 
+import com.iron.tec.labs.ecommercejava.config.security.JwtConfig;
 import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,9 @@ class JWTGeneratorServiceImplTest {
     @Mock
     JwtEncoder encoder;
 
+    @Mock
+    JwtConfig jwtConfig;
+
     @InjectMocks
     JWTGeneratorServiceImpl jwtGeneratorService;
 
@@ -38,6 +42,8 @@ class JWTGeneratorServiceImplTest {
         Jwt jwt = mock(Jwt.class);
         when(encoder.encode(any())).thenReturn(jwt);
         when(jwt.getTokenValue()).thenReturn(jwtExample);
+        when(jwtConfig.expiration()).thenReturn(20000L);
+
         when(authentication.getPrincipal()).thenReturn(AppUser.builder().id(UUID.randomUUID())
                 .email("asd@gmail.com")
                 .lastName("Smith")

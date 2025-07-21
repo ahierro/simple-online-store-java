@@ -21,7 +21,6 @@ public class CategoryCreationDTOToDomain implements Converter<CategoryCreationDT
 
         categoryDomain.setName(source.getName());
         categoryDomain.setDescription(source.getDescription());
-        categoryDomain.setDeleted(source.getDeleted() != null ? source.getDeleted() : false);
 
         return categoryDomain;
     }

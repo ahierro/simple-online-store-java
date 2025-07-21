@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -14,13 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class PurchaseOrderLineDomain {
     private UUID id;
-    private UUID idPurchaseOrder;
-    private UUID idProduct;
-    private String productName;
-    private Integer stock;
-    private BigDecimal price;
-    private String bigImageUrl;
-    private String smallImageUrl;
-    private String categoryName;
+    private PurchaseOrderDomain purchaseOrder;
+    private ProductDomain product;
     private Integer quantity;
 }

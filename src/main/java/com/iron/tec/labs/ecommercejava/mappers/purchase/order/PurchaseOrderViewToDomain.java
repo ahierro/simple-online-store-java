@@ -13,7 +13,6 @@ public class PurchaseOrderViewToDomain implements Converter<PurchaseOrderView, P
     public PurchaseOrderDomain convert(@NonNull PurchaseOrderView source) {
         return PurchaseOrderDomain.builder()
                 .id(source.getId())
-                .idUser(source.getIdUser())
                 .total(source.getTotal())
                 .status(source.getStatus())
                 .createdAt(source.getCreatedAt())

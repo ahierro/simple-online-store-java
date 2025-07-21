@@ -4,19 +4,25 @@ import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@AutoConfigureMockMvc
 class AuthControllerLoginTest extends PostgresIntegrationSetup {
 
     @Autowired
-    private WebTestClient testClient;
+    private MockMvc mockMvc;
 
     @Container
     protected static PostgreSQLContainer<?> postgresqlContainer = createContainer();
@@ -32,105 +38,85 @@ class AuthControllerLoginTest extends PostgresIntegrationSetup {
 
     @Test
     @DisplayName("Should login successfully with valid credentials as user")
-    void loginSuccess() {
-        testClient.post()
-                .uri("/api/login")
+    void loginSuccess() throws Exception {
+        mockMvc.perform(post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("""
+                .content("""
                         {
                           "username": "testuser",
                           "password": "admin"
                         }
-                        """)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(String.class)
-                .consumeWith(response -> {
-                    String token = response.getResponseBody();
-                    assert token != null && !token.isEmpty();
-                });
+                        """))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.emptyString())));
     }
     @Test
     @DisplayName("Should login successfully with valid credentials as admin")
-    void loginAdminSuccess() {
-        testClient.post()
-                .uri("/api/login")
+    void loginAdminSuccess() throws Exception {
+        mockMvc.perform(post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("""
+                .content("""
                         {
                           "username": "adminuser",
                           "password": "adminpass"
                         }
-                        """)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(String.class)
-                .consumeWith(response -> {
-                    String token = response.getResponseBody();
-                    assert token != null && !token.isEmpty();
-                });
+                        """))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.emptyString())));
     }
     @Test
     @DisplayName("Should fail login with invalid password")
-    void loginFailInvalidPassword() {
-        testClient.post()
-                .uri("/api/login")
+    void loginFailInvalidPassword() throws Exception {
+        mockMvc.perform(post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("""
+                .content("""
                         {
                           "username": "testuser",
                           "password": "wrongpassword"
                         }
-                        """)
-                .exchange()
-                .expectStatus().isUnauthorized();
+                        """))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     @DisplayName("Should fail login with non-existent username")
-    void loginFailNonExistentUser() {
-        testClient.post()
-                .uri("/api/login")
+    void loginFailNonExistentUser() throws Exception {
+        mockMvc.perform(post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("""
+                .content("""
                         {
                           "username": "nonexistentuser",
                           "password": "admin"
                         }
-                        """)
-                .exchange()
-                .expectStatus().isUnauthorized();
+                        """))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     @DisplayName("Should fail login with inactive user")
-    void loginFailInactiveUser() {
-        testClient.post()
-                .uri("/api/login")
+    void loginFailInactiveUser() throws Exception {
+        mockMvc.perform(post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("""
+                .content("""
                         {
                           "username": "inactiveuser",
                           "password": "admin"
                         }
-                        """)
-                .exchange()
-                .expectStatus().isUnauthorized();
+                        """))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     @DisplayName("Should fail login with locked user")
-    void loginFailLockedUser() {
-        testClient.post()
-                .uri("/api/login")
+    void loginFailLockedUser() throws Exception {
+        mockMvc.perform(post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("""
+                .content("""
                         {
                           "username": "lockeduser",
                           "password": "admin"
                         }
-                        """)
-                .exchange()
-                .expectStatus().isUnauthorized();
+                        """))
+                .andExpect(status().isUnauthorized());
     }
 }

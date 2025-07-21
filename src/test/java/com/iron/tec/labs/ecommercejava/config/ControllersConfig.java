@@ -1,17 +1,12 @@
 package com.iron.tec.labs.ecommercejava.config;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-
-import com.iron.tec.labs.ecommercejava.config.security.HttpConfigSetter;
 
 @SpringBootApplication
 public class ControllersConfig {
-    @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        return HttpConfigSetter.setHttpConfig(http)
-                .build();
-    }
+//    @Bean
+//    public SecurityFilterChain springSecurityFilterChain(HttpSecurity http) throws Exception {
+//        return HttpConfigSetter.setHttpConfig(http)
+//                .build();
+//    }
 }

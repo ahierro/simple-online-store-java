@@ -14,18 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class CategoryDAOImplTest extends PostgresIntegrationSetup {
 
@@ -53,8 +53,7 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
 
     @BeforeEach
     public void setup() {
-        StepVerifier.create(productRepository.deleteAll()).verifyComplete();
-        StepVerifier.create(categoryRepository.deleteAll()).verifyComplete();
+        categoryRepository.deleteAll();
 
         exampleCategory = CategoryDomain.builder()
                 .id(UUID.fromString("9ea1e0f8-27ad-4915-9b49-9845b51f06d4"))
@@ -66,22 +65,22 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
     @Test
     @DisplayName("Create a category and find it to verify if it is persisted in the database")
     void create_ok() {
-        StepVerifier.create(categoryDAO.create(exampleCategory)
-                        .thenMany(categoryRepository.findAll()))
-                .expectNextCount(1)
-                .verifyComplete();
+        categoryDAO.create(exampleCategory);
+        assertEquals(1, categoryRepository.findAll().size());
     }
 
     @Test
     @DisplayName("Create a category that is already persisted in the database")
     void create_with_existing_id() {
-        StepVerifier.create(categoryDAO.create(exampleCategory)
-                        .thenMany(categoryRepository.findAll()))
-                .expectNextCount(1)
-                .verifyComplete();
-        StepVerifier.create(categoryDAO.create(exampleCategory)
-                        .thenMany(categoryRepository.findAll()))
-                .verifyError(Conflict.class);
+        categoryDAO.create(exampleCategory);
+        assertEquals(1, categoryRepository.findAll().size());
+        
+        try {
+            categoryDAO.create(exampleCategory);
+            Assertions.fail("Expected Conflict exception was not thrown");
+        } catch (Conflict e) {
+            // Expected exception
+        }
     }
 
     @Test
@@ -91,19 +90,18 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
         assert exampleCategory.getId() != null;
         exampleCategory.setName("Motherboard");
         exampleCategory.setDescription("Description updated");
-        exampleCategory.setDeleted(false);
         assert exampleCategory.getId() != null;
-        StepVerifier.create(categoryDAO.update(exampleCategory)
-                        .then(categoryRepository.findById(exampleCategory.getId())))
-                .expectNextMatches(category -> isEquals(this.exampleCategory,category))
-                .verifyComplete();
+        
+        categoryDAO.update(exampleCategory);
+        var category = categoryRepository.findById(exampleCategory.getId()).orElse(null);
+        assertNotNull(category);
+        assertTrue(isEquals(this.exampleCategory, category));
     }
 
     boolean isEquals(CategoryDomain categoryDomain, Category category){
         return categoryDomain.getId().equals(category.getId())
                 && categoryDomain.getName().equals(category.getName())
-                && categoryDomain.getDescription().equals(category.getDescription())
-                && categoryDomain.getDeleted().equals(category.getDeleted());
+                && categoryDomain.getDescription().equals(category.getDescription());
     }
 
     @Test
@@ -111,8 +109,13 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
     void update_nonExisting_error() {
         assert exampleCategory.getId() != null;
         exampleCategory.setCreatedAt(LocalDateTime.now());
-        StepVerifier.create(categoryDAO.update(exampleCategory))
-                .verifyError(NotFound.class);
+        
+        try {
+            categoryDAO.update(exampleCategory);
+            Assertions.fail("Expected NotFound exception was not thrown");
+        } catch (NotFound e) {
+            // Expected exception
+        }
     }
 
     @Test
@@ -120,16 +123,20 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
     void delete_existing_ok() {
         create_ok();
         assert exampleCategory.getId() != null;
-        StepVerifier.create(categoryDAO.delete(exampleCategory.getId().toString())
-                        .then(categoryRepository.findById(exampleCategory.getId())))
-                .expectNextCount(0)
-                .verifyComplete();
+        
+        categoryDAO.delete(exampleCategory.getId().toString());
+        assertTrue(categoryRepository.findAll().isEmpty());
     }
 
     @Test
     @DisplayName("Delete a category associated to products should throw exception")
     void delete_with_conflict() {
         create_ok();
+        
+        // Get the saved category entity
+        Category savedCategory = categoryRepository.findById(exampleCategory.getId()).orElse(null);
+        assertNotNull(savedCategory);
+        
         productRepository.save(Product.builder()
                 .id(UUID.randomUUID())
                 .name("Laptop")
@@ -138,28 +145,37 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
                 .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
                 .smallImageUrl("https://github.com/1.jpg")
                 .bigImageUrl("https://github.com/2.jpg")
-                .idCategory(exampleCategory.getId())
-                .build()).block();
+                .category(savedCategory)
+                .build());
+        productRepository.flush();
         assert exampleCategory.getId() != null;
-        StepVerifier.create(categoryDAO.delete(exampleCategory.getId().toString())
-                        .then(categoryRepository.findById(exampleCategory.getId())))
-                .verifyError(Conflict.class);
+        
+        try {
+            categoryDAO.delete(exampleCategory.getId().toString());
+            Assertions.fail("Expected Conflict exception was not thrown");
+        } catch (Conflict e) {
+            // Expected exception
+        }
     }
 
     @Test
     @DisplayName("Delete a non-existing category")
     void delete_nonExisting_ok() {
         assert exampleCategory.getId() != null;
-        StepVerifier.create(categoryDAO.delete(exampleCategory.getId().toString())
-                        .then(categoryRepository.findById(exampleCategory.getId())))
-                .verifyError(NotFound.class);
+        
+        try {
+            categoryDAO.delete(exampleCategory.getId().toString());
+            Assertions.fail("Expected NotFound exception was not thrown");
+        } catch (NotFound e) {
+            // Expected exception
+        }
     }
 
     @Test
-    @DisplayName("Create category and get a category page to verify if it is returned")
+    @DisplayName("Get Page of categories when the table is not empty")
     void getPage_ok() {
         create_ok();
-        PageDomain<CategoryDomain> page = categoryDAO.getPage(0, 2).block();
+        PageDomain<CategoryDomain> page = categoryDAO.getPage(0, 2);
         assertNotNull(page);
         assertEquals(1, page.getTotalPages());
         assertEquals(0, page.getNumber());
@@ -171,7 +187,7 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
     @Test
     @DisplayName("Get a category page when the table is empty")
     void getPage_empty() {
-        PageDomain<CategoryDomain> page = categoryDAO.getPage(0, 2).block();
+        PageDomain<CategoryDomain> page = categoryDAO.getPage(0, 2);
         assertNotNull(page);
         assertEquals(0, page.getTotalPages());
         assertEquals(0, page.getNumber());
@@ -184,15 +200,18 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
     @DisplayName("Create a category and get category by id to verify if it is returned")
     void getById_ok() {
         create_ok();
-        StepVerifier.create(categoryDAO.getById(exampleCategory.getId()))
-                .expectNextCount(1)
-                .verifyComplete();
+        CategoryDomain category = categoryDAO.getById(exampleCategory.getId());
+        assertNotNull(category);
     }
 
     @Test
     @DisplayName("Get non existing category")
     void getById_notFound() {
-        StepVerifier.create(categoryDAO.getById(UUID.randomUUID()))
-                .verifyError(NotFound.class);
+        try {
+            categoryDAO.getById(UUID.randomUUID());
+            Assertions.fail("Expected NotFound exception was not thrown");
+        } catch (NotFound e) {
+            // Expected exception
+        }
     }
 }

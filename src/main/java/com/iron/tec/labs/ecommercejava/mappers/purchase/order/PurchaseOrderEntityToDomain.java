@@ -53,12 +53,11 @@ public class PurchaseOrderEntityToDomain implements Converter<PurchaseOrder, Pur
         }
         return PurchaseOrderDomain.builder()
                 .id(source.getId())
-                .idUser(source.getIdUser())
+                .user(user)
                 .lines(lines)
                 .total(source.getTotal())
                 .status(source.getStatus())
                 .createdAt(source.getCreatedAt())
-                .user(user)
                 .build();
     }
 }

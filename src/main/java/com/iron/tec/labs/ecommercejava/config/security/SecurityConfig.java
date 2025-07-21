@@ -1,74 +1,49 @@
 package com.iron.tec.labs.ecommercejava.config.security;
 
-import java.util.function.Function;
-
+import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
+import com.iron.tec.labs.ecommercejava.db.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
-import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.SecurityFilterChain;
 
-import com.iron.tec.labs.ecommercejava.db.repository.UserRepository;
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import java.util.Optional;
 
-import lombok.AllArgsConstructor;
-
-@EnableWebFluxSecurity
+@EnableWebSecurity
 @Configuration
 @AllArgsConstructor
 public class SecurityConfig {
 
-    private final RsaKeyProperties jwtConfigProperties;
-
     @Bean
-    public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return HttpConfigSetter.setHttpConfig(http)
                 .build();
     }
-
     @Bean
-    public ReactiveAuthenticationManager reactiveAuthenticationManager(
-            ReactiveUserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder) {
-        UserDetailsRepositoryReactiveAuthenticationManager authenticationManager
-                = new UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService);
-        authenticationManager.setPasswordEncoder(passwordEncoder);
-        return authenticationManager;
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
-
     @Bean
-    public ReactiveUserDetailsService userDetailsService(UserRepository users) {
-        return username -> users
-                .findByUsername(username)
-                .map(Function.identity());
+    public UserDetailsService userDetailsService(UserRepository users) {
+        return username -> {
+            Optional<AppUser> userOpt = users.findByUsername(username);
+            if (userOpt.isEmpty()) {
+                throw new UsernameNotFoundException("User not found: " + username);
+            }
+            return userOpt.get();
+        };
     }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    ReactiveJwtDecoder jwtDecoder() {
-        return NimbusReactiveJwtDecoder.withPublicKey(jwtConfigProperties.publicKey()).build();
-    }
-
-    @Bean
-    JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(jwtConfigProperties.publicKey())
-                .privateKey(jwtConfigProperties.privateKey()).build();
-        return new NimbusJwtEncoder(new ImmutableJWKSet<>(new JWKSet(jwk)));
     }
 }

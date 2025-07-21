@@ -1,47 +1,38 @@
 package com.iron.tec.labs.ecommercejava.db.dao;
 
+import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
+import com.iron.tec.labs.ecommercejava.db.entities.*;
+import com.iron.tec.labs.ecommercejava.db.repository.*;
+import com.iron.tec.labs.ecommercejava.domain.PageDomain;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
+import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
+import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
+import com.iron.tec.labs.ecommercejava.mappers.product.ProductEntityToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.PurchaseOrderEntityToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineEntityToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineViewToDomain;
+import com.iron.tec.labs.ecommercejava.mappers.user.AppUserEntityToDomain;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
+import static org.junit.jupiter.api.Assertions.*;
 
-import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
-import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
-import com.iron.tec.labs.ecommercejava.db.entities.Category;
-import com.iron.tec.labs.ecommercejava.db.entities.Product;
-import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrder;
-import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderLine;
-import com.iron.tec.labs.ecommercejava.db.repository.CategoryRepository;
-import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
-import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderLineRepository;
-import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderRepository;
-import com.iron.tec.labs.ecommercejava.db.repository.UserRepository;
-import com.iron.tec.labs.ecommercejava.domain.PageDomain;
-import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
-import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
-import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
-import com.iron.tec.labs.ecommercejava.mappers.purchase.order.PurchaseOrderEntityToDomain;
-import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineEntityToDomain;
-import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineViewToDomain;
-import com.iron.tec.labs.ecommercejava.mappers.user.AppUserEntityToDomain;
 
-import reactor.test.StepVerifier;
 
 @SpringBootTest
+@Transactional
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
 
@@ -75,6 +66,9 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private PurchaseOrderEntityToDomain purchaseOrderEntityToDomain;
 
     PurchaseOrder purchaseOrder = null;
@@ -84,16 +78,13 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
 
     @BeforeEach
     public void setup() {
-        purchaseOrderEntityToDomain = new PurchaseOrderEntityToDomain(new PurchaseOrderLineEntityToDomain(), new PurchaseOrderLineViewToDomain(), new AppUserEntityToDomain());
-        StepVerifier.create(purchaseOrderLineRepository.deleteAll()).verifyComplete();
-        StepVerifier.create(purchaseOrderRepository.deleteAll()).verifyComplete();
-        StepVerifier.create(productRepository.deleteAll()).verifyComplete();
-        StepVerifier.create(categoryRepository.deleteAll()).verifyComplete();
-        StepVerifier.create(userRepository.deleteAll()).verifyComplete();
-
+        purchaseOrderEntityToDomain = new PurchaseOrderEntityToDomain(
+                new PurchaseOrderLineEntityToDomain(new ProductEntityToDomain()),
+                new PurchaseOrderLineViewToDomain(), new AppUserEntityToDomain());
+        deleteAllEntities();
         appUser = AppUser.builder()
                 .id(UUID.randomUUID())
-                .username("admin")
+                .username("admintest")
                 .password("$2a$10$7EVF8hBxswNOWMPfpIImruKVkUbNcL51KK.TueUqUPjnfdAghhJmC")
                 .firstName("John")
                 .lastName("Smith")
@@ -117,55 +108,55 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
                 .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
                 .smallImageUrl("https://github.com/1.jpg")
                 .bigImageUrl("https://github.com/2.jpg")
-                .idCategory(category.getId())
+                .category(category)
                 .build();
 
         purchaseOrder = PurchaseOrder.builder()
                 .id(UUID.randomUUID())
-                .idUser(appUser.getId())
-                .line(PurchaseOrderLine.builder().idProduct(product.getId()).quantity(10).build())
+                .user(appUser)
+                .line(PurchaseOrderLine.builder().product(product).quantity(10).build())
                 .status("PENDING")
                 .total(BigDecimal.valueOf(100000))
                 .build();
 
-        StepVerifier.create(userRepository.save(appUser)
-                        .thenMany(userRepository.findAll()))
-                .expectNextCount(1)
-                .verifyComplete();
+        userRepository.save(appUser);
+        assertEquals(1, userRepository.findAll().size());
 
-        StepVerifier.create(categoryRepository.save(category)
-                        .thenMany(categoryRepository.findAll()))
-                .expectNextCount(1)
-                .verifyComplete();
+        categoryRepository.save(category);
+        assertEquals(1, categoryRepository.findAll().size());
 
-
-        StepVerifier.create(productRepository.save(product)
-                        .thenMany(productRepository.findAll()))
-                .expectNextCount(1)
-                .verifyComplete();
+        productRepository.save(product);
+        assertEquals(1, productRepository.findAll().size());
+    }
+    public void deleteAllEntities() {
+        jdbcTemplate.update("DELETE FROM purchase_order_line");
+        jdbcTemplate.update("DELETE FROM purchase_order");
+        jdbcTemplate.update("DELETE FROM product");
+        jdbcTemplate.update("DELETE FROM category");
+        jdbcTemplate.update("DELETE FROM users");
     }
 
     @Test
     @DisplayName("Create a PurchaseOrder and find it to verify if it is persisted in the database")
     void create_ok() {
         PurchaseOrderDomain purchaseOrderDomain = purchaseOrderEntityToDomain.convert(purchaseOrder);
-        StepVerifier.create(purchaseOrderDAO.create(purchaseOrderDomain)
-                        .thenMany(purchaseOrderRepository.findAll()))
-                .expectNextCount(1)
-                .verifyComplete();
+        purchaseOrderDAO.create(purchaseOrderDomain);
+        assertEquals(1, purchaseOrderRepository.findAll().size());
     }
 
     @Test
     @DisplayName("Create a PurchaseOrder that is already persisted in the database")
     void create_with_existing_id() {
         PurchaseOrderDomain purchaseOrderDomain = purchaseOrderEntityToDomain.convert(purchaseOrder);
-        StepVerifier.create(purchaseOrderDAO.create(purchaseOrderDomain)
-                        .thenMany(purchaseOrderRepository.findAll()))
-                .expectNextCount(1)
-                .verifyComplete();
-        StepVerifier.create(purchaseOrderDAO.create(purchaseOrderDomain)
-                        .thenMany(purchaseOrderRepository.findAll()))
-                .verifyError(Conflict.class);
+        purchaseOrderDAO.create(purchaseOrderDomain);
+        assertEquals(1, purchaseOrderRepository.findAll().size());
+        
+        try {
+            purchaseOrderDAO.create(purchaseOrderDomain);
+            fail("Expected Conflict exception was not thrown");
+        } catch (Conflict e) {
+            // Expected exception
+        }
     }
 
     @Test
@@ -173,11 +164,9 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
     void update_ok() {
         create_ok();
         assert purchaseOrder.getId() != null;
-        PurchaseOrderDomain purchaseOrderDomain = purchaseOrderEntityToDomain.convert(Objects.requireNonNull(purchaseOrderRepository.findById(purchaseOrder.getId()).block()));
-        StepVerifier.create(purchaseOrderDAO.update(purchaseOrderDomain)
-                        .thenMany(purchaseOrderRepository.findAll()))
-                .expectNextCount(1)
-                .verifyComplete();
+        PurchaseOrderDomain purchaseOrderDomain = purchaseOrderEntityToDomain.convert(Objects.requireNonNull(purchaseOrderRepository.findById(purchaseOrder.getId()).orElse(null)));
+        purchaseOrderDAO.update(purchaseOrderDomain);
+        assertEquals(1, purchaseOrderRepository.findAll().size());
     }
 
     @Test
@@ -186,8 +175,12 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
         assert purchaseOrder.getId() != null;
         purchaseOrder.setCreatedAt(LocalDateTime.now());
         PurchaseOrderDomain purchaseOrderDomain = purchaseOrderEntityToDomain.convert(purchaseOrder);
-        StepVerifier.create(purchaseOrderDAO.update(purchaseOrderDomain))
-                .verifyError(NotFound.class);
+        try {
+            purchaseOrderDAO.update(purchaseOrderDomain);
+            fail("Expected NotFound exception was not thrown");
+        } catch (NotFound e) {
+            // Expected exception
+        }
     }
 
     @Test
@@ -196,7 +189,7 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
         create_ok();
         // Convert entity to domain for getPage
         PurchaseOrderDomain purchaseOrderDomain = purchaseOrderEntityToDomain.convert(purchaseOrder);
-        PageDomain<PurchaseOrderDomain> page = purchaseOrderDAO.getPage(0, 2, purchaseOrderDomain).block();
+        PageDomain<PurchaseOrderDomain> page = purchaseOrderDAO.getPage(0, 2, purchaseOrderDomain);
         assertNotNull(page);
         assertEquals(1, page.getTotalPages());
         assertEquals(0, page.getNumber());
@@ -210,7 +203,7 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
     void getPage_empty() {
         // Pass an empty domain object for filter
         PurchaseOrderDomain emptyDomain = PurchaseOrderDomain.builder().build();
-        PageDomain<PurchaseOrderDomain> page = purchaseOrderDAO.getPage(0, 2, emptyDomain).block();
+        PageDomain<PurchaseOrderDomain> page = purchaseOrderDAO.getPage(0, 2, emptyDomain);
         assertNotNull(page);
         assertEquals(0, page.getTotalPages());
         assertEquals(0, page.getNumber());
@@ -223,15 +216,18 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
     @DisplayName("Create a PurchaseOrder and get PurchaseOrder by id to verify if it is returned")
     void getById_ok() {
         create_ok();
-        StepVerifier.create(purchaseOrderDAO.getById(purchaseOrder.getId()))
-                .expectNextCount(1)
-                .verifyComplete();
+        PurchaseOrderDomain result = purchaseOrderDAO.getById(purchaseOrder.getId());
+        assertNotNull(result);
     }
 
     @Test
     @DisplayName("Get non existing PurchaseOrder")
     void getById_notFound() {
-        StepVerifier.create(purchaseOrderDAO.getById(UUID.randomUUID()))
-                .verifyError(NotFound.class);
+        try {
+            purchaseOrderDAO.getById(UUID.randomUUID());
+            fail("Expected NotFound exception was not thrown");
+        } catch (NotFound e) {
+            // Expected exception
+        }
     }
 }

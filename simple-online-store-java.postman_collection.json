@@ -57,11 +57,6 @@
 									"key": "queryString",
 									"value": "Asus",
 									"disabled": true
-								},
-								{
-									"key": "deleted",
-									"value": "true",
-									"disabled": true
 								}
 							]
 						}
@@ -144,7 +139,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"productName\": \"Mother ASUS ROG STRIX B550-XE Gaming Wifi AM4\",\r\n    \"productDescription\": \"Mother ASUS ROG STRIX B550-XE Gaming Wifi AM4 \",\r\n    \"stock\": 2,\r\n    \"price\": 55.00,\r\n    \"smallImageUrl\": \"https://www.youtube.com/small.jpg\",\r\n    \"bigImageUrl\": \"https://www.youtube.com/small.jpg\",\r\n    \"categoryId\": \"7836a937-5467-4191-9d2c-b65bba26f64e\",\r\n    \"deleted\": true\r\n}",
+							"raw": "{\r\n    \"productName\": \"Mother ASUS ROG STRIX B550-XE Gaming Wifi AM4\",\r\n    \"productDescription\": \"Mother ASUS ROG STRIX B550-XE Gaming Wifi AM4 \",\r\n    \"stock\": 2,\r\n    \"price\": 55.00,\r\n    \"smallImageUrl\": \"https://www.youtube.com/small.jpg\",\r\n    \"bigImageUrl\": \"https://www.youtube.com/small.jpg\",\r\n    \"categoryId\": \"7836a937-5467-4191-9d2c-b65bba26f64e\"}",
 							"options": {
 								"raw": {
 									"language": "json"

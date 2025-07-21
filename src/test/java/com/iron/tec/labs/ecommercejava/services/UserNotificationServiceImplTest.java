@@ -8,16 +8,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class UserNotificationServiceImplTest {
@@ -54,8 +54,7 @@ class UserNotificationServiceImplTest {
         ArgumentCaptor<String> subjectCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<String> contentCaptor = ArgumentCaptor.forClass(String.class);
 
-        StepVerifier.create(userNotificationService.sendWelcomeEmail(user))
-                .verifyComplete();
+        userNotificationService.sendWelcomeEmail(user);
 
         verify(emailService).sendEmailInParallel(
                 emailCaptor.capture(),
@@ -90,8 +89,7 @@ class UserNotificationServiceImplTest {
         ArgumentCaptor<String> subjectCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<String> contentCaptor = ArgumentCaptor.forClass(String.class);
 
-        StepVerifier.create(userNotificationService.sendUserConfirmationEmail(user))
-                .verifyComplete();
+        userNotificationService.sendUserConfirmationEmail(user);
 
         verify(emailService).sendEmailInParallel(
                 emailCaptor.capture(),
@@ -120,8 +118,7 @@ class UserNotificationServiceImplTest {
 
         ArgumentCaptor<String> contentCaptor = ArgumentCaptor.forClass(String.class);
 
-        StepVerifier.create(userNotificationService.sendWelcomeEmail(user))
-                .verifyComplete();
+        userNotificationService.sendWelcomeEmail(user);
 
         verify(emailService).sendEmailInParallel(
                 eq("jane@example.com"),
@@ -146,8 +143,7 @@ class UserNotificationServiceImplTest {
 
         ArgumentCaptor<String> contentCaptor = ArgumentCaptor.forClass(String.class);
 
-        StepVerifier.create(userNotificationService.sendUserConfirmationEmail(user))
-                .verifyComplete();
+        userNotificationService.sendUserConfirmationEmail(user);
 
         verify(emailService).sendEmailInParallel(
                 eq("jane@example.com"),

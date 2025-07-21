@@ -1,15 +1,28 @@
 package com.iron.tec.labs.ecommercejava.mappers.product;
 
-import com.iron.tec.labs.ecommercejava.db.entities.ProductView;
-import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+
+import com.iron.tec.labs.ecommercejava.db.entities.ProductView;
+import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
+import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 
 @Component
 public class ProductViewToProductDomain implements Converter<ProductView, ProductDomain> {
     @Override
     public ProductDomain convert(@NonNull ProductView source) {
+        CategoryDomain categoryDomain = null;
+        if (source.getIdCategory() != null) {
+            categoryDomain = CategoryDomain.builder()
+                    .id(source.getIdCategory())
+                    .name(source.getCategoryName())
+                    .description(source.getCategoryDescription())
+                    .createdAt(source.getCategoryCreatedAt())
+                    .updatedAt(source.getCategoryUpdatedAt())
+                    .build();
+        }
+
         return ProductDomain.builder()
                 .id(source.getId())
                 .name(source.getProductName())
@@ -18,11 +31,7 @@ public class ProductViewToProductDomain implements Converter<ProductView, Produc
                 .price(source.getPrice())
                 .smallImageUrl(source.getSmallImageUrl())
                 .bigImageUrl(source.getBigImageUrl())
-                .idCategory(source.getIdCategory())
-                .categoryName(source.getCategoryName())
-                .categoryDescription(source.getCategoryDescription())
-                .categoryCreatedAt(source.getCategoryCreatedAt())
-                .deleted(source.getDeleted())
+                .category(categoryDomain)
                 .createdAt(source.getProductCreatedAt())
                 .build();
     }

@@ -13,8 +13,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -51,16 +49,18 @@ class PurchaseOrderServiceImplTest {
             .description("Laptop 16gb RAM 500gb SDD CPU 8 cores")
             .smallImageUrl("https://github.com/1.jpg")
             .bigImageUrl("https://github.com/2.jpg")
-            .idCategory(UUID.randomUUID())
+            .category(CategoryDomain.builder()
+                    .id(UUID.randomUUID())
+                    .build())
             .build();
     PurchaseOrderLineDomain purchaseOrderLine = PurchaseOrderLineDomain.builder()
             .id(UUID.randomUUID())
-            .idProduct(product.getId())
+            .product(product)
             .quantity(10)
             .build();
     PurchaseOrderDomain purchaseOrder = PurchaseOrderDomain.builder()
             .id(UUID.randomUUID())
-            .idUser(appUser.getId())
+            .user(appUser)
             .line(purchaseOrderLine)
             .status("PENDING")
             .total(BigDecimal.valueOf(1000))
@@ -69,12 +69,12 @@ class PurchaseOrderServiceImplTest {
     @Test
     @DisplayName("Should create a purchase order successfully")
     void createPurchaseOrderTest() {
-        when(stockValidator.validateStock(any())).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+        when(stockValidator.validateStock(any())).thenReturn(purchaseOrder);
 
         ArgumentCaptor<PurchaseOrderDomain> argumentCaptor = ArgumentCaptor.forClass(PurchaseOrderDomain.class);
-        when(purchaseOrderDAO.create(argumentCaptor.capture())).thenReturn(Mono.just(purchaseOrder));
+        when(purchaseOrderDAO.create(argumentCaptor.capture())).thenReturn(purchaseOrder);
 
-        PurchaseOrderDomain createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrder).block();
+        PurchaseOrderDomain createdPurchaseOrder = purchaseOrderService.createPurchaseOrder(purchaseOrder);
 
         assertNotNull(createdPurchaseOrder);
         assertEquals(purchaseOrder.getId(), createdPurchaseOrder.getId());
@@ -86,14 +86,15 @@ class PurchaseOrderServiceImplTest {
     @DisplayName("Should throw BadRequest when stock is insufficient")
     void createPurchaseOrderInsufficientStockTest() {
 
-        when(stockValidator.validateStock(any())).thenAnswer(invocation -> Mono.error(new BadRequest("Stock is not enough")));
+        when(stockValidator.validateStock(any())).thenThrow(new BadRequest("Stock is not enough"));
 
-        StepVerifier.create(purchaseOrderService.createPurchaseOrder(purchaseOrder))
-                .verifyErrorMatches(x -> {
-                    assertInstanceOf(BadRequest.class, x);
-                    assertEquals("Stock is not enough", x.getMessage());
-                    return true;
-                });
+        try {
+            purchaseOrderService.createPurchaseOrder(purchaseOrder);
+            fail("Expected BadRequest exception was not thrown");
+        } catch (BadRequest e) {
+            assertInstanceOf(BadRequest.class, e);
+            assertEquals("Stock is not enough", e.getMessage());
+        }
 
     }
 
@@ -103,12 +104,12 @@ class PurchaseOrderServiceImplTest {
         UUID id = UUID.randomUUID();
         PurchaseOrderLineDomain patchOrderLine = PurchaseOrderLineDomain.builder()
                 .id(UUID.randomUUID())
-                .idProduct(product.getId())
+                .product(product)
                 .quantity(100)
                 .build();
         PurchaseOrderDomain patchOrder = PurchaseOrderDomain.builder()
                 .id(UUID.randomUUID())
-                .idUser(appUser.getId())
+                .user(appUser)
                 .line(patchOrderLine)
                 .status("PENDING")
                 .total(BigDecimal.valueOf(100000))
@@ -116,9 +117,9 @@ class PurchaseOrderServiceImplTest {
         PurchaseOrderPatchDTO purchaseOrderDTO = new PurchaseOrderPatchDTO();
         purchaseOrderDTO.setStatus(PurchaseOrderStatus.DELIVERED);
         ArgumentCaptor<PurchaseOrderDomain> argumentCaptor = ArgumentCaptor.forClass(PurchaseOrderDomain.class);
-        when(purchaseOrderDAO.update(argumentCaptor.capture())).thenReturn(Mono.just(patchOrder));
-        when(purchaseOrderDAO.getById(id)).thenReturn(Mono.just(patchOrder));
-        purchaseOrderService.patchPurchaseOrder(id.toString(), PurchaseOrderDomain.builder().status(purchaseOrderDTO.getStatus().name()).build()).block();
+        when(purchaseOrderDAO.update(argumentCaptor.capture())).thenReturn(patchOrder);
+        when(purchaseOrderDAO.getById(id)).thenReturn(patchOrder);
+        purchaseOrderService.patchPurchaseOrder(id.toString(), PurchaseOrderDomain.builder().status(purchaseOrderDTO.getStatus().name()).build());
 
         assertEquals(patchOrder, argumentCaptor.getValue());
         verify(purchaseOrderDAO, times(1)).update(any(PurchaseOrderDomain.class));
@@ -133,10 +134,10 @@ class PurchaseOrderServiceImplTest {
                 .totalElements(2)
                 .number(0)
                 .build();
-        when(purchaseOrderDAO.getPage(eq(0), eq(1), any())).thenReturn(Mono.just(pageDomain));
+        when(purchaseOrderDAO.getPage(eq(0), eq(1), any())).thenReturn(pageDomain);
 
         PageRequestDTO pageRequest = PageRequestDTO.builder().page(0).size(1).build();
-        PageDomain<PurchaseOrderDomain> page = purchaseOrderService.getPurchaseOrderPage(pageRequest).block();
+        PageDomain<PurchaseOrderDomain> page = purchaseOrderService.getPurchaseOrderPage(pageRequest);
 
         assertNotNull(page);
         assertEquals(2, page.getTotalPages().intValue());
@@ -149,11 +150,10 @@ class PurchaseOrderServiceImplTest {
     @Test
     @DisplayName("Should return a purchase order by its ID")
     void testGetById() {
-        when(purchaseOrderDAO.getById(any(UUID.class))).thenReturn(Mono.just(purchaseOrder));
+        when(purchaseOrderDAO.getById(any(UUID.class))).thenReturn(purchaseOrder);
 
-        StepVerifier.create(purchaseOrderService.getById(UUID.randomUUID()))
-                .expectNext(purchaseOrder)
-                .verifyComplete();
+        PurchaseOrderDomain result = purchaseOrderService.getById(UUID.randomUUID());
+        assertEquals(purchaseOrder, result);
 
     }
 }

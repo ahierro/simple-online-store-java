@@ -1,12 +1,14 @@
 package com.iron.tec.labs.ecommercejava.db.entities;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.relational.core.mapping.Table;
 
-@Table("CATEGORY")
+@Entity
+@Table(name = "CATEGORY")
 @Data
 @SuperBuilder
 @NoArgsConstructor
@@ -15,6 +17,5 @@ public class Category extends AuditableEntity {
 
     private String name;
     private String description;
-    private Boolean deleted;
 
 }

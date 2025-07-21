@@ -21,10 +21,7 @@ public class ProductDomain {
     private BigDecimal price;
     private String smallImageUrl;
     private String bigImageUrl;
-    private UUID idCategory;
-    private String categoryName;
-    private String categoryDescription;
-    private LocalDateTime categoryCreatedAt;
-    private Boolean deleted;
+    private CategoryDomain category;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

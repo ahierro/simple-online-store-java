@@ -10,7 +10,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -53,8 +54,7 @@ class EmailServiceImplTest {
     @Test
     @DisplayName("Should send email in parallel and return result")
     void sendEmailInParallel() {
-        var result = emailService.sendEmailInParallel("test@gmail.com", "Email Confirmation",
+        emailService.sendEmailInParallel("test@gmail.com", "Email Confirmation",
                 "Confirm on the following link");
-        assertNotNull(result);
     }
 }

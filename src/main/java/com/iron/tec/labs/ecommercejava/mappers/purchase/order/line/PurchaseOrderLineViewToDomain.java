@@ -1,6 +1,9 @@
 package com.iron.tec.labs.ecommercejava.mappers.purchase.order.line;
 
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderLineView;
+import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
+import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
+import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
@@ -12,15 +15,21 @@ public class PurchaseOrderLineViewToDomain implements Converter<PurchaseOrderLin
     public PurchaseOrderLineDomain convert(@NonNull PurchaseOrderLineView source) {
         return PurchaseOrderLineDomain.builder()
                 .id(source.getId())
-                .idPurchaseOrder(source.getIdPurchaseOrder())
-                .idProduct(source.getIdProduct())
+                .purchaseOrder(PurchaseOrderDomain.builder()
+                        .id(source.getIdPurchaseOrder())
+                        .build())
+                .product(ProductDomain.builder()
+                        .id(source.getIdProduct())
+                        .name(source.getProductName())
+                        .stock(source.getStock())
+                        .price(source.getPrice())
+                        .bigImageUrl(source.getBigImageUrl())
+                        .smallImageUrl(source.getSmallImageUrl())
+                        .category(CategoryDomain.builder()
+                                .name(source.getCategoryName())
+                                .build())
+                        .build())
                 .quantity(source.getQuantity())
-                .productName(source.getProductName())
-                .stock(source.getStock())
-                .price(source.getPrice())
-                .bigImageUrl(source.getBigImageUrl())
-                .smallImageUrl(source.getSmallImageUrl())
-                .categoryName(source.getCategoryName())
                 .build();
     }
 }
