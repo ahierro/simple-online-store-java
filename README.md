@@ -65,6 +65,9 @@ DOCKER_COMPOSE_ENABLED=false
 
 # Application Configuration
 APP_BASE_URL=http://localhost:8080
+
+LIQUIBASE_ENABLED=false
+LIQUIBASE_PATH=classpath:/db/changelog/changelog.sql
 ```
 
 #### Environment Variables Explained
@@ -105,6 +108,10 @@ APP_BASE_URL=http://localhost:8080
 
 **Application Configuration:**
 - `APP_BASE_URL`: Base URL of the application for generating links
+
+**Liquibase Configuration:**
+- `LIQUIBASE_ENABLED`: This setting activates Liquibase, causing Spring Boot to automatically run Liquibase migrations when the application starts.
+- `LIQUIBASE_PATH`: The location of the Liquibase master changelog file
 
 Note: The `.env` file is ignored by Git to keep sensitive information out of version control.
 
