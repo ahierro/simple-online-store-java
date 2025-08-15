@@ -91,7 +91,10 @@ public class PurchaseOrderController {
                                                           Authentication authentication) {
         PurchaseOrderDomain domain = conversionService.convert(purchaseOrderCreationDTO, PurchaseOrderDomain.class);
         if (domain != null && authentication != null) {
-            domain.setIdUser(UUID.fromString(authentication.getName()));
+            AppUserDomain user = AppUserDomain.builder()
+                    .id(UUID.fromString(authentication.getName()))
+                    .build();
+            domain.setUser(user);
         }
         return Mono.empty()
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before creating purchaseOrder")))

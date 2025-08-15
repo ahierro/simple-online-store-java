@@ -37,11 +37,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Mono<PageDomain<ProductDomain>> getProductPage(int page, int size, ProductDomain example, Authentication authentication, Sort.Direction  sortBy) {
-        if(BooleanUtils.isTrue(example.getDeleted())
-                && (authentication==null ||
-                authentication.getAuthorities().stream().noneMatch(x -> x.getAuthority().equals("SCOPE_ROLE_ADMIN")))){
-            throw new NotAuthorized();
-        }
         return productDAO.getProductViewPage(page, size, example, sortBy);
     }
 

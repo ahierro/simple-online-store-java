@@ -37,6 +37,8 @@ public class ProductView {
     private LocalDateTime productCreatedAt;
     @EqualsAndHashCode.Exclude
     private LocalDateTime categoryCreatedAt;
-    private Boolean deleted;
-
+    @EqualsAndHashCode.Exclude
+    private LocalDateTime productUpdatedAt;
+    @EqualsAndHashCode.Exclude
+    private LocalDateTime categoryUpdatedAt;
 }

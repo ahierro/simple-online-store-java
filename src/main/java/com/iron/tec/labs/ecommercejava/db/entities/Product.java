@@ -25,7 +25,6 @@ public class Product extends AuditableEntity {
     private BigDecimal price;
     private String smallImageUrl;
     private String bigImageUrl;
-    private Boolean deleted;
 
     @EqualsAndHashCode.Include
     private BigDecimal priceWithoutTrailingZeros() {

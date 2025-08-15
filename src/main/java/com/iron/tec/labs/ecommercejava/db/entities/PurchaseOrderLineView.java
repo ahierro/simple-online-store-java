@@ -36,7 +36,6 @@ public class PurchaseOrderLineView {
     private LocalDateTime productCreatedAt;
     @EqualsAndHashCode.Exclude
     private LocalDateTime categoryCreatedAt;
-    private Boolean deleted;
 
     @EqualsAndHashCode.Include
     private BigDecimal priceWithoutTrailingZeros() {

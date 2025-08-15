@@ -5,6 +5,7 @@ import com.iron.tec.labs.ecommercejava.db.entities.Category;
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
 import com.iron.tec.labs.ecommercejava.db.repository.CategoryRepository;
 import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
+import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.MessageService;
@@ -93,8 +94,7 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
                 .price(product.getPrice())
                 .smallImageUrl(product.getSmallImageUrl())
                 .bigImageUrl(product.getBigImageUrl())
-                .idCategory(product.getIdCategory())
-                .deleted(product.getDeleted())
+                .category(CategoryDomain.builder().id(product.getIdCategory()).build())
                 .createdAt(product.getCreatedAt())
                 .build();
     }
@@ -129,7 +129,6 @@ class ProductDAOImplTest extends PostgresIntegrationSetup {
         product.setDescription("Description updated");
         product.setBigImageUrl("https://google.com/1.jpg");
         product.setSmallImageUrl("https://google.com/2.jpg");
-        product.setDeleted(false);
         assert product.getId() != null;
         StepVerifier.create(productDAO.update(toDomain(product))
                         .then(productRepository.findById(product.getId())))

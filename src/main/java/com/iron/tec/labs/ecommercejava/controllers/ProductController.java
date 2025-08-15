@@ -1,5 +1,6 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
+import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
 import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import com.iron.tec.labs.ecommercejava.dto.*;
 import com.iron.tec.labs.ecommercejava.services.ProductService;
@@ -51,9 +52,9 @@ public class ProductController {
                 .doOnEach(LoggingUtils.logOnComplete(x -> log.info("Before products obtained")))
                 .then(productService.getProductPage(pageRequest.getPage(), pageRequest.getSize(),
                                 ProductDomain.builder()
-                                        .idCategory((pageRequest.getCategoryId() == null) ? null : UUID.fromString(pageRequest.getCategoryId()))
-                                        .description(pageRequest.getQueryString())
-                                        .deleted(pageRequest.getDeleted()).build(), authentication,pageRequest.getSortByPrice())
+                                        .category(CategoryDomain.builder().id((pageRequest.getCategoryId() == null) ? null :
+                                                UUID.fromString(pageRequest.getCategoryId())).build())
+                                        .description(pageRequest.getQueryString()).build(), authentication,pageRequest.getSortByPrice())
                         .mapNotNull(page ->
                                 new PageResponseDTO<>(
                                         page.getContent().stream()

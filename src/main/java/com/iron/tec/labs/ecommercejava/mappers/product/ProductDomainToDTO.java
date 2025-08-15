@@ -11,6 +11,17 @@ import org.springframework.stereotype.Component;
 public class ProductDomainToDTO implements Converter<ProductDomain, ProductDTO> {
     @Override
     public ProductDTO convert(@NonNull ProductDomain source) {
+        CategoryDTO categoryDTO = null;
+        if (source.getCategory() != null) {
+            categoryDTO = CategoryDTO.builder()
+                    .id(source.getCategory().getId() != null ? source.getCategory().getId().toString() : null)
+                    .name(source.getCategory().getName())
+                    .description(source.getCategory().getDescription())
+                    .createdAt(source.getCategory().getCreatedAt())
+                    .updatedAt(source.getCategory().getUpdatedAt())
+                    .build();
+        }
+
         return ProductDTO.builder()
                 .productId(source.getId() != null ? source.getId().toString() : null)
                 .productName(source.getName())
@@ -19,14 +30,9 @@ public class ProductDomainToDTO implements Converter<ProductDomain, ProductDTO> 
                 .price(source.getPrice())
                 .smallImageUrl(source.getSmallImageUrl())
                 .bigImageUrl(source.getBigImageUrl())
-                .category(CategoryDTO.builder()
-                        .id(source.getIdCategory() != null ? source.getIdCategory().toString() : null)
-                        .name(source.getCategoryName())
-                        .description(source.getCategoryDescription())
-                        .createdAt(source.getCategoryCreatedAt())
-                        .build())
-                .deleted(source.getDeleted() != null ? source.getDeleted() : false)
+                .category(categoryDTO)
                 .createdAt(source.getCreatedAt())
+                .updatedAt(source.getUpdatedAt())
                 .build();
     }
 }

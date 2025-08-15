@@ -13,11 +13,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class PurchaseOrderDomain {
     private UUID id;
-    private UUID idUser;
+    private AppUserDomain user;
     @Singular
     private List<PurchaseOrderLineDomain> lines;
     private BigDecimal total;
     private String status;
     private LocalDateTime createdAt;
-    private AppUserDomain user;
 }

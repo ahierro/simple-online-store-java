@@ -2,6 +2,7 @@ package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
 import com.iron.tec.labs.ecommercejava.db.repository.ProductRepository;
+import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
 import com.iron.tec.labs.ecommercejava.exceptions.BadRequest;
@@ -38,8 +39,8 @@ class StockValidatorImplTest {
                         Product.builder().id(idProduct2).stock(2).build())));
 
         PurchaseOrderDomain purchaseOrder = PurchaseOrderDomain.builder()
-                .line(PurchaseOrderLineDomain.builder().idProduct(idProduct1).quantity(1).build())
-                .line(PurchaseOrderLineDomain.builder().idProduct(idProduct2).quantity(5).build())
+                .line(PurchaseOrderLineDomain.builder().product(ProductDomain.builder().id(idProduct1).build()).quantity(1).build())
+                .line(PurchaseOrderLineDomain.builder().product(ProductDomain.builder().id(idProduct2).build()).quantity(5).build())
                 .build();
 
         StepVerifier.create(stockValidatorImpl.validateStock(purchaseOrder))
@@ -59,8 +60,8 @@ class StockValidatorImplTest {
                         Product.builder().id(idProduct2).stock(20).build())));
 
         PurchaseOrderDomain purchaseOrder = PurchaseOrderDomain.builder()
-                .line(PurchaseOrderLineDomain.builder().idProduct(idProduct1).quantity(1).build())
-                .line(PurchaseOrderLineDomain.builder().idProduct(idProduct2).quantity(5).build())
+                .line(PurchaseOrderLineDomain.builder().product(ProductDomain.builder().id(idProduct1).build()).quantity(1).build())
+                .line(PurchaseOrderLineDomain.builder().product(ProductDomain.builder().id(idProduct2).build()).quantity(5).build())
                 .build();
 
         StepVerifier.create(stockValidatorImpl.validateStock(purchaseOrder))

@@ -1,14 +1,14 @@
 -- Create test categories
-INSERT INTO public.category (ID, NAME, DESCRIPTION, created_at, deleted)
-VALUES ('345e0ef3-b8da-4a7e-ab5d-6636d63614b1', 'Hardware', 'Computer Hardware', CURRENT_TIMESTAMP, false);
+INSERT INTO public.category (ID, NAME, DESCRIPTION, created_at)
+VALUES ('345e0ef3-b8da-4a7e-ab5d-6636d63614b1', 'Hardware', 'Computer Hardware', CURRENT_TIMESTAMP);
 
 -- Create test products
 INSERT INTO public.product (ID, NAME, DESCRIPTION, PRICE, STOCK, id_category, small_image_url, big_image_url,
-                            created_at, deleted)
+                            created_at)
 VALUES ('4ebeb473-435b-428c-aa4a-914ae472bc45', 'Keyboard', 'Mechanical Keyboard', 89.99, 10,
-        '345e0ef3-b8da-4a7e-ab5d-6636d63614b1', 'keyboard_small.jpg', 'keyboard_big.jpg', CURRENT_TIMESTAMP, false),
+        '345e0ef3-b8da-4a7e-ab5d-6636d63614b1', 'keyboard_small.jpg', 'keyboard_big.jpg', CURRENT_TIMESTAMP),
        ('7486f916-1008-4611-98ef-746fe08197c6', 'Mouse', 'Gaming Mouse', 59.99, 15,
-        '345e0ef3-b8da-4a7e-ab5d-6636d63614b1', 'mouse_small.jpg', 'mouse_big.jpg', CURRENT_TIMESTAMP, false);
+        '345e0ef3-b8da-4a7e-ab5d-6636d63614b1', 'mouse_small.jpg', 'mouse_big.jpg', CURRENT_TIMESTAMP);
 
 -- Create test users
 INSERT INTO public.users (ID, EMAIL, USERNAME, PASSWORD, FIRST_NAME, LAST_NAME, active, locked, authorities, created_at)

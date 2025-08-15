@@ -48,17 +48,16 @@ public class PurchaseOrderEntityToDomain implements Converter<PurchaseOrder, Pur
             }
         }
         AppUserDomain user = null;
-        if (source.getUser() != null) {
-            user = appUserEntityToDomain.convert(source.getUser());
+        if (source.getIdUser() != null) {
+            user = AppUserDomain.builder().id(source.getIdUser()).build();
         }
         return PurchaseOrderDomain.builder()
                 .id(source.getId())
-                .idUser(source.getIdUser())
+                .user(user)
                 .lines(lines)
                 .total(source.getTotal())
                 .status(source.getStatus())
                 .createdAt(source.getCreatedAt())
-                .user(user)
                 .build();
     }
 }

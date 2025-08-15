@@ -1,5 +1,6 @@
 package com.iron.tec.labs.ecommercejava.mappers.product;
 
+import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
 import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import com.iron.tec.labs.ecommercejava.dto.ProductUpdateDTO;
 import org.springframework.core.convert.converter.Converter;
@@ -19,8 +20,15 @@ public class ProductUpdateDTOToDomain implements Converter<ProductUpdateDTO, Pro
         productDomain.setPrice(source.getPrice());
         productDomain.setSmallImageUrl(source.getSmallImageUrl());
         productDomain.setBigImageUrl(source.getBigImageUrl());
-        productDomain.setDeleted(source.getDeleted() != null ? source.getDeleted() : false);
-        productDomain.setIdCategory(UUID.fromString(source.getCategoryId()));
+
+        // Set category if categoryId is provided
+        if (source.getCategoryId() != null) {
+            CategoryDomain categoryDomain = CategoryDomain.builder()
+                    .id(UUID.fromString(source.getCategoryId()))
+                    .build();
+            productDomain.setCategory(categoryDomain);
+        }
+        
         return productDomain;
     }
 }

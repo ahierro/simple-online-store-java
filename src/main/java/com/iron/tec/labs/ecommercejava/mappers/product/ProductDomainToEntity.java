@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProductDomainToEntity implements Converter<ProductDomain, Product> {
+    
     @Override
     public Product convert(@NonNull ProductDomain source) {
         Product product = new Product();
@@ -18,9 +19,13 @@ public class ProductDomainToEntity implements Converter<ProductDomain, Product> 
         product.setPrice(source.getPrice());
         product.setSmallImageUrl(source.getSmallImageUrl());
         product.setBigImageUrl(source.getBigImageUrl());
-        product.setIdCategory(source.getIdCategory());
-        product.setDeleted(source.getDeleted());
         product.setCreatedAt(source.getCreatedAt());
+        product.setUpdatedAt(source.getUpdatedAt());
+        
+        if (source.getCategory() != null && source.getCategory().getId() != null) {
+            product.setIdCategory(source.getCategory().getId());
+        }
+        
         return product;
     }
 }

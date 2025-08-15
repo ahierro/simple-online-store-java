@@ -1,10 +1,11 @@
 package com.iron.tec.labs.ecommercejava.mappers.category;
 
-import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
-import com.iron.tec.labs.ecommercejava.dto.CategoryDTO;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+
+import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
+import com.iron.tec.labs.ecommercejava.dto.CategoryDTO;
 
 @Component
 public class CategoryDomainToDTO implements Converter<CategoryDomain, CategoryDTO> {
@@ -16,6 +17,7 @@ public class CategoryDomainToDTO implements Converter<CategoryDomain, CategoryDT
                 .name(source.getName())
                 .description(source.getDescription())
                 .createdAt(source.getCreatedAt())
+                .updatedAt(source.getUpdatedAt())
                 .build();
     }
 }

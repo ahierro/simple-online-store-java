@@ -120,10 +120,11 @@ class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
                 .idCategory(category.getId())
                 .build();
 
+        UUID idPurchaseOrder = UUID.randomUUID();
         purchaseOrder = PurchaseOrder.builder()
-                .id(UUID.randomUUID())
+                .id(idPurchaseOrder)
                 .idUser(appUser.getId())
-                .line(PurchaseOrderLine.builder().idProduct(product.getId()).quantity(10).build())
+                .line(PurchaseOrderLine.builder().idPurchaseOrder(idPurchaseOrder).idProduct(product.getId()).quantity(10).build())
                 .status("PENDING")
                 .total(BigDecimal.valueOf(100000))
                 .build();

@@ -16,7 +16,6 @@ public class CategoryUpdateDTOToDomain implements Converter<CategoryUpdateDTO, C
         // ID and createdAt are intentionally not set as they should be preserved from the existing entity
         categoryDomain.setName(source.getName());
         categoryDomain.setDescription(source.getDescription());
-        categoryDomain.setDeleted(source.getDeleted() != null ? source.getDeleted() : false);
 
         return categoryDomain;
     }

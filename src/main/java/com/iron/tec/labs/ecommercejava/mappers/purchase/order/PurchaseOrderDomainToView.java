@@ -12,7 +12,7 @@ public class PurchaseOrderDomainToView implements Converter<PurchaseOrderDomain,
     public PurchaseOrderView convert(@NonNull PurchaseOrderDomain source) {
         return PurchaseOrderView.builder()
                 .id(source.getId())
-                .idUser(source.getIdUser())
+                .idUser(source.getUser() != null ? source.getUser().getId() : null)
                 .total(source.getTotal())
                 .status(source.getStatus())
                 .createdAt(source.getCreatedAt())

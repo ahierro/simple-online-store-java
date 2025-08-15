@@ -18,9 +18,9 @@ public class StockValidatorImpl implements StockValidator {
     @Override
     public Mono<PurchaseOrderDomain> validateStock(PurchaseOrderDomain purchaseOrder) {
 
-        return productRepository.findByIdIn(purchaseOrder.getLines().stream().map(PurchaseOrderLineDomain::getIdProduct).toList()).collectList()
+        return productRepository.findByIdIn(purchaseOrder.getLines().stream().map(x -> x.getProduct().getId()).toList()).collectList()
                 .map(products -> products.stream().allMatch(product -> {
-                    var line = purchaseOrder.getLines().stream().filter(x -> x.getIdProduct().equals(product.getId())).findFirst().orElse(null);
+                    var line = purchaseOrder.getLines().stream().filter(x -> x.getProduct().getId().equals(product.getId())).findFirst().orElse(null);
                     if (line == null) return false;
                     return product.getStock() >= line.getQuantity();
                 })).handle((valid, sink) -> {

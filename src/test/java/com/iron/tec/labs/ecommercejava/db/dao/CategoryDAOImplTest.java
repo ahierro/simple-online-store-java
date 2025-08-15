@@ -91,7 +91,6 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
         assert exampleCategory.getId() != null;
         exampleCategory.setName("Motherboard");
         exampleCategory.setDescription("Description updated");
-        exampleCategory.setDeleted(false);
         assert exampleCategory.getId() != null;
         StepVerifier.create(categoryDAO.update(exampleCategory)
                         .then(categoryRepository.findById(exampleCategory.getId())))
@@ -102,8 +101,7 @@ class CategoryDAOImplTest extends PostgresIntegrationSetup {
     boolean isEquals(CategoryDomain categoryDomain, Category category){
         return categoryDomain.getId().equals(category.getId())
                 && categoryDomain.getName().equals(category.getName())
-                && categoryDomain.getDescription().equals(category.getDescription())
-                && categoryDomain.getDeleted().equals(category.getDeleted());
+                && categoryDomain.getDescription().equals(category.getDescription());
     }
 
     @Test
