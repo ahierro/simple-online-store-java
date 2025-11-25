@@ -6,12 +6,12 @@ import com.iron.tec.labs.ecommercejava.dto.PurchaseOrderLineDTO;
 import com.iron.tec.labs.ecommercejava.mappers.product.ProductDomainToDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class PurchaseOrderLineDomainToDTO implements Converter<PurchaseOrderLineDomain, PurchaseOrderLineDTO> {
+public class PurchaseOrderLineDomainToDTO implements Converter<@NonNull PurchaseOrderLineDomain,@NonNull PurchaseOrderLineDTO> {
     
     private final ProductDomainToDTO productDomainToDTO;
     

@@ -1,14 +1,14 @@
 package com.iron.tec.labs.ecommercejava.mappers.category;
 
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import com.iron.tec.labs.ecommercejava.db.entities.Category;
 import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
 
 @Component
-public class CategoryDomainToEntity implements Converter<CategoryDomain, Category> {
+public class CategoryDomainToEntity implements Converter<@NonNull CategoryDomain,@NonNull Category> {
 
     @Override
     public Category convert(@NonNull CategoryDomain source) {

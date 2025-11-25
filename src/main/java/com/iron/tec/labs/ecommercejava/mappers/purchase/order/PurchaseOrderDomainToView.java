@@ -3,11 +3,11 @@ package com.iron.tec.labs.ecommercejava.mappers.purchase.order;
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderView;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PurchaseOrderDomainToView implements Converter<PurchaseOrderDomain, PurchaseOrderView> {
+public class PurchaseOrderDomainToView implements Converter<@NonNull PurchaseOrderDomain,@NonNull PurchaseOrderView> {
     @Override
     public PurchaseOrderView convert(@NonNull PurchaseOrderDomain source) {
         return PurchaseOrderView.builder()

@@ -6,11 +6,11 @@ import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PurchaseOrderLineViewToDomain implements Converter<PurchaseOrderLineView, PurchaseOrderLineDomain> {
+public class PurchaseOrderLineViewToDomain implements Converter<@NonNull PurchaseOrderLineView,@NonNull PurchaseOrderLineDomain> {
     @Override
     public PurchaseOrderLineDomain convert(@NonNull PurchaseOrderLineView source) {
         return PurchaseOrderLineDomain.builder()

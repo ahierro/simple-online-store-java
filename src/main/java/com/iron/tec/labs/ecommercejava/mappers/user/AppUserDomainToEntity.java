@@ -3,11 +3,11 @@ package com.iron.tec.labs.ecommercejava.mappers.user;
 import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
 import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AppUserDomainToEntity implements Converter<AppUserDomain, AppUser> {
+public class AppUserDomainToEntity implements Converter<@NonNull AppUserDomain,@NonNull AppUser> {
     @Override
     public AppUser convert(@NonNull AppUserDomain source) {
         return AppUser.builder()

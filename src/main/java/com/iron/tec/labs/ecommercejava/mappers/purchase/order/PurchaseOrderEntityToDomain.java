@@ -10,14 +10,14 @@ import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrder
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineViewToDomain;
 import com.iron.tec.labs.ecommercejava.mappers.user.AppUserEntityToDomain;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class PurchaseOrderEntityToDomain implements Converter<PurchaseOrder, PurchaseOrderDomain> {
+public class PurchaseOrderEntityToDomain implements Converter<@NonNull PurchaseOrder,@NonNull PurchaseOrderDomain> {
 
     private final PurchaseOrderLineEntityToDomain purchaseOrderLineEntityToDomain;
     private final PurchaseOrderLineViewToDomain purchaseOrderLineViewToDomain;

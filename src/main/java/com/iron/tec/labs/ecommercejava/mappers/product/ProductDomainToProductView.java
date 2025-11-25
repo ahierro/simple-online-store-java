@@ -3,11 +3,11 @@ package com.iron.tec.labs.ecommercejava.mappers.product;
 import com.iron.tec.labs.ecommercejava.db.entities.ProductView;
 import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductDomainToProductView implements Converter<ProductDomain, ProductView> {
+public class ProductDomainToProductView implements Converter<@NonNull ProductDomain,@NonNull ProductView> {
     @Override
     public ProductView convert(@NonNull ProductDomain source) {
         return ProductView.builder()

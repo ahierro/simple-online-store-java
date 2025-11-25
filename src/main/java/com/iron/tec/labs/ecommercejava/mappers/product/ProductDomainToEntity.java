@@ -6,11 +6,11 @@ import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductDomainToEntity implements Converter<ProductDomain, Product> {
+public class ProductDomainToEntity implements Converter<@NonNull ProductDomain,@NonNull Product> {
     
     @PersistenceContext
     private EntityManager entityManager;

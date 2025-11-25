@@ -3,11 +3,11 @@ package com.iron.tec.labs.ecommercejava.mappers.category;
 import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
 import com.iron.tec.labs.ecommercejava.dto.CategoryUpdateDTO;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CategoryUpdateDTOToDomain implements Converter<CategoryUpdateDTO, CategoryDomain> {
+public class CategoryUpdateDTOToDomain implements Converter<@NonNull CategoryUpdateDTO,@NonNull CategoryDomain> {
 
     @Override
     public CategoryDomain convert(@NonNull CategoryUpdateDTO source) {

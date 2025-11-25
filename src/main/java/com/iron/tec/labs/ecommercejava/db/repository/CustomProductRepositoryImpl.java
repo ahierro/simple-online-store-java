@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,13 +51,13 @@ public class CustomProductRepositoryImpl implements CustomProductRepository{
                     .productDescription((String) result[4])
                     .bigImageUrl((String) result[5])
                     .smallImageUrl((String) result[6])
-                    .updatedAt(result[12] != null ? ((Timestamp) result[12]).toLocalDateTime() : null)
-                    .createdAt(result[11] != null ? ((Timestamp) result[11]).toLocalDateTime() : null)
+                    .updatedAt(result[12] != null ? ((LocalDateTime) result[12]): null)
+                    .createdAt(result[11] != null ? ((LocalDateTime) result[11]) : null)
                     .category(CategoryDTO.builder()
                             .name((String) result[7])
                             .description((String) result[8])
-                            .createdAt(result[9] != null ? ((Timestamp) result[9]).toLocalDateTime() : null)
-                            .updatedAt(result[13] != null ? ((Timestamp) result[13]).toLocalDateTime() : null)
+                            .createdAt(result[9] != null ? ((LocalDateTime) result[9]) : null)
+                            .updatedAt(result[13] != null ? ((LocalDateTime) result[13]) : null)
                             .id((result[10]).toString())
                             .build())
                     .build());

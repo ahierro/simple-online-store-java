@@ -4,9 +4,9 @@ import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,6 +16,7 @@ import org.testcontainers.junit.jupiter.Container;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -38,9 +39,8 @@ class ProductControllerGetTest extends PostgresIntegrationSetup {
 
     @Test
     @DisplayName("Should return product by id for user role")
-    @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void getProductByIdUser() throws Exception {
-        mockMvc.perform(get("/api/product/a8f01033-6f92-4ef5-9437-7d54738c9b1a"))
+        mockMvc.perform(get("/api/product/a8f01033-6f92-4ef5-9437-7d54738c9b1a").with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ROLE_USER"))))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
@@ -58,9 +58,8 @@ class ProductControllerGetTest extends PostgresIntegrationSetup {
 
     @Test
     @DisplayName("Should return product by id for admin role")
-    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void getProductByIdAdmin() throws Exception {
-        mockMvc.perform(get("/api/product/a8f01033-6f92-4ef5-9437-7d54738c9b1a"))
+        mockMvc.perform(get("/api/product/a8f01033-6f92-4ef5-9437-7d54738c9b1a").with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ROLE_ADMIN"))))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
@@ -78,17 +77,15 @@ class ProductControllerGetTest extends PostgresIntegrationSetup {
 
     @Test
     @DisplayName("Should return not found for non-existent product id")
-    @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void getProductByIdNotFound() throws Exception {
-        mockMvc.perform(get("/api/product/992968f5-42db-4284-bd86-1181f0890320"))
+        mockMvc.perform(get("/api/product/992968f5-42db-4284-bd86-1181f0890320").with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ROLE_USER"))))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @DisplayName("Should return paged products for user role")
-    @WithMockUser(authorities = "SCOPE_ROLE_USER")
     void getProductPageUser() throws Exception {
-        mockMvc.perform(get("/api/product/page?page=0&size=1"))
+        mockMvc.perform(get("/api/product/page?page=0&size=1").with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ROLE_USER"))))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
@@ -113,9 +110,8 @@ class ProductControllerGetTest extends PostgresIntegrationSetup {
 
     @Test
     @DisplayName("Should return paged products for admin role")
-    @WithMockUser(authorities = "SCOPE_ROLE_ADMIN")
     void getProductPageAdmin() throws Exception {
-        mockMvc.perform(get("/api/product/page?page=0&size=1"))
+        mockMvc.perform(get("/api/product/page?page=0&size=1").with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ROLE_ADMIN"))))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {

@@ -6,7 +6,7 @@ import com.iron.tec.labs.ecommercejava.dto.PurchaseOrderCreationDTO;
 import com.iron.tec.labs.ecommercejava.dto.PurchaseOrderLineCreationDTO;
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineCreationDTOToDomain;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ import java.util.UUID;
 import static com.iron.tec.labs.ecommercejava.enums.PurchaseOrderStatus.PENDING;
 
 @Component
-public class PurchaseOrderCreationDTOToDomain implements Converter<PurchaseOrderCreationDTO, PurchaseOrderDomain> {
+public class PurchaseOrderCreationDTOToDomain implements Converter<@NonNull PurchaseOrderCreationDTO,@NonNull PurchaseOrderDomain> {
     private final PurchaseOrderLineCreationDTOToDomain conversionService;
 
     public PurchaseOrderCreationDTOToDomain(PurchaseOrderLineCreationDTOToDomain conversionService) {

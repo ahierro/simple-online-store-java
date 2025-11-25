@@ -38,7 +38,6 @@ public class PurchaseOrderDAOImpl implements PurchaseOrderDAO {
     private final MessageService messageService;
     private final PurchaseOrderViewRepository purchaseOrderViewRepository;
     private final PurchaseOrderLineViewRepository purchaseOrderLineViewRepository;
-    private final UserRepository appUserRepository;
     private final org.springframework.core.convert.ConversionService conversionService;
 
     @Override

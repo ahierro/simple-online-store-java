@@ -4,13 +4,13 @@ import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
 import com.iron.tec.labs.ecommercejava.dto.PurchaseOrderLineCreationDTO;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
-public class PurchaseOrderLineCreationDTOToDomain implements Converter<PurchaseOrderLineCreationDTO, PurchaseOrderLineDomain> {
+public class PurchaseOrderLineCreationDTOToDomain implements Converter<@NonNull PurchaseOrderLineCreationDTO,@NonNull PurchaseOrderLineDomain> {
     @Override
     public PurchaseOrderLineDomain convert(@NonNull PurchaseOrderLineCreationDTO source) {
         return PurchaseOrderLineDomain.builder()

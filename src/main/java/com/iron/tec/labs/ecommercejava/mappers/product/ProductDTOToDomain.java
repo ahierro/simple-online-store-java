@@ -3,7 +3,7 @@ package com.iron.tec.labs.ecommercejava.mappers.product;
 import java.util.UUID;
 
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
@@ -11,7 +11,7 @@ import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
 
 @Component
-public class ProductDTOToDomain implements Converter<ProductDTO, ProductDomain> {
+public class ProductDTOToDomain implements Converter<@NonNull ProductDTO,@NonNull ProductDomain> {
     @Override
     public ProductDomain convert(@NonNull ProductDTO source) {
         CategoryDomain categoryDomain = null;
