@@ -4,14 +4,14 @@ import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,7 +24,7 @@ class AuthControllerSignupTest extends PostgresIntegrationSetup {
     private MockMvc mockMvc;
 
     @Container
-    protected static PostgreSQLContainer<?> postgresqlContainer = createContainer();
+    protected static PostgreSQLContainer postgresqlContainer = createContainer();
 
     static {
         initWithScripts(postgresqlContainer, "scripts/authTests.sql");

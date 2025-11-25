@@ -19,8 +19,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PurchaseOrderDAOImplTest extends PostgresIntegrationSetup {
 
     @Container
-    protected static PostgreSQLContainer<?> postgresqlContainer = createContainer();
+    protected static PostgreSQLContainer postgresqlContainer = createContainer();
 
     static {
         init(postgresqlContainer);

@@ -6,13 +6,13 @@ import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.Getter;
+import org.jspecify.annotations.NonNull;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
 @Getter
-public class PurchaseOrderLineDomainToEntity implements Converter<PurchaseOrderLineDomain, PurchaseOrderLine> {
+public class PurchaseOrderLineDomainToEntity implements Converter<@NonNull PurchaseOrderLineDomain,@NonNull PurchaseOrderLine> {
 
     @PersistenceContext
     private EntityManager entityManager;

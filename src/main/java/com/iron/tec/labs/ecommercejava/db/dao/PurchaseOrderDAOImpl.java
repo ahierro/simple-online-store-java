@@ -6,7 +6,6 @@ import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderView;
 import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderLineViewRepository;
 import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderRepository;
 import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderViewRepository;
-import com.iron.tec.labs.ecommercejava.db.repository.UserRepository;
 import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
@@ -38,7 +37,6 @@ public class PurchaseOrderDAOImpl implements PurchaseOrderDAO {
     private final MessageService messageService;
     private final PurchaseOrderViewRepository purchaseOrderViewRepository;
     private final PurchaseOrderLineViewRepository purchaseOrderLineViewRepository;
-    private final UserRepository appUserRepository;
     private final org.springframework.core.convert.ConversionService conversionService;
 
     @Override

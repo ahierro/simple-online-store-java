@@ -32,7 +32,7 @@ public class UserBusinessServiceImpl implements UserBusinessService {
                 .email(registerUserDTO.getEmail())
                 .active(false)
                 .locked(false)
-                .authorities(List.of(registerUserDTO.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER"))
+                .authorities(List.of(Boolean.TRUE.equals(registerUserDTO.getIsAdmin())? "ROLE_ADMIN" : "ROLE_USER"))
                 .createdAt(LocalDateTime.now())
                 .build();
     }
