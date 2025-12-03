@@ -11,7 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.UUID;
 
-@Table("PURCHASE_ORDER_LINE")
+@Table("purchase_order_line")
 @Data
 @SuperBuilder
 @NoArgsConstructor

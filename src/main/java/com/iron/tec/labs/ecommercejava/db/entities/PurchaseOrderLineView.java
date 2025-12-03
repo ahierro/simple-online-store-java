@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Table("PURCHASE_ORDER_LINE_VIEW")
+@Table("purchase_order_line_view")
 @Data
 @SuperBuilder
 @NoArgsConstructor

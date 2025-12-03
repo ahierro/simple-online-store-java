@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("CATEGORY")
+@Table("category")
 @Data
 @SuperBuilder
 @NoArgsConstructor

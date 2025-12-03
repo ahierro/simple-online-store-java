@@ -1,9 +1,11 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -16,9 +18,17 @@ import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ProductControllerDeleteTest extends PostgresIntegrationSetup {
 
-    @Autowired
     private WebTestClient testClient;
 
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void setUpClient() {
+        this.testClient = WebTestClient.bindToServer()
+                .baseUrl("http://localhost:" + port)
+                .build();
+    }
     @Container
     protected static PostgreSQLContainer<?> postgresqlContainer = createContainer();
 

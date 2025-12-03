@@ -1,8 +1,6 @@
 package com.iron.tec.labs.ecommercejava.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Singular;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,6 +8,8 @@ import java.util.Set;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PurchaseOrderDTO {
     private String id;
     @Singular

@@ -1,5 +1,6 @@
 package com.iron.tec.labs.ecommercejava.db.dao;
 
+import com.iron.tec.labs.ecommercejava.config.ControllersConfig;
 import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
 import com.iron.tec.labs.ecommercejava.db.entities.Category;
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -28,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@Import(ControllersConfig.class)
 class ProductDAOImplTest extends PostgresIntegrationSetup {
 
     @Container

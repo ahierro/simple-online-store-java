@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Table("USERS")
+@Table("users")
 @Data
 @SuperBuilder
 @NoArgsConstructor

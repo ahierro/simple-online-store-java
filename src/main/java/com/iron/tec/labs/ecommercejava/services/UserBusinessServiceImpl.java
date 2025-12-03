@@ -5,6 +5,7 @@ import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
 import com.iron.tec.labs.ecommercejava.dto.RegisterUserDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -33,7 +34,7 @@ public class UserBusinessServiceImpl implements UserBusinessService {
                 .email(registerUserDTO.getEmail())
                 .active(false)
                 .locked(false)
-                .authorities(List.of(registerUserDTO.isAdmin() ? "ROLE_ADMIN" : "ROLE_USER"))
+                .authorities(List.of(BooleanUtils.isTrue(registerUserDTO.getIsAdmin()) ? "ROLE_ADMIN" : "ROLE_USER"))
                 .createdAt(LocalDateTime.now())
                 .build();
                 
