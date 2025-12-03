@@ -11,7 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Table("PURCHASE_ORDER_VIEW")
+@Table("purchase_order_view")
 @Data
 @SuperBuilder
 @NoArgsConstructor

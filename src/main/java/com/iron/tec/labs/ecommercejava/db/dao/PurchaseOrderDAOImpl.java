@@ -1,19 +1,5 @@
 package com.iron.tec.labs.ecommercejava.db.dao;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.UUID;
-
-import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.TransientDataAccessResourceException;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
-
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrder;
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderView;
 import com.iron.tec.labs.ecommercejava.db.repository.PurchaseOrderLineViewRepository;
@@ -25,10 +11,20 @@ import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.exceptions.Conflict;
 import com.iron.tec.labs.ecommercejava.exceptions.NotFound;
 import com.iron.tec.labs.ecommercejava.services.MessageService;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.TransientDataAccessResourceException;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import reactor.core.publisher.Mono;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static com.iron.tec.labs.ecommercejava.constants.Constants.*;
 

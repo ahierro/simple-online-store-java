@@ -1,5 +1,6 @@
 package com.iron.tec.labs.ecommercejava.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,9 @@ import org.springframework.data.domain.Sort;
 
 @Data
 @SuperBuilder
-@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductPageRequestDTO extends PageRequestDTO {
 
     private @UUID String categoryId;

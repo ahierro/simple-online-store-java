@@ -1,11 +1,10 @@
 package com.iron.tec.labs.ecommercejava.mappers.category;
 
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
-
 import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
 import com.iron.tec.labs.ecommercejava.dto.CategoryDTO;
+import org.springframework.core.convert.converter.Converter;
+import org.jspecify.annotations.NonNull;
+import org.springframework.stereotype.Component;
 
 @Component
 public class CategoryDomainToDTO implements Converter<CategoryDomain, CategoryDTO> {

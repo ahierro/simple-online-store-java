@@ -1,18 +1,14 @@
 package com.iron.tec.labs.ecommercejava.services;
 
-import java.util.UUID;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-
 import com.iron.tec.labs.ecommercejava.db.dao.PurchaseOrderDAO;
 import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.dto.PageRequestDTO;
-import com.iron.tec.labs.ecommercejava.enums.PurchaseOrderStatus;
-
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor

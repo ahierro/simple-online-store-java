@@ -3,7 +3,7 @@ package com.iron.tec.labs.ecommercejava.mappers.user;
 import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
 import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component

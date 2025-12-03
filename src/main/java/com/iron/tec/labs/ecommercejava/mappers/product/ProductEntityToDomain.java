@@ -1,12 +1,11 @@
 package com.iron.tec.labs.ecommercejava.mappers.product;
 
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
-
 import com.iron.tec.labs.ecommercejava.db.entities.Product;
 import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
 import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
+import org.springframework.core.convert.converter.Converter;
+import org.jspecify.annotations.NonNull;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ProductEntityToDomain implements Converter<Product, ProductDomain> {

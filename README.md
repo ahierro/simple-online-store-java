@@ -6,8 +6,8 @@ This Spring Boot application provides a REST API for an oversimplified ecommerce
 It includes CRUD operations for Product, Category, User, PurchaseOrder and PurchaseOrderLine entities. It also includes a simple authentication mechanism using JWT.
 
 ### Technologies used
-* Java 21
-* Spring Boot 3
+* Java 25
+* Spring Boot 4
 * Spring Webflux
 * Spring Security
 * Liquibase
@@ -135,7 +135,7 @@ docker run --detach --name postgres --env POSTGRES_PASSWORD=postgres:17.2 --publ
 ```shell
 ./mvnw liquibase:update
 ```
-### (In case it is needed) Rollback last changeset
+### (In case it is necessary) Rollback last changeset
 ```shell
 ./mvnw liquibase:rollback "-Dliquibase.rollbackCount=1"
 ```
@@ -193,25 +193,25 @@ src/
 
 The application exposes the following main endpoints:
 
-| Endpoint | Method | Description | Auth Required |
-|----------|--------|-------------|--------------|
-| `/api/auth/signup` | POST | Register a new user | No |
-| `/api/auth/login` | POST | Authenticate and get JWT | No |
-| `/api/auth/confirm` | GET | Confirm user email | No |
-| `/api/categories` | GET | List all categories | Yes |
-| `/api/categories` | POST | Create a new category | Yes |
-| `/api/categories/{id}` | GET | Get category by ID | Yes |
-| `/api/categories/{id}` | PUT | Update a category | Yes |
-| `/api/categories/{id}` | DELETE | Delete a category | Yes |
-| `/api/products` | GET | List all products | Yes |
-| `/api/products` | POST | Create a new product | Yes |
-| `/api/products/{id}` | GET | Get product by ID | Yes |
-| `/api/products/{id}` | PUT | Update a product | Yes |
-| `/api/products/{id}` | DELETE | Delete a product | Yes |
-| `/api/purchase-orders` | GET | List all purchase orders | Yes |
-| `/api/purchase-orders` | POST | Create a new purchase order | Yes |
-| `/api/purchase-orders/{id}` | GET | Get purchase order by ID | Yes |
-| `/api/purchase-orders/{id}` | PATCH | Update purchase order status | Yes |
+| Endpoint                    | Method | Description                  | Auth Required |
+|-----------------------------|--------|------------------------------|---------------|
+| `/api/auth/signup`          | POST   | Register a new user          | No            |
+| `/api/auth/login`           | POST   | Authenticate and get JWT     | No            |
+| `/api/auth/confirm`         | GET    | Confirm user email           | No            |
+| `/api/categories`           | GET    | List all categories          | Yes           |
+| `/api/categories`           | POST   | Create a new category        | Yes           |
+| `/api/categories/{id}`      | GET    | Get category by ID           | Yes           |
+| `/api/categories/{id}`      | PUT    | Update a category            | Yes           |
+| `/api/categories/{id}`      | DELETE | Delete a category            | Yes           |
+| `/api/products`             | GET    | List all products            | Yes           |
+| `/api/products`             | POST   | Create a new product         | Yes           |
+| `/api/products/{id}`        | GET    | Get product by ID            | Yes           |
+| `/api/products/{id}`        | PUT    | Update a product             | Yes           |
+| `/api/products/{id}`        | DELETE | Delete a product             | Yes           |
+| `/api/purchase-orders`      | GET    | List all purchase orders     | Yes           |
+| `/api/purchase-orders`      | POST   | Create a new purchase order  | Yes           |
+| `/api/purchase-orders/{id}` | GET    | Get purchase order by ID     | Yes           |
+| `/api/purchase-orders/{id}` | PATCH  | Update purchase order status | Yes           |
 
 For detailed API documentation, please refer to the Swagger UI at `/swagger-ui.html` when the application is running.
 

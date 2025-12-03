@@ -1,6 +1,6 @@
 package com.iron.tec.labs.ecommercejava.config.logging;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.ServerWebExchangeDecorator;
 

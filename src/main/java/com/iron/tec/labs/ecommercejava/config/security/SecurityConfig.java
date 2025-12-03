@@ -1,7 +1,11 @@
 package com.iron.tec.labs.ecommercejava.config.security;
 
-import java.util.function.Function;
-
+import com.iron.tec.labs.ecommercejava.db.repository.UserRepository;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -17,13 +21,7 @@ import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
-import com.iron.tec.labs.ecommercejava.db.repository.UserRepository;
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-
-import lombok.AllArgsConstructor;
+import java.util.function.Function;
 
 @EnableWebFluxSecurity
 @Configuration

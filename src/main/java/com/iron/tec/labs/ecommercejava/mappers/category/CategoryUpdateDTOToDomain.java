@@ -3,7 +3,7 @@ package com.iron.tec.labs.ecommercejava.mappers.category;
 import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
 import com.iron.tec.labs.ecommercejava.dto.CategoryUpdateDTO;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component

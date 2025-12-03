@@ -1,11 +1,10 @@
 package com.iron.tec.labs.ecommercejava.mappers.purchase.order.line;
 
-import com.iron.tec.labs.ecommercejava.db.entities.Product;
 import com.iron.tec.labs.ecommercejava.db.entities.PurchaseOrderLine;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
 import lombok.Getter;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component

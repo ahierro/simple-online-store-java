@@ -1,12 +1,11 @@
 package com.iron.tec.labs.ecommercejava.config.logging;
 
-import org.springframework.lang.NonNull;
+import lombok.extern.log4j.Log4j2;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
-
-import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 
 @Component

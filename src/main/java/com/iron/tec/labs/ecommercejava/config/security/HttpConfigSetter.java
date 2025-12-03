@@ -16,6 +16,7 @@ public class HttpConfigSetter {
                         .pathMatchers(HttpMethod.POST, "/api/login").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/signup").permitAll()
                         .pathMatchers(HttpMethod.GET, "/api/confirm").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/webjars/swagger-ui/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()

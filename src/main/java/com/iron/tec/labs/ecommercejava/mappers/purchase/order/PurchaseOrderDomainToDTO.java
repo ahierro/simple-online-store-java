@@ -8,7 +8,7 @@ import com.iron.tec.labs.ecommercejava.dto.UserDTO;
 import com.iron.tec.labs.ecommercejava.mappers.purchase.order.line.PurchaseOrderLineDomainToDTO;
 import com.iron.tec.labs.ecommercejava.mappers.user.AppUserDomainToDTO;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component

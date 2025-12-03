@@ -1,6 +1,5 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
-import com.iron.tec.labs.ecommercejava.db.entities.AppUser;
 import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.dto.*;

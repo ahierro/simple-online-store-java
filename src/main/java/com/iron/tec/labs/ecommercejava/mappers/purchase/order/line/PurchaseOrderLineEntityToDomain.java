@@ -5,13 +5,10 @@ import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
 import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderLineDomain;
-import com.iron.tec.labs.ecommercejava.mappers.product.ProductEntityToDomain;
 import lombok.AllArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 @Component
 @AllArgsConstructor

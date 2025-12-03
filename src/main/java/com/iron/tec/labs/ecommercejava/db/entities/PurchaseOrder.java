@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-@Table("PURCHASE_ORDER")
+@Table("purchase_order")
 @Data
 @SuperBuilder
 @NoArgsConstructor

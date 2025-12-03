@@ -1,13 +1,12 @@
 package com.iron.tec.labs.ecommercejava.db.rowmappers;
 
+import io.r2dbc.spi.Row;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.convert.R2dbcCustomConversions;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
-
-import io.r2dbc.spi.Row;
 
 @Component
 public class ColumnConverter {

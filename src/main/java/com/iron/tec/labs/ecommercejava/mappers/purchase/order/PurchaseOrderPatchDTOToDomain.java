@@ -3,7 +3,7 @@ package com.iron.tec.labs.ecommercejava.mappers.purchase.order;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.dto.PurchaseOrderPatchDTO;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component

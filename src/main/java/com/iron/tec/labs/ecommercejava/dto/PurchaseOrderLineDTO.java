@@ -1,12 +1,14 @@
 package com.iron.tec.labs.ecommercejava.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import java.math.BigDecimal;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PurchaseOrderLineDTO {
     private Integer quantity;
     private ProductDTO product;

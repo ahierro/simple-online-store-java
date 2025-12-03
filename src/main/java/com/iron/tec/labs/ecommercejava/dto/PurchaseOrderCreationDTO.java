@@ -3,9 +3,7 @@ package com.iron.tec.labs.ecommercejava.dto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Singular;
+import lombok.*;
 import org.hibernate.validator.constraints.UUID;
 
 import java.math.BigDecimal;
@@ -13,6 +11,8 @@ import java.util.Set;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PurchaseOrderCreationDTO {
     @NotNull
     @UUID

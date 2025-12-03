@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class CategoryDAOImplTest extends PostgresIntegrationSetup {
 
     @Container
-    protected static PostgreSQLContainer<?> postgresqlContainer = createContainer();
+    protected static PostgreSQLContainer postgresqlContainer = createContainer();
 
     static {
         init(postgresqlContainer);

@@ -1,14 +1,13 @@
 package com.iron.tec.labs.ecommercejava.mappers.product;
 
-import java.util.UUID;
-
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
-
 import com.iron.tec.labs.ecommercejava.domain.CategoryDomain;
 import com.iron.tec.labs.ecommercejava.domain.ProductDomain;
 import com.iron.tec.labs.ecommercejava.dto.ProductDTO;
+import org.springframework.core.convert.converter.Converter;
+import org.jspecify.annotations.NonNull;
+import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class ProductDTOToDomain implements Converter<ProductDTO, ProductDomain> {
