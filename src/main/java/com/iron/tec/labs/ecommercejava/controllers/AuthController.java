@@ -1,8 +1,6 @@
 package com.iron.tec.labs.ecommercejava.controllers;
 
-import com.iron.tec.labs.ecommercejava.dto.LoginRequest;
 import com.iron.tec.labs.ecommercejava.dto.RegisterUserDTO;
-import com.iron.tec.labs.ecommercejava.services.JWTGeneratorService;
 import com.iron.tec.labs.ecommercejava.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,9 +10,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,18 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final UserService userService;
-    private final JWTGeneratorService jwtGeneratorService;
-    private final AuthenticationManager authenticationManager;
-
-    @Operation(summary = "Login with user and password and returns JWT token", responses = {
-            @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content)})
-    @PostMapping("/api/login")
-    public String login(@RequestBody @Valid LoginRequest userLogin) {
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(userLogin.username(), userLogin.password()));
-        return jwtGeneratorService.generateToken(authentication);
-    }
 
     @Operation(summary = "E-mail confirmation endpoint that activates user", responses = {
             @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content),

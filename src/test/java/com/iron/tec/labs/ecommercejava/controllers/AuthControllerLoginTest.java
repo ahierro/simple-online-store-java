@@ -40,13 +40,8 @@ class AuthControllerLoginTest extends PostgresIntegrationSetup {
     @DisplayName("Should login successfully with valid credentials as user")
     void loginSuccess() throws Exception {
         mockMvc.perform(post("/api/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                          "username": "testuser",
-                          "password": "admin"
-                        }
-                        """))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .content("username=testuser&password=admin"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.emptyString())));
     }
@@ -54,13 +49,8 @@ class AuthControllerLoginTest extends PostgresIntegrationSetup {
     @DisplayName("Should login successfully with valid credentials as admin")
     void loginAdminSuccess() throws Exception {
         mockMvc.perform(post("/api/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                          "username": "adminuser",
-                          "password": "adminpass"
-                        }
-                        """))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .content("username=adminuser&password=adminpass"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.emptyString())));
     }
@@ -68,13 +58,8 @@ class AuthControllerLoginTest extends PostgresIntegrationSetup {
     @DisplayName("Should fail login with invalid password")
     void loginFailInvalidPassword() throws Exception {
         mockMvc.perform(post("/api/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                          "username": "testuser",
-                          "password": "wrongpassword"
-                        }
-                        """))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .content("username=testuser&password=wrongpassword"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -82,13 +67,8 @@ class AuthControllerLoginTest extends PostgresIntegrationSetup {
     @DisplayName("Should fail login with non-existent username")
     void loginFailNonExistentUser() throws Exception {
         mockMvc.perform(post("/api/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                          "username": "nonexistentuser",
-                          "password": "admin"
-                        }
-                        """))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .content("username=nonexistentuser&password=admin"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -96,13 +76,8 @@ class AuthControllerLoginTest extends PostgresIntegrationSetup {
     @DisplayName("Should fail login with inactive user")
     void loginFailInactiveUser() throws Exception {
         mockMvc.perform(post("/api/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                          "username": "inactiveuser",
-                          "password": "admin"
-                        }
-                        """))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .content("username=inactiveuser&password=admin"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -110,13 +85,8 @@ class AuthControllerLoginTest extends PostgresIntegrationSetup {
     @DisplayName("Should fail login with locked user")
     void loginFailLockedUser() throws Exception {
         mockMvc.perform(post("/api/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                          "username": "lockeduser",
-                          "password": "admin"
-                        }
-                        """))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .content("username=lockeduser&password=admin"))
                 .andExpect(status().isUnauthorized());
     }
 }

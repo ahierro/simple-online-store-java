@@ -39,27 +39,22 @@ class AuthControllerSignupTest extends PostgresIntegrationSetup {
     @DisplayName("Should successfully register a new user")
     void signupSuccess() throws Exception {
         mockMvc.perform(post("/api/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                          "username": "newuser",
-                          "email": "newuser@example.com",
-                          "password": "password123",
-                          "firstName": "New",
-                          "lastName": "User"
-                        }
-                        """))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "newuser",
+                                  "email": "newuser@example.com",
+                                  "password": "password123",
+                                  "firstName": "New",
+                                  "lastName": "User"
+                                }
+                                """))
                 .andExpect(status().isOk());
 
         // Verify we cannot immediately login (since email confirmation is required)
         mockMvc.perform(post("/api/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                          "username": "newuser",
-                          "password": "password123"
-                        }
-                        """))
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .content("username=newuser&password=password123"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -67,16 +62,16 @@ class AuthControllerSignupTest extends PostgresIntegrationSetup {
     @DisplayName("Should fail signup with existing username")
     void signupFailExistingUsername() throws Exception {
         mockMvc.perform(post("/api/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                          "username": "testuser",
-                          "email": "unique@example.com",
-                          "password": "password123",
-                          "firstName": "Unique",
-                          "lastName": "User"
-                        }
-                        """))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "testuser",
+                                  "email": "unique@example.com",
+                                  "password": "password123",
+                                  "firstName": "Unique",
+                                  "lastName": "User"
+                                }
+                                """))
                 .andExpect(status().isConflict());
     }
 
@@ -84,16 +79,16 @@ class AuthControllerSignupTest extends PostgresIntegrationSetup {
     @DisplayName("Should fail signup with existing email")
     void signupFailExistingEmail() throws Exception {
         mockMvc.perform(post("/api/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                          "username": "uniqueuser",
-                          "email": "user@example.com",
-                          "password": "password123",
-                          "firstName": "Unique",
-                          "lastName": "User"
-                        }
-                        """))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "uniqueuser",
+                                  "email": "user@example.com",
+                                  "password": "password123",
+                                  "firstName": "Unique",
+                                  "lastName": "User"
+                                }
+                                """))
                 .andExpect(status().isConflict());
     }
 
@@ -101,16 +96,16 @@ class AuthControllerSignupTest extends PostgresIntegrationSetup {
     @DisplayName("Should fail signup with invalid email format")
     void signupFailInvalidEmail() throws Exception {
         mockMvc.perform(post("/api/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                          "username": "badmailuser",
-                          "email": "not-an-email",
-                          "password": "password123",
-                          "firstName": "Bad",
-                          "lastName": "Email"
-                        }
-                        """))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "badmailuser",
+                                  "email": "not-an-email",
+                                  "password": "password123",
+                                  "firstName": "Bad",
+                                  "lastName": "Email"
+                                }
+                                """))
                 .andExpect(status().isBadRequest());
     }
 
@@ -118,13 +113,13 @@ class AuthControllerSignupTest extends PostgresIntegrationSetup {
     @DisplayName("Should fail signup with missing required fields")
     void signupFailMissingFields() throws Exception {
         mockMvc.perform(post("/api/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                          "username": "incompleteuser",
-                          "email": "incomplete@example.com"
-                        }
-                        """))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "incompleteuser",
+                                  "email": "incomplete@example.com"
+                                }
+                                """))
                 .andExpect(status().isBadRequest());
     }
 }
