@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 import org.hibernate.validator.constraints.UUID;
 
@@ -17,11 +18,11 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ProductCreationDTO{
     @NotEmpty @UUID private String productId;
-    @NotEmpty private String productName;
+    @NotEmpty @Length(max = 255) private String productName;
     @NotEmpty private String productDescription;
     @PositiveOrZero private Integer stock;
     @Positive private BigDecimal price;
-    @NotEmpty @URL private String smallImageUrl;
-    @NotEmpty @URL private String bigImageUrl;
+    @NotEmpty @Length(max = 255) @URL private String smallImageUrl;
+    @NotEmpty @Length(max = 255) @URL private String bigImageUrl;
     @NotEmpty @UUID private String categoryId;
 }

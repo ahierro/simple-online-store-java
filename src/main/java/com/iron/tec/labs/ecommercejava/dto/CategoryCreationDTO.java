@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.UUID;
 
 @Data
@@ -13,6 +14,6 @@ import org.hibernate.validator.constraints.UUID;
 @NoArgsConstructor
 public class CategoryCreationDTO {
     @NotEmpty @UUID private String id;
-    @NotEmpty private String name;
+    @NotEmpty @Length(max = 50) private String name;
     @NotEmpty private String description;
 }
