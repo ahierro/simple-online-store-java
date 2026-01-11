@@ -137,7 +137,7 @@ class PurchaseOrderServiceImplTest {
         when(purchaseOrderDAO.getPage(eq(0), eq(1), any())).thenReturn(pageDomain);
 
         PageRequestDTO pageRequest = PageRequestDTO.builder().page(0).size(1).build();
-        PageDomain<PurchaseOrderDomain> page = purchaseOrderService.getPurchaseOrderPage(pageRequest);
+        PageDomain<PurchaseOrderDomain> page = purchaseOrderService.getPurchaseOrderPage(pageRequest,null);
 
         assertNotNull(page);
         assertEquals(2, page.getTotalPages().intValue());

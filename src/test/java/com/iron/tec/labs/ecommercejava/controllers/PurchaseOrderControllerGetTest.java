@@ -3,15 +3,21 @@ package com.iron.tec.labs.ecommercejava.controllers;
 import com.iron.tec.labs.ecommercejava.db.PostgresIntegrationSetup;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.postgresql.PostgreSQLContainer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -149,7 +155,12 @@ class PurchaseOrderControllerGetTest extends PostgresIntegrationSetup {
     @Test
     @DisplayName("Should return paged purchase orders for user role")
     void getPurchaseOrderPageUser() throws Exception {
-        mockMvc.perform(get("/api/purchase-order/page?page=0&size=10").with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_ROLE_USER"))))
+        GrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("SCOPE_ROLE_USER");
+        Jwt jwt = Mockito.mock(Jwt.class);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("sub", "295ba273-ca1d-45bc-9818-f949223981f6");
+        Mockito.when(jwt.getClaims()).thenReturn(claims);
+        mockMvc.perform(get("/api/purchase-order/page?page=0&size=10").with(jwt().authorities(simpleGrantedAuthority).jwt(jwt)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].id").value("b451dafd-7c96-43b6-bf5f-ac522dd3026c"))
                 .andExpect(jsonPath("$.content[0].total").value(149.98))

@@ -21,11 +21,14 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.UUID;
 
+import static com.iron.tec.labs.ecommercejava.constants.Constants.SCOPE_ROLE_USER;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -48,8 +51,19 @@ public class PurchaseOrderController {
     @GetMapping("/page")
     public PageResponseDTO<PurchaseOrderViewDTO> getPurchaseOrdersPaged(@Valid PageRequestDTO pageRequest,
                                                                         Authentication authentication) {
+
         log.info("Before purchaseOrders obtained");
-        PageDomain<PurchaseOrderDomain> page = purchaseOrderService.getPurchaseOrderPage(pageRequest);
+        UUID userId = null;
+        if (authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().contains(SCOPE_ROLE_USER)){
+            Jwt jwt = (Jwt)authentication.getPrincipal();
+            if(jwt!=null&&jwt.getClaims()!=null){
+                Object sub = jwt.getClaims().get("sub");
+                if (sub!=null){
+                    userId = UUID.fromString(String.valueOf(sub));
+                }
+            }
+        }
+        PageDomain<PurchaseOrderDomain> page = purchaseOrderService.getPurchaseOrderPage(pageRequest,userId);
         PageResponseDTO<PurchaseOrderViewDTO> result = new PageResponseDTO<>(
                 page.getContent().stream()
                         .map(po -> conversionService.convert(po, PurchaseOrderViewDTO.class))

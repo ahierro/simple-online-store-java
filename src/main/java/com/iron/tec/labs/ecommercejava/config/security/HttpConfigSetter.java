@@ -29,7 +29,7 @@ public class HttpConfigSetter {
                         .requestMatchers(HttpMethod.POST, API).hasAuthority(SCOPE_ROLE_ADMIN)
                         .requestMatchers(HttpMethod.PUT, API).hasAuthority(SCOPE_ROLE_ADMIN)
                         .requestMatchers(HttpMethod.DELETE, API).hasAuthority(SCOPE_ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.GET, "/api/purchase-order/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/purchase-order/**").hasAnyAuthority(SCOPE_ROLE_USER,SCOPE_ROLE_ADMIN)
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)

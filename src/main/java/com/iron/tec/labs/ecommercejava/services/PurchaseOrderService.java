@@ -13,6 +13,6 @@ public interface PurchaseOrderService {
 
     PurchaseOrderDomain patchPurchaseOrder(String id, PurchaseOrderDomain purchaseOrder);
 
-    PageDomain<PurchaseOrderDomain> getPurchaseOrderPage(PageRequestDTO pageRequest);
+    PageDomain<PurchaseOrderDomain> getPurchaseOrderPage(PageRequestDTO pageRequest,UUID userId);
 
 }

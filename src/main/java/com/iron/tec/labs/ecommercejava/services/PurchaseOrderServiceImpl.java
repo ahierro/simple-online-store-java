@@ -1,6 +1,7 @@
 package com.iron.tec.labs.ecommercejava.services;
 
 import com.iron.tec.labs.ecommercejava.db.dao.PurchaseOrderDAO;
+import com.iron.tec.labs.ecommercejava.domain.AppUserDomain;
 import com.iron.tec.labs.ecommercejava.domain.PageDomain;
 import com.iron.tec.labs.ecommercejava.domain.PurchaseOrderDomain;
 import com.iron.tec.labs.ecommercejava.dto.PageRequestDTO;
@@ -34,8 +35,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     }
 
     @Override
-    public PageDomain<PurchaseOrderDomain> getPurchaseOrderPage(PageRequestDTO pageRequest) {
-        return purchaseOrderDAO.getPage(pageRequest.getPage(), pageRequest.getSize(), PurchaseOrderDomain.builder().build());
+    public PageDomain<PurchaseOrderDomain> getPurchaseOrderPage(PageRequestDTO pageRequest,UUID userId) {
+        PurchaseOrderDomain purchaseOrderDomain = (userId==null)?
+        PurchaseOrderDomain.builder().build():
+        PurchaseOrderDomain.builder().user(AppUserDomain.builder().id(userId).build()).build();
+        return purchaseOrderDAO.getPage(pageRequest.getPage(), pageRequest.getSize(),
+                purchaseOrderDomain
+        );
     }
 
 }
