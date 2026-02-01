@@ -12,7 +12,7 @@ It includes CRUD operations for Product, Category, User, PurchaseOrder and Purch
 * Spring Security
 * Liquibase
 * PostgreSQL
-* Spring Data R2DBC (including queries with pagination and sorting)
+* Spring Data (including queries with pagination and sorting)
 * Test Containers
 * Swagger
 * JWT authentication
@@ -35,7 +35,7 @@ DB_USERNAME=postgres
 DB_PASSWORD=postgres
 
 # Logging Configuration
-LOG_R2DBC_QUERY=DEBUG
+LOG_QUERY=DEBUG
 INCLUDE_STACKTRACE=never
 LOG_HTTP_WEB_HANDLER=DEBUG
 LOG_ECOMMERCE=DEBUG
@@ -73,12 +73,11 @@ LIQUIBASE_PATH=classpath:/db/changelog/changelog.sql
 #### Environment Variables Explained
 
 **Database Configuration:**
-- `DB_URL`: R2DBC connection URL for PostgreSQL database
+- `DB_URL`: Connection URL for PostgreSQL database
 - `DB_USERNAME`: Database username
 - `DB_PASSWORD`: Database password
 
 **Logging Configuration:**
-- `LOG_R2DBC_QUERY`: Log level for R2DBC SQL queries (DEBUG, INFO, WARN, ERROR)
 - `INCLUDE_STACKTRACE`: Whether to include stack traces in error responses (never, always, on_param)
 - `LOG_HTTP_WEB_HANDLER`: Log level for HTTP web handler adapter
 - `LOG_ECOMMERCE`: Log level for the ecommerce application package
@@ -238,9 +237,8 @@ This project follows Clean Architecture principles with some adaptations for the
    - Services return `Mono` or `Flux` types to enable reactive data processing
 
 2. **Database Access**
-   - R2DBC is used for reactive database access
    - DAOs abstract database operations from the service layer
-   - Repositories extend Spring Data R2DBC interfaces for common operations
+   - Repositories extend Spring Data interfaces for common operations
 
 3. **Separation of Concerns**
    - Domain objects are distinct from database entities
