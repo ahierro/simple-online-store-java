@@ -29,61 +29,44 @@ http://localhost:8080/swagger-ui.html
 Create a `.env` file in the project root directory to configure the application. Copy the template below and adjust the values according to your environment:
 
 ```env
-# Database Configuration
-DB_URL=r2dbc:postgresql://host.docker.internal:5432/postgres
+DB_JDBC_URL=jdbc:postgresql://host.docker.internal:5432/postgres
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
-
-# Logging Configuration
 LOG_QUERY=DEBUG
+LOGSTASH_URL=localhost:5000
 INCLUDE_STACKTRACE=never
 LOG_HTTP_WEB_HANDLER=DEBUG
 LOG_ECOMMERCE=DEBUG
-
-# Schema Initialization
-INITIALIZE_SCHEMA=false
-
-# JWT Authentication
 JWT_SECRET_KEY=497e5789-db2c-41e7-8071-682721231b18
 JWT_SECRET_EXPIRATION_IN_MILLISECONDS=1200000
-
-# Internationalization
 MESSAGES_BASENAME=i18n/messages
-
-# Email Configuration (SMTP)
 MAIL_HOST=smtp.ethereal.email
 MAIL_PORT=587
-MAIL_USERNAME=your-email@ethereal.email
-MAIL_PASSWORD=your-email-password
+MAIL_USERNAME=beaulah.jaskolski6@ethereal.email
+MAIL_PASSWORD=kFhzSmU5zwsmkwU1Kq
 MAIL_PROTOCOL=smtp
 MAIL_AUTH=true
 MAIL_START_TLS=true
 MAIL_DEBUG=true
-
-# Docker Compose
-DOCKER_COMPOSE_ENABLED=false
-
-# Application Configuration
+DOCKER_COMPOSE_ENABLED=true
 APP_BASE_URL=http://localhost:8080
-
-LIQUIBASE_ENABLED=false
-LIQUIBASE_PATH=classpath:/db/changelog/changelog.sql
+SPRING_LIQUIBASE_ENABLED=true
+SPRING_LIQUIBASE_PATH=classpath:/db/changelog/changelog.sql
 ```
 
 #### Environment Variables Explained
 
 **Database Configuration:**
-- `DB_URL`: Connection URL for PostgreSQL database
+- `DB_JDBC_URL`: Connection URL for PostgreSQL database
 - `DB_USERNAME`: Database username
 - `DB_PASSWORD`: Database password
 
 **Logging Configuration:**
+- `LOG_QUERY`: Log level for R2DBC SQL queries (DEBUG, INFO, WARN, ERROR)
+- `LOGSTASH_URL`: Logstash URL
 - `INCLUDE_STACKTRACE`: Whether to include stack traces in error responses (never, always, on_param)
 - `LOG_HTTP_WEB_HANDLER`: Log level for HTTP web handler adapter
 - `LOG_ECOMMERCE`: Log level for the ecommerce application package
-
-**Schema Configuration:**
-- `INITIALIZE_SCHEMA`: Whether to initialize database schema on startup (true/false)
 
 **JWT Authentication:**
 - `JWT_SECRET_KEY`: JWT secret key used for signing tokens
@@ -109,8 +92,8 @@ LIQUIBASE_PATH=classpath:/db/changelog/changelog.sql
 - `APP_BASE_URL`: Base URL of the application for generating links
 
 **Liquibase Configuration:**
-- `LIQUIBASE_ENABLED`: This setting activates Liquibase, causing Spring Boot to automatically run Liquibase migrations when the application starts.
-- `LIQUIBASE_PATH`: The location of the Liquibase master changelog file
+- `SPRING_LIQUIBASE_ENABLED`: This setting activates Liquibase, causing Spring Boot to automatically run Liquibase migrations when the application starts.
+- `SPRING_LIQUIBASE_PATH`: The location of the Liquibase master changelog file
 
 Note: The `.env` file is ignored by Git to keep sensitive information out of version control.
 
