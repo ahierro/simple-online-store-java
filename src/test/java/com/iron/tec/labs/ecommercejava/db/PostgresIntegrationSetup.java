@@ -8,7 +8,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 public class PostgresIntegrationSetup {
 
     public static PostgreSQLContainer createContainer() {
-        return new PostgreSQLContainer("postgres:15.1-alpine3.17");
+        return new PostgreSQLContainer("postgres:18.1-alpine3.23");
     }
 
     public static void init(PostgreSQLContainer postgresqlContainer) {
